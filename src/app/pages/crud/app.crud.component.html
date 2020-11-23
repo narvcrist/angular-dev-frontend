@@ -1,0 +1,283 @@
+<p-toast position="top-center"></p-toast>
+<div class="p-grid">
+	<div class="p-col-12">
+		<div class="card">
+			<p-toolbar styleClass="p-mb-4">
+				<ng-template pTemplate="left">
+					<button pButton pRipple icon="pi pi-plus" label=""
+							class="p-button-info p-button-raised p-button-lg p-button-rounded p-mr-2"
+							(click)="openModal(null)" [pTooltip]="'Nuevo registro'"></button>
+					<button pButton pRipple icon="pi pi-trash" label=""
+							class="p-button-lg p-button-danger p-button-raised p-button-rounded"
+							(click)="deleteSelected()"
+							[pTooltip]="'Eliminar uno o varios registros'"></button>
+				</ng-template>
+
+				<ng-template pTemplate="right">
+					<p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Importar"
+								  chooseLabel="Import" class="p-mr-2 p-d-inline-block"></p-fileUpload>
+					<button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-secondary"
+							(click)="dt.exportCSV()"></button>
+				</ng-template>
+			</p-toolbar>
+			<p-table #dt
+					 [responsive]="true"
+					 [value]="users"
+					 [columns]="cols"
+					 [(selection)]="selectedUsers"
+					 [rowHover]="true"
+					 dataKey="id"
+			>
+				<ng-template pTemplate="caption">
+					<div class="p-d-flex p-ai-center p-jc-between">
+						<h5 class="p-m-0">Administración de Usuarios</h5>
+						<span class="p-input-icon-right">
+							<p-dropdown #selectedCol [options]="cols" optionLabel="header"
+										class="p-text-uppercase p-m-2"
+										(onChange)="selectColSearch(selectedCol.value)"></p-dropdown>
+							<i class="pi pi-search" (click)="search($event,inputSearch.value)"></i>
+                        <input #inputSearch pInputText type="text" placeholder="Buscar..."
+							   class="p-text-uppercase p-m-2"
+							   (keyup.enter)="search($event,inputSearch.value)"
+							   (keyup.backspace)="search($event,inputSearch.value)"/>
+                    </span>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width: 3rem">
+							<p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+						</th>
+						<th pSortableColumn="identification">Número de Documento
+							<p-sortIcon field="identification"></p-sortIcon>
+						</th>
+						<th pSortableColumn="first_lastname">Apellidos
+							<p-sortIcon field="first_lastname"></p-sortIcon>
+						</th>
+						<th pSortableColumn="first_name">Nombres
+							<p-sortIcon field="first_name"></p-sortIcon>
+						</th>
+						<th pSortableColumn="email">Correo Electrónico
+							<p-sortIcon field="email"></p-sortIcon>
+						</th>
+						<th>
+						</th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-user>
+					<tr>
+						<td>
+							<p-tableCheckbox [value]="user"></p-tableCheckbox>
+						</td>
+						<td>{{user.identification}}</td>
+						<td>{{user.first_lastname}} {{user.second_lastname}}</td>
+						<td>{{user.first_name}} {{user.second_name}}</td>
+						<td>{{user.email}}</td>
+						<td>
+							<button pButton pRipple icon="pi pi-user-edit"
+									class="p-button-rounded p-button-raised p-mr-2"
+									(click)="openModal(user)" [pTooltip]="'Editar registro'"></button>
+							<button pButton pRipple icon="pi pi-times"
+									class="p-button-rounded p-button-danger p-button-raised"
+									(click)="delete(user)" [pTooltip]="'Eliminar registro'"></button>
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="summary">
+					<div class="p-d-flex p-ai-center p-jc-between">
+						<span *ngIf="paginator.total===0"> No hay registros.</span>
+						<span *ngIf="paginator.total>0"> {{paginator.total}} registros.</span>
+						<p-paginator *ngIf="paginator.total>0"
+									 [rowsPerPageOptions]="rowsPerPageOptions"
+									 [rows]="paginator.per_page"
+									 [totalRecords]="paginator.total"
+									 (onPageChange)="paginate($event)"
+						></p-paginator>
+					</div>
+				</ng-template>
+			</p-table>
+		</div>
+		<form [formGroup]="form" (ngSubmit)="onSubmit($event)">
+			<p-dialog [(visible)]="dialog" [style]="{width: '450px'}" header="Details" [modal]="true"
+					  styleClass="p-fluid">
+				<ng-template pTemplate="content">
+					<div class="p-field">
+						<label for="identification">Número de Documento:
+							<small>
+								({{form.get('identification').value == null ? 0 : form.get('identification').value.length}}
+								de
+								{{validatorsOptions.identification.maxlength}})
+							</small>
+						</label>
+						<input type="text" pInputText id="identification" name="identification"
+							   pKeyFilter="alphanum"
+							   class="p-text-uppercase"
+							   [maxlength]="validatorsOptions.identification.maxlength"
+							   formControlName="identification" autofocus/>
+						<div *ngIf="form.get('identification').errors && form.get('identification').touched">
+							<small id="identification1Help" class="p-invalid"
+								   *ngIf="form.get('identification').hasError('required')">
+								identification is required.
+							</small>
+							<small id="identificatio2nHelp" class="p-invalid"
+								   *ngIf="form.get('identification').hasError('minlength')">
+								identification minLength is {{validatorsOptions.identification.minlength}}.
+							</small>
+							<small id="identification3Help" class="p-invalid"
+								   *ngIf="form.get('identification').hasError('maxlength')">
+								identification maxLength is {{validatorsOptions.identification.minlength}}.
+							</small>
+						</div>
+					</div>
+					<div class="p-formgrid p-grid">
+						<div class="p-field p-col">
+							<label for="first_lastname">Primer Apellido:
+								<small>
+									({{form.get('first_lastname').value == null ? 0 : form.get('first_lastname').value.length}}
+									de
+									{{validatorsOptions.first_lastname.maxlength}})
+								</small>
+							</label>
+							<input type="text" pInputText id="first_lastname" name="first_lastname"
+								   pKeyFilter="alpha"
+								   class="p-text-uppercase"
+								   [maxlength]="validatorsOptions.first_lastname.maxlength"
+								   formControlName="first_lastname"/>
+							<div *ngIf="form.get('first_lastname').errors && form.get('first_lastname').touched">
+								<small id="first_lastname1Help" class="p-invalid"
+									   *ngIf="form.get('first_lastname').hasError('required')">
+									first_lastname is required.
+								</small>
+								<small id="first_lastname2nHelp" class="p-invalid"
+									   *ngIf="form.get('first_lastname').hasError('minlength')">
+									first_lastname minLength is {{validatorsOptions.first_lastname.minlength}}.
+								</small>
+								<small id="first_lastname3Help" class="p-invalid"
+									   *ngIf="form.get('first_lastname').hasError('maxlength')">
+									first_lastname maxLength is {{validatorsOptions.first_lastname.maxlength}}.
+								</small>
+							</div>
+						</div>
+						<div class="p-field p-col">
+							<label for="second_lastname">Segundo Apellido:
+								<small>
+									({{form.get('second_lastname').value == null ? 0 : form.get('second_lastname').value.length}}
+									de
+									{{validatorsOptions.second_lastname.maxlength}})
+								</small>
+							</label>
+							<input type="text" pInputText id="second_lastname" name="second_lastname"
+								   pKeyFilter="alpha" class="p-text-uppercase"
+								   [maxlength]="validatorsOptions.second_lastname.maxlength"
+								   formControlName="second_lastname"/>
+							<div *ngIf="form.get('second_lastname').errors && form.get('second_lastname').touched">
+								<small id="second_lastname1Help" class="p-invalid"
+									   *ngIf="form.get('second_lastname').hasError('required')">
+									second_lastname is required.
+								</small>
+								<small id="second_lastname2nHelp" class="p-invalid"
+									   *ngIf="form.get('second_lastname').hasError('minlength')">
+									second_lastname minLength is {{validatorsOptions.second_lastname.minlength}}.
+								</small>
+								<small id="second_lastname3Help" class="p-invalid"
+									   *ngIf="form.get('second_lastname').hasError('maxlength')">
+									second_lastname maxLength is {{validatorsOptions.second_lastname.maxlength}}.
+								</small>
+							</div>
+						</div>
+					</div>
+					<div class="p-formgrid p-grid">
+						<div class="p-field p-col">
+							<label for="first_name">Primer Nombre:
+								<small>
+									({{form.get('first_name').value == null ? 0 : form.get('first_name').value.length}}
+									de
+									{{validatorsOptions.first_name.maxlength}})
+								</small>
+							</label>
+							<input type="text" pInputText id="first_name" name="first_name" pKeyFilter="alpha"
+								   class="p-text-uppercase"
+								   [maxlength]="validatorsOptions.first_name.maxlength"
+								   formControlName="first_name"/>
+							<div *ngIf="form.get('first_name').errors && form.get('first_name').touched">
+								<small id="first_name1Help" class="p-invalid"
+									   *ngIf="form.get('first_name').hasError('required')">
+									first_name is required.
+								</small>
+								<small id="first_namen2Help" class="p-invalid"
+									   *ngIf="form.get('first_name').hasError('minlength')">
+									first_name minLength is {{validatorsOptions.first_name.minlength}}.
+								</small>
+								<small id="first_name3Help" class="p-invalid"
+									   *ngIf="form.get('first_name').hasError('maxlength')">
+									first_name maxLength is {{validatorsOptions.first_name.maxlength}}.
+								</small>
+							</div>
+						</div>
+						<div class="p-field p-col">
+							<label for="second_name">Segundo Nombre:
+								<small>
+									({{form.get('second_name').value == null ? 0 : form.get('second_name').value.length}}
+									de
+									{{validatorsOptions.second_name.maxlength}})
+								</small>
+							</label>
+							<input type="text" pInputText id="second_name" name="second_name" pKeyFilter="alpha"
+								   class="p-text-uppercase"
+								   [maxlength]="validatorsOptions.second_name.maxlength"
+								   formControlName="second_name"/>
+							<div *ngIf="form.get('second_name').errors && form.get('second_name').touched">
+								<small id="second_name1Help" class="p-invalid"
+									   *ngIf="form.get('second_name').hasError('required')">
+									second_name is required.
+								</small>
+								<small id="second_name2Help" class="p-invalid"
+									   *ngIf="form.get('second_name').hasError('minlength')">
+									second_name minLength is {{validatorsOptions.second_name.minlength}}.
+								</small>
+								<small id="second_name3Help" class="p-invalid"
+									   *ngIf="form.get('second_name').hasError('maxlength')">
+									second_name maxLength is {{validatorsOptions.second_name.maxlength}}.
+								</small>
+							</div>
+						</div>
+					</div>
+					<div class="p-field">
+						<label for="email">Correo Electrónico:
+							<small>
+								({{form.get('email').value == null ? 0 : form.get('email').value.length}}
+								de
+								{{validatorsOptions.email.maxlength}})
+							</small>
+						</label>
+						<input type="text" pInputText id="email" name="email" pKeyFilter="email"
+							   class="p-text-lowercase"
+							   [maxlength]="validatorsOptions.email.maxlength"
+							   formControlName="email"/>
+						<div *ngIf="form.get('email').errors && form.get('email').touched">
+							<small id="email1Help" class="p-invalid"
+								   *ngIf="form.get('email').hasError('required')">
+								email is required.
+							</small>
+							<small id="email2Help" class="p-invalid"
+								   *ngIf="form.get('email').hasError('email')">
+								email is not valid.
+							</small>
+							<small id="email3Help" class="p-invalid"
+								   *ngIf="form.get('email').hasError('maxlength')">
+								email maxlength is {{validatorsOptions.email.maxlength}}.
+							</small>
+						</div>
+					</div>
+				</ng-template>
+				<ng-template pTemplate="footer">
+					<button type="button" pButton pRipple label="Cancelar" icon="pi pi-times"
+							class="p-button-text" (click)="dialog=false"></button>
+					<button type="submit" pButton pRipple label="Guardar" icon="pi pi-save"
+							class="p-button-raised"></button>
+				</ng-template>
+			</p-dialog>
+		</form>
+		<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+	</div>
+</div>

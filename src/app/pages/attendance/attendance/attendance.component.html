@@ -1,0 +1,181 @@
+<p-toast key="msgToast"></p-toast>
+<p-sidebar [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
+    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
+        <label for="percentageAdvance">Porcentaje de Avance:</label>
+        <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
+                       class="p-mr-2" min="1" max="100" suffix="%"></p-inputNumber>
+        <button type="submit" pButton class="p-button-raised p-mt-2" label="Guardar" icon="pi pi-check"
+                pRipple></button>
+        <div *ngIf="formTask.get('percentage_advance').errors && formTask.get('percentage_advance').touched">
+            <small *ngIf="formTask.get('percentage_advance').hasError('required')"
+                   id="percentageAdvanceHelp" class="p-invalid">
+                Debe ingresar un valor mayor a 0.
+            </small>
+        </div>
+    </form>
+</p-sidebar>
+<p-confirmDialog [style]="{width: '450px'}" [baseZIndex]="10000"></p-confirmDialog>
+
+<div class="p-grid">
+    <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
+        <div class="p-grid">
+            <div class="p-lg-12 p-md-12 p-sm-12">
+                <p-card [header]="currentDate.format('LLL')">
+                    <div class="p-formgrid p-grid">
+                        <div class="p-field p-col" *ngIf="attendance.workdays.length>=3">
+                            <p-message severity="info"
+                                       text="Has completado el máximo de Jornadas y Almuerzo"></p-message>
+                        </div>
+                        <div class="p-field p-col" *ngIf="attendance.workdays.length==0 || checked">
+                            <button type="button" pButton
+                                    label="Iniciar Jornada"
+                                    class="p-button-raised"
+                                    icon="pi pi-home"
+                                    pRipple
+                                    (click)="createWorkday('WORK')"></button>
+                        </div>
+                        <div class="p-field-checkbox p-col"
+                             *ngIf="attendance.workdays.length>0 && attendance.workdays.length<3">
+                            <p-checkbox [(ngModel)]="checked" binary="true"
+                                        inputId="checkedJornada"></p-checkbox>
+                            <label for="checkedJornada">Habilitar inicio de jornada extra</label>
+                        </div>
+                        <div class="p-field p-col">
+                            <button *ngIf="attendance.workdays.length>0 && attendance.workdays.length<2"
+                                    type="button" pButton
+                                    label="Iniciar Almuerzo"
+                                    class="p-button-raised p-button-warning"
+                                    icon="pi pi-briefcase"
+                                    pRipple
+                                    (click)="createWorkday('LUNCH')"></button>
+                        </div>
+                    </div>
+                    <ng-template pTemplate="footer">
+                        <p-messages *ngIf="attendance.workdays.length===0" [(value)]="msgsErrors"></p-messages>
+                    </ng-template>
+                </p-card>
+            </div>
+            <div class="p-lg-12 p-md-12 p-sm-12">
+                <p-card>
+                    <p-tabView [activeIndex]="selectedTab" (onChange)="changeIndex($event)">
+                        <p-tabPanel header="Jornada" leftIcon="pi pi-home">
+                            <div class="p-grid">
+                                <p-message *ngIf="attendance.workdays.length===0" severity="warn"
+                                           text="No tienes actividades registradas."></p-message>
+                                <div class="p-xl-4 p-lg-6 p-md-4" *ngFor="let workday of attendance.workdays">
+                                    <p-card [header]="workday.description" [style]="{width: '200px'}"
+                                            styleClass="p-card-shadow">
+                                        <div class="p-text-center">
+                                            <img *ngIf="workday.type.code==='WORK'" alt="work" width="50px"
+                                                 src="assets/layout/images/pages/attendance/work.png">
+                                            <img *ngIf="workday.type.code==='LUNCH'" alt="lunch" width="50px"
+                                                 src="assets/layout/images/pages/attendance/lunch.png">
+                                        </div>
+                                        <p>Hora de Inicio: <b>{{workday.start_time}}</b></p>
+                                        <p>Hora de Fin: <b>{{workday.end_time}}</b></p>
+                                        <p>Duración: <b>{{workday.duration}}</b></p>
+                                        <ng-template pTemplate="footer">
+                                            <button *ngIf="workday.duration===null" pButton type="button"
+                                                    label="Finalizar"
+                                                    class="p-button-raised p-button-danger"
+                                                    icon="pi pi-check"
+                                                    pRipple
+                                                    (click)="endWorkday(workday)"></button>
+                                        </ng-template>
+                                    </p-card>
+                                    <p-messages [(value)]="msgsErrors"></p-messages>
+                                </div>
+                            </div>
+                        </p-tabPanel>
+                        <p-tabPanel header="Calendario" leftIcon="pi pi-calendar">
+                            <div class="p-grid">
+                                <div class="p-lg-12">
+                                    <p-fullCalendar [events]="events" [options]="optionsFullCalendar"></p-fullCalendar>
+                                </div>
+                            </div>
+                        </p-tabPanel>
+                        <p-tabPanel header="Actividades" leftIcon="pi pi-list">
+                            <div class="p-text-center">
+                                <p-calendar [(ngModel)]="selectedDate"
+                                            dateFormat="yy/mm/dd"
+                                            icon="pi pi-calendar"
+                                            showIcon="true"
+                                            [disabledDays]="[0,6]"
+                                            [monthNavigator]="true"
+                                            readonlyInput="true"
+                                            (onSelect)="getHistoryTasks()">
+                                </p-calendar>
+                            </div>
+                            <hr>
+                            <p-message *ngIf="historyAttendances.length===0" severity="warn"
+                                       text="No tienes actividades registradas."></p-message>
+                            <div class="p-grid" *ngFor="let attendance of historyAttendances">
+                                <p-message *ngIf="attendance.tasks.length===0" severity="warn"
+                                           text="No tienes actividades registradas."></p-message>
+                                <p-card [header]="task.type.parent.name" *ngFor="let task of attendance.tasks"
+                                        class="p-xl-4 p-lg-6 p-md-4 p-text-center"
+                                        [style]="{width: '250px',height:'300px'}"
+                                        styleClass="p-card-shadow">
+                                    <p-scrollPanel [style]="{width: '100%', height: '120px'}">
+                                        <p>{{task.type.name}}</p>
+                                    </p-scrollPanel>
+                                    <p-footer *ngIf="attendance.date == currentDate.format('YYYY-MM-DD')">
+                                        <button pButton [label]="task.percentage_advance + '%'"
+                                                class="p-button-raised p-button-rounded"
+                                                icon="pi pi-user-edit"
+                                                pRipple
+                                                (click)="displayFormTask=true;selectedTask=task"></button>
+                                        <button pButton label=""
+                                                class="p-button-danger p-button-raised p-button-rounded p-ml-2"
+                                                icon="pi pi-trash"
+                                                pRipple
+                                                (click)="deleteTask(task)"></button>
+                                    </p-footer>
+                                </p-card>
+                            </div>
+                        </p-tabPanel>
+                    </p-tabView>
+                </p-card>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
+        <div class="p-grid">
+            <div class="p-lg-12 p-md-12 p-sm-12">
+                <p-card header="Catálogo de Actividades">
+                    <p-message *ngIf="processes.length===0" severity="error"
+                               text="No tienes actividades asignadas, comunícate con el administrador."></p-message>
+                    <p-accordion>
+                        <p-accordionTab [header]="process.name" *ngFor="let process of processes">
+                            <p-table #dt
+                                     [responsive]="true"
+                                     [value]="process.children"
+                                     [columns]="colsActivies"
+                                     [rowHover]="true"
+                                     selectionMode="single"
+                                     [(selection)]="selectedTask.type"
+                                     dataKey="id"
+                            >
+                                <ng-template pTemplate="body" let-activity>
+                                    <tr [pSelectableRow]="activity" (click)="displayFormTask=true;selectedTab=2">
+                                        <td>
+                                            <span class="p-text-capitalize">{{activity.name.toLocaleLowerCase()}}</span>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </p-accordionTab>
+                    </p-accordion>
+                </p-card>
+            </div>
+            <div class="p-lg-12 p-md-12 p-sm-12">
+                <p-card header="Histórico de actividades">
+                    <p-message *ngIf="processes.length===0" severity="info"
+                               text="No tienes actividades registradas."></p-message>
+                    <p-chart type="pie" [data]="data" [options]="options"></p-chart>
+                </p-card>
+            </div>
+        </div>
+    </div>
+</div>
