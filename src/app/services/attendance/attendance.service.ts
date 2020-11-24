@@ -12,32 +12,27 @@ export class AttendanceService {
 
     }
 
-    get(url: string) {
-        const params = new HttpParams();
+    get(url: string, params = new HttpParams()) {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.get(url, {params});
     }
 
-    post(url: string, data: any) {
-        const params = new HttpParams();
+    post(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.post(url, data, {params});
     }
 
-    update(url: string, data: any) {
-        const params = new HttpParams();
+    update(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.put(url, data, {params});
     }
 
-    delete(url: string) {
-        const params = new HttpParams();
+    delete(url: string, params = new HttpParams()) {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.delete(url, {params});
     }
 
-    upload(url: string, data: any) {
-        const params = new HttpParams();
+    upload(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.post(url, data, {params});
     }

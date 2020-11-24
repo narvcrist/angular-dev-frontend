@@ -84,7 +84,9 @@ export class AppLoginComponent {
             response => {
                 localStorage.setItem('token', JSON.stringify(response));
                 this.authService.resetAttempts(credentials.username).subscribe(response => {
+                    console.log(response);
                 }, error => {
+                    console.log(error);
                     this.msgs = [{
                         severity: 'error',
                         summary: error.error.msg.summary,

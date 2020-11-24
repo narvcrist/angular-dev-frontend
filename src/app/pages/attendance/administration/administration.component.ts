@@ -11,6 +11,7 @@ import {Event, Col} from '../../../models/setting/models.index';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 import {Institution} from '../../../models/ignug/institution';
+import {HttpParams} from '@angular/common/http';
 
 @Component({
     selector: 'app-administration-laboral',
@@ -125,30 +126,31 @@ export class AdministrationComponent implements OnInit {
     }
 
     getAttendances() {
-        const params = '?user_id=' + this.user.id + '&institution_id=' + this.institution.id;
         this._spinner.show();
-        this._attendanceService.post('attendances/current_day' + params, {date: this.selectedDate.toDateString()}).subscribe(response => {
-            this._spinner.hide();
-            this.users = response['data'];
-            this.users = this.users.filter(element => element.institutions.length > 0);
-            this.usersActivities = response['data'];
-            this.usersActivities = this.usersActivities.filter(element => element.institutions.length > 0);
-            this.totalAttendances = 0;
-            this.users.forEach(user => {
-                if (user.attendance !== null) {
-                    this.totalAttendances++;
-                }
+        const params = new HttpParams().append('institution_id', this.institution.id.toString());
+        this._attendanceService.post('attendances/current_day', {date: this.selectedDate.toDateString()}, params)
+            .subscribe(response => {
+                this._spinner.hide();
+                this.users = response['data'];
+                this.users = this.users.filter(element => element.institutions.length > 0);
+                this.usersActivities = response['data'];
+                this.usersActivities = this.usersActivities.filter(element => element.institutions.length > 0);
+                this.totalAttendances = 0;
+                this.users.forEach(user => {
+                    if (user.attendance !== null) {
+                        this.totalAttendances++;
+                    }
+                });
+                this.fillChartAttendances();
+                this.selectFilter();
+            }, error => {
+                this._spinner.hide();
+                this.msgsErrors = [{
+                    severity: 'error',
+                    summary: error.error.msg.summary,
+                    detail: error.error.msg.detail,
+                }];
             });
-            this.fillChartAttendances();
-            this.selectFilter();
-        }, error => {
-            this._spinner.hide();
-            this.msgsErrors = [{
-                severity: 'error',
-                summary: error.error.msg.summary,
-                detail: error.error.msg.detail,
-            }];
-        });
     }
 
     selectFilter() {
@@ -169,9 +171,8 @@ export class AdministrationComponent implements OnInit {
     }
 
     getHistoryTasks() {
-        const params = '?user_id=' + this.user.id;
         this._spinner.show();
-        this._attendanceService.post('attendances/user_history_attendances' + params, {
+        this._attendanceService.post('attendances/user_history_attendances', {
             start_date: this.selectedDate.toDateString(),
             end_date: this.selectedDate.toDateString()
         }).subscribe(response => {
@@ -188,11 +189,11 @@ export class AdministrationComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        const params = '?user_id=' + this.selectedUser.id;
+        const params = new HttpParams().append('user_id', this.selectedUser.id.toString()).append('institution_id', this.institution.id.toString());
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
         this.selectedTask.description = '';
         this._spinner.show();
-        this._attendanceService.post('tasks' + params, {task: this.selectedTask}).subscribe(response => {
+        this._attendanceService.post('tasks', {task: this.selectedTask}, params).subscribe(response => {
             this._spinner.hide();
             this.displayFormTask = false;
             this.attendance = response['data'];
@@ -272,7 +273,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     startWorkday() {
-        const params = '?user_id=' + this.formWorkday.controls['user'].value['id']+'&institution_id='+this.institution.id;
+        const params = new HttpParams().append('user_id', this.selectedUser.id.toString()).append('institution_id', this.institution.id.toString());
         this.workday = {
             description: this.formWorkday.controls['description'].value,
             start_time: this.formWorkday.controls['start_time'].value,
@@ -280,10 +281,10 @@ export class AdministrationComponent implements OnInit {
             observations: this.formWorkday.controls['observations'].value
         };
         this._spinner.show();
-        this._attendanceService.post('attendances/start_day' + params, {
+        this._attendanceService.post('attendances/start_day', {
             workday: this.workday,
             date: this.selectedDate.toDateString()
-        }).subscribe(response => {
+        }, params).subscribe(response => {
             this._spinner.hide();
             this.attendance = response['data'];
             this.getAttendances();
@@ -319,8 +320,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     getProcesses() {
-        const params = '?role_id=' + this.role.id;
-        this._attendanceService.get('attendances/processes' + params).subscribe(response => {
+        this._attendanceService.get('attendances/processes').subscribe(response => {
             this.processes = response['data'];
         }, error => {
             this.msgsErrors = [{
@@ -367,7 +367,8 @@ export class AdministrationComponent implements OnInit {
 
     fillChartActivities() {
         this._spinner.show();
-        this._attendanceService.get('attendances/total_processes').subscribe(response => {
+        const params = new HttpParams().append('institution_id', this.institution.id.toString());
+        this._attendanceService.get('attendances/total_processes', params).subscribe(response => {
             this._spinner.hide();
             const data = response['data']['data'];
             const labels = response['data']['labels'];
@@ -486,11 +487,11 @@ export class AdministrationComponent implements OnInit {
     }
 
     openModalStartWorkday(user: User) {
+        this.selectedUser = user;
         this.formWorkday.controls['start_time'].setValue(moment().format('LT'));
         this.formWorkday.controls['observations'].setValue('');
         this.formWorkday.controls['type'].setValue({code: 'WORK'});
         this.formWorkday.controls['description'].setValue('JORNADA');
-        this.formWorkday.controls['user'].setValue(user);
         this.dialogFormStartWorkday = true;
     }
 
@@ -537,6 +538,13 @@ export class AdministrationComponent implements OnInit {
         } else {
             this.formWorkday.markAllAsTouched();
         }
+    }
+
+    selectInstitution(institution: Institution) {
+        this.institution = institution;
+        this.getAttendances();
+        this.fillChartActivities();
+        this.getHistoryTasks();
     }
 }
 

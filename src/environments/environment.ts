@@ -3,8 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 
-// export const URL = 'http://192.168.100.19:8000/';
-export const URL = 'http://127.0.0.1:8000/';
+export const URL = 'http://192.168.0.184:8000/';
+// export const URL = 'http://127.0.0.1:8000/';
 
 export const environment = {
     production: false,
@@ -18,7 +18,7 @@ export const environment = {
     API_URL_COMMUNITY: URL + 'api/community/',
     
     CLIENT_ID: '1',
-    CLIENT_SECRET: 'Cf7DlpdyvmBAFrmBJeHGTPAcNZ8EivLCWk5uaxsK',
+    CLIENT_SECRET: 'ieX5mfqnd7BH3DYeIYIur7sOXcykfPpvk0EVQiDf',
     GRANT_TYPE: 'password',
     
     APP_ACRONYM: 'SIGA-A',

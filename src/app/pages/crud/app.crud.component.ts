@@ -6,6 +6,7 @@ import {AuthService} from '../../services/auth/auth.service';
 import {User} from '../../models/auth/models.index';
 import {Condition, Col, Paginator} from '../../models/setting/models.index';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {HttpParams} from '@angular/common/http';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class AppCrudComponent implements OnInit {
     rowsPerPageOptions: number[];
     form: FormGroup;
     validatorsOptions: any;
-    
+
     constructor(private messageService: MessageService,
                 private confirmationService: ConfirmationService,
                 private breadcrumbService: BreadcrumbService,
@@ -48,7 +49,7 @@ export class AppCrudComponent implements OnInit {
             email: {maxlength: 50},
         };
     }
-    
+
     ngOnInit() {
         this.buildForm();
         this.cols = [
@@ -62,7 +63,7 @@ export class AppCrudComponent implements OnInit {
         this.selectedCol = this.cols[0];
         this.getUsers();
     }
-    
+
     buildForm() {
         this.form = this._fb.group({
             id: [],
@@ -92,11 +93,12 @@ export class AppCrudComponent implements OnInit {
                 Validators.maxLength(this.validatorsOptions.email.maxlength)]]
         });
     }
-    
+
     getUsers() {
         this._spinnerService.show();
-        const params = '?page=' + this.paginator.current_page + '&per_page=' + this.paginator.per_page;
-        this._authService.post('users/filters' + params, {conditions: this.conditions}).subscribe(response => {
+        const params = new HttpParams().append('page', this.paginator.current_page.toString())
+            .append('per_page', this.paginator.per_page.toString());
+        this._authService.post('users/filters', {conditions: this.conditions}, params).subscribe(response => {
             this._spinnerService.hide();
             this.users = response['data'];
             this.paginator = response as Paginator;
@@ -105,7 +107,7 @@ export class AppCrudComponent implements OnInit {
             this._spinnerService.hide();
         });
     }
-    
+
     openModal(user: User) {
         if (user) {
             this.form.controls['id'].setValue(user.id);
@@ -120,15 +122,15 @@ export class AppCrudComponent implements OnInit {
         }
         this.dialog = true;
     }
-    
+
     create() {
         this.messageService.add({severity: 'success', summary: 'Successful', detail: 'user Created', life: 3000});
     }
-    
+
     update() {
         this.messageService.add({severity: 'success', summary: 'Successful', detail: 'user Updated', life: 3000});
     }
-    
+
     deleteSelected() {
         if (this.selectedUsers && this.selectedUsers.length > 0) {
             this.confirmationService.confirm({
@@ -146,7 +148,7 @@ export class AppCrudComponent implements OnInit {
             this.messageService.add({severity: 'error', summary: 'Debe seleccionar al menos un registro', detail: 'Deleted', life: 3000});
         }
     }
-    
+
     delete(user: User) {
         this.confirmationService.confirm({
             message: 'Are you sure you want to delete ' + user.first_name + '?',
@@ -159,7 +161,7 @@ export class AppCrudComponent implements OnInit {
             }
         });
     }
-    
+
     onSubmit(event: Event) {
         event.preventDefault();
         if (this.form.valid) {
@@ -173,13 +175,13 @@ export class AppCrudComponent implements OnInit {
             this.form.markAllAsTouched();
         }
     }
-    
+
     paginate(event) {
         this.paginator.current_page = event.page + 1;
         this.paginator.per_page = event.rows;
         this.getUsers();
     }
-    
+
     search(event, inputSearch) {
         if (inputSearch.length > 0 && event.key !== 'Backspace') {
             this.conditions = [{field: this.selectedCol.field, logic_operator: 'ilike', match_mode: 'contains', value: inputSearch}];
@@ -188,9 +190,9 @@ export class AppCrudComponent implements OnInit {
             this.conditions = null;
             this.getUsers();
         }
-        
+
     }
-    
+
     selectColSearch(col) {
         this.selectedCol = col;
     }

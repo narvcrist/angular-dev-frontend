@@ -1,6 +1,6 @@
 <p-toast key="msgToast"></p-toast>
 <p-sidebar [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
-    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)" *ngIf="selectedTask.type.name">
+    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)" *ngIf="selectedTask.type && selectedTask.type.name">
         <label for="percentageAdvance">Porcentaje de Avance:</label>
         <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
                        class="p-mr-2" min="1" max="100" suffix="%"></p-inputNumber>
@@ -56,6 +56,17 @@
 </p-overlayPanel>
 
 <div class="p-grid">
+    <div *ngFor="let item of user.institutions"
+         class="p-xl-3 p-lg-3 p-md-6 p-sm-12">
+        <p-card (click)="selectInstitution(item)" class="p-text-center"
+                [styleClass]="item.id === institution.id?'background-card-selected':'background-card-noselected'">
+            <img [src]="STORAGE_URL+item.logo" alt="logo" height="50px"
+                 class="p-button p-button-text">
+            <br>
+            <button type="button" pButton label="{{item.short_name}}" class="p-button-text"
+                    [icon]="item.id === institution.id?'pi pi-check':'pi'"></button>
+        </p-card>
+    </div>
     <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
         <div class="p-grid">
             <div class="p-lg-12 p-md-12 p-sm-12">
@@ -63,8 +74,6 @@
                     <hr>
                     <div class="p-grid">
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
-                            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-my-3 p-ml-3"
-                                        optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
                             <span class="p-input-icon-right p-my-3 p-ml-3">
                                 <i class="pi pi-search"></i>
                                 <input type="text" pInputText id="searchUserWorkdays" name="searchUserWorkdays"
@@ -210,8 +219,6 @@
                     <hr>
                     <div class="p-grid">
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
-                            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-my-3 p-ml-3"
-                                        optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
                             <span class="p-input-icon-right p-m-3">
                                 <i class="pi pi-search"></i>
                                 <input type="text" pInputText id="searchUserTasks" name="searchUserTasks"
@@ -253,7 +260,6 @@
                                         {{user.first_name + ' ' + user.second_name}}
                                     </p>
                                     <hr>
-
                                     <div *ngIf="user.attendance">
                                         <img [src]="STORAGE_URL+user.avatar" alt=""
                                              width="100px"
@@ -281,7 +287,6 @@
                                              width="50px"
                                              height="50px">
                                     </div>
-
                                     <hr>
                                     <button *ngIf="user.attendance" pButton type="button"
                                             label="Registrar"
@@ -307,8 +312,6 @@
 
     <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
         <p-card header="Asistencia Diaria">
-            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-ml-3"
-                        optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
             <p-calendar [(ngModel)]="selectedDate"
                         dateFormat="yy/mm/dd"
                         icon="pi pi-calendar"

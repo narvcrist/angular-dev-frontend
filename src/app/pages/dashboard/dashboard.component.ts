@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit {
     permissions: Permission[];
     STORAGE_URL: string;
     msgs: Message[];
-    
+
     constructor(
         private _breadcrumbService: BreadcrumbService,
         private _authService: AuthService,
@@ -38,15 +38,14 @@ export class DashboardComponent implements OnInit {
         this.permissions = JSON.parse(localStorage.getItem('permissions')) as Permission[];
         this.STORAGE_URL = environment.STORAGE_URL;
     }
-    
+
     ngOnInit(): void {
         this.getShortcuts();
     }
-    
+
     getShortcuts() {
         this._spinner.show();
-        const params = '?user_id=' + this.user.id + '&role_id=' + this.role.id + '&institution_id=' + this.institution.id;
-        this._authService.get('shortcuts' + params).subscribe(response => {
+        this._authService.get('shortcuts').subscribe(response => {
             this._spinner.hide();
             if (response) {
                 this._spinner.hide();
@@ -85,5 +84,5 @@ export class DashboardComponent implements OnInit {
             this._spinner.hide();
         });
     }
-    
+
 }

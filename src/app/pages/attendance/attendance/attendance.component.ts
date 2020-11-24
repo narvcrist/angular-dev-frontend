@@ -46,6 +46,7 @@ export class AttendanceComponent implements OnInit {
     data: any;
     options: any;
     institution: Institution;
+
     constructor(private _breadcrumbService: BreadcrumbService,
                 private _attendanceService: AttendanceService,
                 private _spinner: NgxSpinnerService,
@@ -94,9 +95,8 @@ export class AttendanceComponent implements OnInit {
     }
 
     getAttendances() {
-        const params = '?user_id=' + this.user.id + '&page=3';
         this._spinner.show();
-        this._attendanceService.get('attendances/user_attendances' + params).subscribe(response => {
+        this._attendanceService.get('attendances/user_attendances').subscribe(response => {
             this._spinner.hide();
             this.attendances = response['data'];
             this.fillFullCalendar();
@@ -111,9 +111,8 @@ export class AttendanceComponent implements OnInit {
     }
 
     getHistoryTasks() {
-        const params = '?user_id=' + this.user.id;
         this._spinner.show();
-        this._attendanceService.post('attendances/user_history_attendances' + params, {
+        this._attendanceService.post('attendances/user_history_attendances', {
             start_date: this.selectedDate.toDateString(),
             end_date: this.selectedDate.toDateString()
         }).subscribe(response => {
@@ -130,9 +129,8 @@ export class AttendanceComponent implements OnInit {
     }
 
     getAttendance() {
-        const params = '?user_id=' + this.user.id;
         this._spinner.show();
-        this._attendanceService.get('attendances/user_current_day' + params).subscribe(response => {
+        this._attendanceService.get('attendances/user_current_day').subscribe(response => {
             this._spinner.hide();
             this.attendance = response['data'];
             this.currentDate = moment(this.attendance.date);
@@ -147,12 +145,11 @@ export class AttendanceComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        const params = '?user_id=' + this.user.id;
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
         this.selectedTask.description = '';
         this.formTask.controls['percentage_advance'].setValue('1');
         this._spinner.show();
-        this._attendanceService.post('tasks' + params, {task: this.selectedTask}).subscribe(response => {
+        this._attendanceService.post('tasks', {task: this.selectedTask}).subscribe(response => {
             this._spinner.hide();
             this.displayFormTask = false;
             this.attendance = response['data'];
@@ -213,15 +210,13 @@ export class AttendanceComponent implements OnInit {
     startWorkday(type: string) {
         this.msgsErrors = [];
         this.checked = false;
-        const params = '?user_id=' + this.user.id + '&institution_id=' + this.institution.id;
-        ;
         this.workday = {
             description: (type === 'WORK') ? 'JORNADA' : 'ALMUERZO',
             type: {code: type}
         };
         this.selectedTab = 0;
         this._spinner.show();
-        this._attendanceService.post('workdays/start_day' + params, {workday: this.workday}).subscribe(response => {
+        this._attendanceService.post('workdays/start_day', {workday: this.workday}).subscribe(response => {
             this._spinner.hide();
             this.attendance = response['data'];
             this.getAttendances();
@@ -264,8 +259,7 @@ export class AttendanceComponent implements OnInit {
     }
 
     getProcesses() {
-        const params = '?role_id=' + this.role.id;
-        this._attendanceService.get('tasks/processes' + params).subscribe(response => {
+        this._attendanceService.get('tasks/processes').subscribe(response => {
             this.processes = response['data'];
         }, error => {
             this.msgsErrors = [{
@@ -326,9 +320,8 @@ export class AttendanceComponent implements OnInit {
     }
 
     fillChart() {
-        const params = '?user_id=' + this.user.id + '&role_id=' + this.role.id;
         this._spinner.show();
-        this._attendanceService.get('tasks/total_processes' + params).subscribe(response => {
+        this._attendanceService.get('tasks/total_processes').subscribe(response => {
             this._spinner.hide();
             const data = response['data']['data'];
             const labels = response['data']['labels'];

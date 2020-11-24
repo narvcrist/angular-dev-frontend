@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders, HttpParams} from '@angular/common/http';
 import {environment} from '../../../environments/environment';
-import {Role, Token, User} from '../../models/auth/models.index';
+import {Role, User} from '../../models/auth/models.index';
 import {Router} from '@angular/router';
 import {SYSTEMS} from '../../../environments/catalogues';
 import {URL} from '../../../environments/environment';
-import {map} from 'rxjs/operators';
 import {Log} from '../../models/log';
 
 @Injectable({
@@ -18,64 +17,61 @@ export class AuthService {
     constructor(private _http: HttpClient, private router: Router) {
     }
 
-    login(credentials: any) {
+    login(credentials: any, params = new HttpParams()) {
         const url = URL + 'oauth/token';
-        return this._http.post(url, credentials);
+        return this._http.post(url, credentials, {params});
     }
 
-    attempts(username: string) {
+    attempts(username: string, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/attempts/' + username;
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    resetAttempts(username: string) {
+    resetAttempts(username: string, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/reset_attempts/' + username;
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    forgotPassword(username: any) {
+    forgotPassword(username: any, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/forgot_password';
-        return this._http.post(url, {username});
+        return this._http.post(url, {username}, {params});
     }
 
-    resetPassword(credentials: any) {
+    resetPassword(credentials: any, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/reset_password';
-        return this._http.post(url, credentials);
+        return this._http.post(url, credentials, {params});
     }
 
-    userUnlock(username: any) {
+    userUnlock(username: any, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/user_unlock';
-        return this._http.post(url, {username});
+        return this._http.post(url, {username}, {params});
     }
 
-
-    transctionalCode(username: any) {
+    transctionalCode(username: any, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/transactional_code/' + username;
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    unlock(credentials: any) {
+    unlock(credentials: any, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/unlock';
-        return this._http.post(url, credentials);
+        return this._http.post(url, credentials, {params});
     }
 
-    getUser(username: string) {
+    getUser(username: string, params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION
             + 'users/' + username + '?system_code=' + SYSTEMS.IGNUG;
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    logout() {
+    logout(params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/logout';
-        const role = (JSON.parse(localStorage.getItem('role')) as Role).code;
-
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    logoutAll() {
+    logoutAll(params = new HttpParams()) {
         const url = environment.API_URL_AUTHENTICATION + 'auth/logout_all?user_id=' + (JSON.parse(localStorage.getItem('user')) as User).id;
         const role = (JSON.parse(localStorage.getItem('role')) as Role).code;
-        return this._http.get(url).subscribe(response => {
+        return this._http.get(url, {params}).subscribe(response => {
             this.removeLogin();
             this.router.navigate(['/auth/login-' + role]);
         }, error => {
@@ -83,29 +79,29 @@ export class AuthService {
         });
     }
 
-    get(url: string) {
+    get(url: string, params = new HttpParams()) {
         url = environment.API_URL_AUTHENTICATION + url;
-        return this._http.get(url);
+        return this._http.get(url, {params});
     }
 
-    post(url: string, data: any) {
+    post(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_AUTHENTICATION + url;
-        return this._http.post(url, data);
+        return this._http.post(url, data, {params});
     }
 
-    update(url: string, data: any) {
+    update(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_AUTHENTICATION + url;
-        return this._http.put(url, data);
+        return this._http.put(url, data, {params});
     }
 
-    delete(url: string) {
+    delete(url: string, params = new HttpParams()) {
         url = environment.API_URL_AUTHENTICATION + url;
-        return this._http.delete(url);
+        return this._http.delete(url, {params});
     }
 
-    changePassword(url: string, data: any) {
+    changePassword(url: string, data: any, params = new HttpParams()) {
         url = environment.API_URL_AUTHENTICATION + url;
-        return this._http.put(url, data);
+        return this._http.put(url, data, {params});
     }
 
     logs(error: HttpErrorResponse) {

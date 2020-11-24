@@ -1,5 +1,5 @@
 <p-toast key="msgToast"></p-toast>
-<p-sidebar [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
+<p-sidebar *ngIf="selectedTask.type" [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
     <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
         <label for="percentageAdvance">Porcentaje de Avance:</label>
         <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
@@ -15,7 +15,6 @@
     </form>
 </p-sidebar>
 <p-confirmDialog [style]="{width: '450px'}" [baseZIndex]="10000"></p-confirmDialog>
-
 <div class="p-grid">
     <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
         <div class="p-grid">
