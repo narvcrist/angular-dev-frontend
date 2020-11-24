@@ -272,7 +272,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     startWorkday() {
-        const params = '?user_id=' + this.formWorkday.controls['user'].value['id'];
+        const params = '?user_id=' + this.formWorkday.controls['user'].value['id']+'&institution_id='+this.institution.id;
         this.workday = {
             description: this.formWorkday.controls['description'].value,
             start_time: this.formWorkday.controls['start_time'].value,

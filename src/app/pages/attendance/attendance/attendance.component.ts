@@ -12,6 +12,7 @@ import {Attendance, Workday, Task} from '../../../models/attendance/models.index
 import {User, Role} from '../../../models/auth/models.index';
 import {Event, Col} from '../../../models/setting/models.index';
 import * as moment from 'moment';
+import {Institution} from '../../../models/ignug/institution';
 
 @Component({
     selector: 'app-attendance',
@@ -44,7 +45,7 @@ export class AttendanceComponent implements OnInit {
     historyAttendances: Attendance[];
     data: any;
     options: any;
-
+    institution: Institution;
     constructor(private _breadcrumbService: BreadcrumbService,
                 private _attendanceService: AttendanceService,
                 private _spinner: NgxSpinnerService,
@@ -60,6 +61,7 @@ export class AttendanceComponent implements OnInit {
         this.primengConfig.ripple = true;
         this.role = JSON.parse(localStorage.getItem('role')) as Role;
         this.user = JSON.parse(localStorage.getItem('user')) as User;
+        this.institution = JSON.parse(localStorage.getItem('institution')) as Institution;
         this.colsActivies = [
             {field: 'name', header: 'ACTIVIDAD'}
         ];
@@ -208,10 +210,11 @@ export class AttendanceComponent implements OnInit {
         });
     }
 
-    createWorkday(type: string) {
+    startWorkday(type: string) {
         this.msgsErrors = [];
         this.checked = false;
-        const params = '?user_id=' + this.user.id;
+        const params = '?user_id=' + this.user.id + '&institution_id=' + this.institution.id;
+        ;
         this.workday = {
             description: (type === 'WORK') ? 'JORNADA' : 'ALMUERZO',
             type: {code: type}

@@ -32,7 +32,7 @@
                                     class="p-button-raised"
                                     icon="pi pi-home"
                                     pRipple
-                                    (click)="createWorkday('WORK')"></button>
+                                    (click)="startWorkday('WORK')"></button>
                         </div>
                         <div class="p-field-checkbox p-col"
                              *ngIf="attendance.workdays.length>0 && attendance.workdays.length<3">
@@ -47,7 +47,7 @@
                                     class="p-button-raised p-button-warning"
                                     icon="pi pi-briefcase"
                                     pRipple
-                                    (click)="createWorkday('LUNCH')"></button>
+                                    (click)="startWorkday('LUNCH')"></button>
                         </div>
                     </div>
                     <ng-template pTemplate="footer">
