@@ -1,6 +1,6 @@
 <p-toast key="msgToast"></p-toast>
 <p-sidebar [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
-    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
+    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)" *ngIf="selectedTask.type.name">
         <label for="percentageAdvance">Porcentaje de Avance:</label>
         <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
                        class="p-mr-2" min="1" max="100" suffix="%"></p-inputNumber>
@@ -13,8 +13,47 @@
             </small>
         </div>
     </form>
+    <hr>
+    <p-accordion>
+        <p-accordionTab [header]="process.name" *ngFor="let process of processes">
+            <p-table #dt
+                     [responsive]="true"
+                     [value]="process.children"
+                     [columns]="colsActivies"
+                     [rowHover]="true"
+                     selectionMode="single"
+                     [(selection)]="selectedTask.type"
+                     dataKey="id"
+            >
+                <ng-template pTemplate="body" let-activity>
+                    <tr [pSelectableRow]="activity" (click)="displayFormTask=true;selectedTab=2">
+                        <td>
+                            <span class="p-text-capitalize">{{activity.name.toLocaleLowerCase()}}</span>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-accordionTab>
+    </p-accordion>
 </p-sidebar>
 <p-confirmDialog [style]="{width: '25vw'}" [baseZIndex]="10000"></p-confirmDialog>
+<p-overlayPanel #opTasks>
+    <ng-template pTemplate>
+        <ul>
+            <li *ngFor="let task of selectedUser.attendance.tasks">
+                {{task.type.name}}
+                <button pButton
+                        type="button"
+                        label=""
+                        class="p-button-danger p-button-raised p-button-sm p-ml-2"
+                        icon="pi pi-trash"
+                        pTooltip="Eliminar"
+                        pRipple
+                        (click)="deleteTask(task)"></button>
+            </li>
+        </ul>
+    </ng-template>
+</p-overlayPanel>
 
 <div class="p-grid">
     <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
@@ -24,12 +63,12 @@
                     <hr>
                     <div class="p-grid">
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
-                            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-m-3"
+                            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-my-3 p-ml-3"
                                         optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
-                            <span class="p-input-icon-right p-m-3">
+                            <span class="p-input-icon-right p-my-3 p-ml-3">
                                 <i class="pi pi-search"></i>
-                                <input type="text" pInputText id="searchUserAtivities" name="searchUserAtivities"
-                                       [(ngModel)]="searchUserActivities"
+                                <input type="text" pInputText id="searchUserWorkdays" name="searchUserWorkdays"
+                                       [(ngModel)]="searchUserWorkdays"
                                        (keyup)="findUserWorkdays()"
                                        placeholder="Buscar por apellidos, nombres, cédula...">
                             </span>
@@ -38,7 +77,7 @@
                                         dateFormat="yy/mm/dd"
                                         icon="pi pi-calendar"
                                         showIcon="true"
-                                        class="p-m-3"
+                                        class="p-my-3 p-ml-3"
                                         [disabledDays]="[0,6]"
                                         [monthNavigator]="true"
                                         readonlyInput="true"
@@ -49,29 +88,25 @@
                                     label="Recargar"
                                     icon="pi pi-refresh"
                                     pRipple
-                                    class="p-m-3"
+                                    class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
                         </div>
                     </div>
                     <hr>
                     <div class="p-grid">
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
-                            <p-radioButton name="groupname" value="ABSENT" label="Ausentes" class="p-m-3"
+                            <p-radioButton name="groupname" value="ABSENT" label="Ausentes" class="p-my-3 p-ml-3"
                                            [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
-                            <i class="pi pi-ban p-my-3"></i>
+                            <p-radioButton name="groupname" value="PRESENT" label="Presentes" class="p-my-3 p-ml-3"
+                                           [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
 
-                            <p-radioButton name="groupname" value="PRESENT" label="Presentes" class="p-m-3"
+                            <p-radioButton name="groupname" value="NO_WORK" label="Jornada sin finalizar"
+                                           class="p-my-3 p-ml-3"
                                            [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
-                            <i class="pi pi-check p-m-3"></i>
-
-                            <p-radioButton name="groupname" value="NO_WORK" label="Jornada sin finalizar" class="p-m-3"
-                                           [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
-                            <i class="pi pi-clock p-m-3"></i>
 
                             <p-radioButton name="groupname" value="NO_LUNCH" label="Almuerzo sin finalizar"
-                                           class="p-m-3"
-                                           [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
-                            <i class="pi pi-briefcase p-m-3"></i>
+                                           class="p-my-3 p-ml-3" [(ngModel)]="selectedValue"
+                                           (click)="getAttendances()"></p-radioButton>
                         </div>
                     </div>
                     <hr>
@@ -91,10 +126,11 @@
                                         {{user.first_name + ' ' + user.second_name}}
                                     </p>
                                     <hr>
-                                    <img *ngIf="user.attendance" [src]="STORAGE_URL+user.avatar" alt=""
+                                    <img [src]="STORAGE_URL+user.avatar" alt=""
                                          width="100px"
                                          height="100px"
                                          style="border-radius: 50%;">
+
                                     <img *ngIf="!user.attendance"
                                          src="../../../../assets/layout/images/pages/attendance/not_work.png" alt=""
                                          width="50px"
@@ -111,10 +147,6 @@
                                 </div>
                                 <hr>
                                 <div *ngIf="!user.attendance" class="p-text-center">
-                                    <p-message
-                                            severity="error"
-                                            text="No está trabajando">
-                                    </p-message>
                                     <button pButton type="button"
                                             label="Iniciar Jornada!"
                                             class="p-button-text"
@@ -138,7 +170,6 @@
                                         <div *ngIf="workday.end_time===null && workday.type.code==='WORK'">
                                             <p-message
                                                     severity="warn"
-                                                    class="p-button p-button-text"
                                                     text="Jornada sin finalizar"></p-message>
                                             <button pButton type="button"
                                                     label="Finalizar"
@@ -179,10 +210,12 @@
                     <hr>
                     <div class="p-grid">
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
-                             <span class="p-input-icon-right p-m-3">
+                            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-my-3 p-ml-3"
+                                        optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
+                            <span class="p-input-icon-right p-m-3">
                                 <i class="pi pi-search"></i>
-                                <input type="text" pInputText id="searchUserWorkdays" name="searchUserWorkdays"
-                                       [(ngModel)]="searchUserWorkdays"
+                                <input type="text" pInputText id="searchUserTasks" name="searchUserTasks"
+                                       [(ngModel)]="searchUserActivities"
                                        (keyup)="findUserActivities()"
                                        placeholder="Buscar por apellidos, nombres, cédula...">
                             </span>
@@ -190,7 +223,7 @@
                                         dateFormat="yy/mm/dd"
                                         icon="pi pi-calendar"
                                         showIcon="true"
-                                        class="p-m-3"
+                                        class="p-my-3 p-ml-3"
                                         [disabledDays]="[0,6]"
                                         [monthNavigator]="true"
                                         readonlyInput="true"
@@ -200,7 +233,7 @@
                                     label="Recargar"
                                     icon="pi pi-refresh"
                                     pRipple
-                                    class="p-m-3"
+                                    class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
                         </div>
                     </div>
@@ -220,31 +253,49 @@
                                         {{user.first_name + ' ' + user.second_name}}
                                     </p>
                                     <hr>
+
                                     <div *ngIf="user.attendance">
+                                        <img [src]="STORAGE_URL+user.avatar" alt=""
+                                             width="100px"
+                                             height="100px"
+                                             style="border-radius: 50%;">
                                         <img *ngIf="user.attendance.tasks.length===0"
                                              src="../../../../assets/layout/images/pages/attendance/no_activity.png"
                                              alt=""
-                                             width="50"
-                                             height="50"
+                                             width="50px"
+                                             height="50px"
                                              pTooltip="No tiene actividades registradas">
                                         <img *ngIf="user.attendance.tasks.length>0"
                                              src="../../../../assets/layout/images/pages/attendance/activity.png"
                                              alt=""
-                                             width="50"
-                                             height="50">
+                                             width="50px"
+                                             height="50px">
                                     </div>
-                                    <img *ngIf="!user.attendance"
-                                         src="../../../../assets/layout/images/pages/attendance/no_activity.png" alt=""
-                                         pTooltip="No tiene actividades registradas"
-                                         width="50px"
-                                         height="50px">
+                                    <div *ngIf="!user.attendance">
+                                        <img [src]="STORAGE_URL+user.avatar" alt=""
+                                             width="100px"
+                                             height="100px"
+                                             style="border-radius: 50%;">
+                                        <img src="../../../../assets/layout/images/pages/attendance/not_work.png" alt=""
+                                             pTooltip="No está trabajando"
+                                             width="50px"
+                                             height="50px">
+                                    </div>
+
                                     <hr>
-                                    <button pButton type="button"
+                                    <button *ngIf="user.attendance" pButton type="button"
                                             label="Registrar"
                                             class="p-button-text"
                                             icon="pi pi-user-edit"
                                             pRipple
-                                            (click)="endWorkday()"></button>
+                                            (click)="selectedUser=user;displayFormTask=true"></button>
+                                    <button *ngIf="user.attendance && user.attendance.tasks.length>0" pButton
+                                            type="button"
+                                            label="Ver Actividades"
+                                            class="p-button-text"
+                                            icon="pi pi-eye"
+                                            pRipple
+                                            (click)="selectedUser=user;opTasks.toggle($event)"></button>
                                 </div>
                             </p-card>
                         </div>
@@ -256,6 +307,8 @@
 
     <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
         <p-card header="Asistencia Diaria">
+            <p-dropdown [options]="user.institutions" [(ngModel)]="institution" class="p-ml-3"
+                        optionLabel="short_name" (onChange)="getAttendances()"></p-dropdown>
             <p-calendar [(ngModel)]="selectedDate"
                         dateFormat="yy/mm/dd"
                         icon="pi pi-calendar"
@@ -263,13 +316,14 @@
                         [disabledDays]="[0,6]"
                         [monthNavigator]="true"
                         readonlyInput="true"
+                        class="p-ml-3"
                         (onSelect)="getAttendances()">
             </p-calendar>
             <button pButton type="button"
                     label="Recargar"
                     icon="pi pi-refresh"
                     pRipple
-                    class="p-ml-3"
+                    class="p-mt-2 p-ml-3"
                     (click)="getAttendances()"></button>
             <hr>
             <p-chart type="pie" [data]="dataAttendances" [options]="optionsChartAttendances"></p-chart>
@@ -282,6 +336,7 @@
                     label="Recargar"
                     icon="pi pi-refresh"
                     pRipple
+                    class="p-mt-2 p-ml-3"
                     (click)="fillChartActivities()"></button>
             <hr>
             <p-chart type="pie" [data]="dataActivities" [options]="optionsChartActivities"></p-chart>

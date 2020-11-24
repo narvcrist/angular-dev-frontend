@@ -3,19 +3,14 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ConfirmationService, Message, MessageService, PrimeNGConfig} from 'primeng/api';
 import {BreadcrumbService} from '../../../shared/breadcrumb.service';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {AttendanceService} from '../../../services/attendance/attendance.service';
 import {Attendance, Workday, Task} from '../../../models/attendance/models.index';
 import {User, Role} from '../../../models/auth/models.index';
 import {Event, Col} from '../../../models/setting/models.index';
-import {Moment} from 'moment';
 import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 import {Institution} from '../../../models/ignug/institution';
-import {element} from 'protractor';
 
 @Component({
     selector: 'app-administration-laboral',
@@ -92,6 +87,7 @@ export class AdministrationComponent implements OnInit {
         this.totalAttendances = 0;
         this.processes = [];
         this.selectedTab = 0;
+        this.selectedTask = {type: {}};
         this.historyAttendances = [];
         this.selectedDate = new Date();
         this.currentDate = moment();
@@ -192,7 +188,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        const params = '?user_id=' + this.user.id;
+        const params = '?user_id=' + this.selectedUser.id;
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
         this.selectedTask.description = '';
         this._spinner.show();
@@ -354,7 +350,7 @@ export class AdministrationComponent implements OnInit {
 
     fillChartAttendances() {
         this.dataAttendances = {
-            labels: ['Presentes', 'Ausentes'],
+            labels: ['Presentes: ' + this.totalAttendances, 'Ausentes: ' + (this.users.length - this.totalAttendances)],
             datasets: [
                 {
                     data: [this.totalAttendances, this.users.length - this.totalAttendances],
@@ -376,6 +372,9 @@ export class AdministrationComponent implements OnInit {
             const data = response['data']['data'];
             const labels = response['data']['labels'];
             const backgroundColor = response['data']['background_color'];
+            for (let i = 0; i < data.length; i++) {
+                labels[i] = labels[i] + ': ' + data[i];
+            }
             this.dataActivities = {
                 labels,
                 datasets: [
@@ -412,11 +411,13 @@ export class AdministrationComponent implements OnInit {
         this.usersWorkdays = this.users.filter(this.filterNoWork);
     }
 
-    filterNoWork(user: User) {
-        if (user.attendance) {
-            for (const item of user.attendance.workdays) {
-                return (item.end_time === null && item.type.code === 'WORK');
+    filterNoWork(users: User) {
+        if (users.attendance) {
+            let flagWorkday = false;
+            for (const item of users.attendance.workdays) {
+                flagWorkday = (item.end_time === null && item.type.code === 'WORK');
             }
+            return flagWorkday;
         }
     }
 
@@ -424,12 +425,13 @@ export class AdministrationComponent implements OnInit {
         this.usersWorkdays = this.users.filter(this.filterNoLunch);
     }
 
-    filterNoLunch(user: User) {
+    filterNoLunch(user) {
         if (user.attendance) {
-            console.log((user.attendance));
+            let flagWorkday = false;
             for (const item of user.attendance.workdays) {
-                return (item.end_time === null && item.type.code === 'LUNCH');
+                flagWorkday = (item.end_time === null && item.type.code === 'LUNCH');
             }
+            return flagWorkday;
         }
     }
 

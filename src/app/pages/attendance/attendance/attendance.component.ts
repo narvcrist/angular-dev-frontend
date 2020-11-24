@@ -11,7 +11,6 @@ import {AttendanceService} from '../../../services/attendance/attendance.service
 import {Attendance, Workday, Task} from '../../../models/attendance/models.index';
 import {User, Role} from '../../../models/auth/models.index';
 import {Event, Col} from '../../../models/setting/models.index';
-import {Moment} from 'moment';
 import * as moment from 'moment';
 
 @Component({
@@ -149,6 +148,7 @@ export class AttendanceComponent implements OnInit {
         const params = '?user_id=' + this.user.id;
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
         this.selectedTask.description = '';
+        this.formTask.controls['percentage_advance'].setValue('1');
         this._spinner.show();
         this._attendanceService.post('tasks' + params, {task: this.selectedTask}).subscribe(response => {
             this._spinner.hide();
@@ -262,7 +262,7 @@ export class AttendanceComponent implements OnInit {
 
     getProcesses() {
         const params = '?role_id=' + this.role.id;
-        this._attendanceService.get('attendances/processes' + params).subscribe(response => {
+        this._attendanceService.get('tasks/processes' + params).subscribe(response => {
             this.processes = response['data'];
         }, error => {
             this.msgsErrors = [{

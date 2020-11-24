@@ -124,7 +124,11 @@
                                                 class="p-button-raised p-button-rounded"
                                                 icon="pi pi-user-edit"
                                                 pRipple
-                                                (click)="displayFormTask=true;selectedTask=task"></button>
+                                                (click)="
+                                                displayFormTask=true;
+                                                selectedTask=task;
+                                                formTask.controls['percentage_advance'].setValue(task.percentage_advance)">
+                                        </button>
                                         <button pButton label=""
                                                 class="p-button-danger p-button-raised p-button-rounded p-ml-2"
                                                 icon="pi pi-trash"

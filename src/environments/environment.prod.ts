@@ -1,4 +1,4 @@
-export const URL = 'http://pruebas.siga-a.yavirac.edu.ec/public/';
+export const URL = 'http://pruebas.prod-siga.yavirac.edu.ec/public/';
 
 export const environment = {
     production: true,
