@@ -41,11 +41,11 @@ export class AttendanceComponent implements OnInit {
     selectedTask: Task;
     formTask: FormGroup;
     selectedTab: number;
-    displayFormTask: boolean;
     historyAttendances: Attendance[];
     data: any;
     options: any;
     institution: Institution;
+    percentages: number[];
 
     constructor(private _breadcrumbService: BreadcrumbService,
                 private _attendanceService: AttendanceService,
@@ -73,6 +73,7 @@ export class AttendanceComponent implements OnInit {
         this.historyAttendances = [];
         this.selectedDate = new Date();
         this.currentDate = moment();
+        this.percentages = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
     }
 
     ngOnInit() {
@@ -145,13 +146,13 @@ export class AttendanceComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
+        // this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
+        this.selectedTask.percentage_advance = 100; // temporalmente hasta que se defina bien el proceso
         this.selectedTask.description = '';
         this.formTask.controls['percentage_advance'].setValue('1');
         this._spinner.show();
         this._attendanceService.post('tasks', {task: this.selectedTask}).subscribe(response => {
             this._spinner.hide();
-            this.displayFormTask = false;
             this.attendance = response['data'];
             this.selectedDate = new Date();// para que se pueda visualizar la actividad cread
             this.getAttendances();

@@ -4,6 +4,9 @@
         <label for="percentageAdvance">Porcentaje de Avance:</label>
         <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
                        class="p-mr-2" min="1" max="100" suffix="%"></p-inputNumber>
+        <label for="observationTask">Observaciones:</label>
+        <textarea type="text" pInputTextarea id="observationTask" name="observationTask" formControlName="observation"
+                  class="p-mt-2"></textarea>
         <button type="submit" pButton class="p-button-raised p-mt-2" label="Guardar" icon="pi pi-check"
                 pRipple></button>
         <div *ngIf="formTask.get('percentage_advance').errors && formTask.get('percentage_advance').touched">
@@ -40,7 +43,7 @@
 <p-overlayPanel #opTasks>
     <ng-template pTemplate>
         <ul>
-            <li *ngFor="let task of selectedUser.attendance.tasks">
+            <li *ngFor="let task of selectedUser.attendance.tasks" class="p-mb-3">
                 {{task.type.name}}
                 <button pButton
                         type="button"
@@ -360,7 +363,7 @@
                 <label for="observationsStartWokday">Observaciones:
                 </label>
                 <textarea id="observationsStartWokday" name="observationsStartWokday" pInputTextarea
-                          formControlName="observations"></textarea>
+                          formControlName="observation"></textarea>
             </div>
         </ng-template>
         <ng-template pTemplate="footer">
@@ -385,7 +388,7 @@
                 <label for="observationsEndWorkday">Observaciones:
                 </label>
                 <textarea id="observationsEndWorkday" name="observationsEndWorkday" pInputTextarea
-                          formControlName="observations"></textarea>
+                          formControlName="observation"></textarea>
             </div>
         </ng-template>
         <ng-template pTemplate="footer">
@@ -414,10 +417,10 @@
                 </div>
             </div>
             <div class="p-field">
-                <label for="observationsStartWokday">Observaciones:
+                <label for="observationsWokday">Observaciones:
                 </label>
-                <textarea id="observationsStartWokday" name="observationsStartWokday" pInputTextarea
-                          formControlName="observations"></textarea>
+                <textarea id="observationsWokday" name="observationsWokday" pInputTextarea
+                          formControlName="observation"></textarea>
             </div>
         </ng-template>
         <ng-template pTemplate="footer">

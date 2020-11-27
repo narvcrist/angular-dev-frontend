@@ -115,13 +115,14 @@ export class AdministrationComponent implements OnInit {
             end_time: [''],
             user: [''],
             type: [''],
-            observations: ['', Validators.required],
+            observation: ['', Validators.required],
         });
     }
 
     buildFormTask() {
         this.formTask = this._fb.group({
-            percentage_advance: ['1', Validators.required],
+            percentage_advance: ['100', Validators.required],
+            observation: ['', Validators.required]
         });
     }
 
@@ -189,11 +190,15 @@ export class AdministrationComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        const params = new HttpParams().append('user_id', this.selectedUser.id.toString()).append('institution_id', this.institution.id.toString());
+        const params = new HttpParams().append('user_id', this.selectedUser.id.toString())
+            .append('institution_id', this.institution.id.toString());
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
+        this.selectedTask.observation = this.formTask.controls['observation'].value;
         this.selectedTask.description = '';
+        this.formTask.controls['percentage_advance'].setValue('1');
+        this.formTask.controls['observation'].setValue('');
         this._spinner.show();
-        this._attendanceService.post('tasks', {task: this.selectedTask}, params).subscribe(response => {
+        this._attendanceService.post('attendances/register_tasks', {task: this.selectedTask}, params).subscribe(response => {
             this._spinner.hide();
             this.displayFormTask = false;
             this.attendance = response['data'];
@@ -255,7 +260,7 @@ export class AdministrationComponent implements OnInit {
             id: this.formWorkday.controls['id'].value,
             start_time: this.formWorkday.controls['start_time'].value,
             end_time: this.formWorkday.controls['end_time'].value,
-            observations: this.formWorkday.controls['observations'].value
+            observation: this.formWorkday.controls['observation'].value
         };
         this._spinner.show();
         this._attendanceService.update('attendances/day', {workday: this.workday}).subscribe(response => {
@@ -273,12 +278,13 @@ export class AdministrationComponent implements OnInit {
     }
 
     startWorkday() {
-        const params = new HttpParams().append('user_id', this.selectedUser.id.toString()).append('institution_id', this.institution.id.toString());
+        const params = new HttpParams().append('user_id', this.selectedUser.id.toString())
+            .append('institution_id', this.institution.id.toString());
         this.workday = {
             description: this.formWorkday.controls['description'].value,
             start_time: this.formWorkday.controls['start_time'].value,
             type: this.formWorkday.controls['type'].value,
-            observations: this.formWorkday.controls['observations'].value
+            observation: this.formWorkday.controls['observation'].value
         };
         this._spinner.show();
         this._attendanceService.post('attendances/start_day', {
@@ -302,7 +308,7 @@ export class AdministrationComponent implements OnInit {
         this.workday = {
             id: this.formWorkday.controls['id'].value,
             end_time: this.formWorkday.controls['end_time'].value,
-            observations: this.formWorkday.controls['observations'].value
+            observation: this.formWorkday.controls['observation'].value
         };
         this._spinner.show();
         this._attendanceService.update('attendances/end_day', {workday: this.workday}).subscribe(response => {
@@ -489,7 +495,7 @@ export class AdministrationComponent implements OnInit {
     openModalStartWorkday(user: User) {
         this.selectedUser = user;
         this.formWorkday.controls['start_time'].setValue(moment().format('LT'));
-        this.formWorkday.controls['observations'].setValue('');
+        this.formWorkday.controls['observation'].setValue('');
         this.formWorkday.controls['type'].setValue({code: 'WORK'});
         this.formWorkday.controls['description'].setValue('JORNADA');
         this.dialogFormStartWorkday = true;
@@ -508,7 +514,7 @@ export class AdministrationComponent implements OnInit {
     openModalEndWorkday(user: User, workday: Workday) {
         this.formWorkday.controls['id'].setValue(workday.id);
         this.formWorkday.controls['end_time'].setValue(moment().format('LT'));
-        this.formWorkday.controls['observations'].setValue('');
+        this.formWorkday.controls['observation'].setValue('');
         this.dialogFormEndWorkday = true;
     }
 
@@ -524,7 +530,7 @@ export class AdministrationComponent implements OnInit {
 
     openModalWorkday(user: User, workday: Workday) {
         this.formWorkday.controls['id'].setValue(workday.id);
-        this.formWorkday.controls['observations'].setValue('');
+        this.formWorkday.controls['observation'].setValue('');
         this.formWorkday.controls['start_time'].setValue(workday.start_time);
         this.formWorkday.controls['end_time'].setValue(workday.end_time);
         this.dialogFormWorkday = true;

@@ -1,20 +1,32 @@
 <p-toast key="msgToast"></p-toast>
-<p-sidebar *ngIf="selectedTask.type" [(visible)]="displayFormTask" styleClass="p-sidebar-sm" position="right">
-    <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
-        <label for="percentageAdvance">Porcentaje de Avance:</label>
-        <p-inputNumber id="percentageAdvance" name="percentageAdvance" formControlName="percentage_advance"
-                       class="p-mr-2" min="1" max="100" suffix="%"></p-inputNumber>
-        <button type="submit" pButton class="p-button-raised p-mt-2" label="Guardar" icon="pi pi-check"
-                pRipple></button>
-        <div *ngIf="formTask.get('percentage_advance').errors && formTask.get('percentage_advance').touched">
-            <small *ngIf="formTask.get('percentage_advance').hasError('required')"
-                   id="percentageAdvanceHelp" class="p-invalid">
-                Debe ingresar un valor mayor a 0.
-            </small>
-        </div>
-    </form>
-</p-sidebar>
 <p-confirmDialog [style]="{width: '450px'}" [baseZIndex]="10000"></p-confirmDialog>
+
+
+<p-overlayPanel #op [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
+            <button type="submit"
+                    icon="pi pi-check"
+                    pButton label="Registrar"
+                    class="p-m-2"
+                    (click)="op.hide()"></button>
+            <!--            <div>-->
+            <!--                <button *ngFor="let percentage of percentages"-->
+            <!--                        type="submit"-->
+            <!--                        pButton [label]="percentage+'%'"-->
+            <!--                        class="p-m-2"-->
+            <!--                        (click)="formTask.controls['percentage_advance'].setValue(percentage);op.hide()"></button>-->
+            <!--            </div>-->
+            <!--            <div *ngIf="formTask.get('percentage_advance').errors && formTask.get('percentage_advance').touched">-->
+            <!--                <small *ngIf="formTask.get('percentage_advance').hasError('required')"-->
+            <!--                       id="percentageAdvanceHelp" class="p-invalid">-->
+            <!--                    Debe ingresar un valor mayor a 0.-->
+            <!--                </small>-->
+            <!--            </div>-->
+        </form>
+    </ng-template>
+</p-overlayPanel>
+
 <div class="p-grid">
     <div class="p-xl-6 p-lg-6 p-md-12 p-sm-12">
         <div class="p-grid">
@@ -34,7 +46,7 @@
                                     (click)="startWorkday('WORK')"></button>
                         </div>
                         <div class="p-field-checkbox p-col"
-                             *ngIf="attendance.workdays.length>0 && attendance.workdays.length<3">
+                             *ngIf="attendance.workdays.length>0 && attendance.workdays.length<3 && attendance.workdays[0].end_time!==null">
                             <p-checkbox [(ngModel)]="checked" binary="true"
                                         inputId="checkedJornada"></p-checkbox>
                             <label for="checkedJornada">Habilitar inicio de jornada extra</label>
@@ -82,8 +94,8 @@
                                                     (click)="endWorkday(workday)"></button>
                                         </ng-template>
                                     </p-card>
-                                    <p-messages [(value)]="msgsErrors"></p-messages>
                                 </div>
+                                <p-messages [(value)]="msgsErrors"></p-messages>
                             </div>
                         </p-tabPanel>
                         <p-tabPanel header="Calendario" leftIcon="pi pi-calendar">
@@ -119,15 +131,15 @@
                                         <p>{{task.type.name}}</p>
                                     </p-scrollPanel>
                                     <p-footer *ngIf="attendance.date == currentDate.format('YYYY-MM-DD')">
-                                        <button pButton [label]="task.percentage_advance + '%'"
-                                                class="p-button-raised p-button-rounded"
-                                                icon="pi pi-user-edit"
-                                                pRipple
-                                                (click)="
-                                                displayFormTask=true;
-                                                selectedTask=task;
-                                                formTask.controls['percentage_advance'].setValue(task.percentage_advance)">
-                                        </button>
+                                        <!--                                        <button pButton [label]="task.percentage_advance + '%'"-->
+                                        <!--                                                class="p-button-raised p-button-rounded"-->
+                                        <!--                                                icon="pi pi-user-edit"-->
+                                        <!--                                                pRipple-->
+                                        <!--                                                (click)="-->
+                                        <!--                                                op.show($event);-->
+                                        <!--                                                selectedTask=task;-->
+                                        <!--                                                formTask.controls['percentage_advance'].setValue(task.percentage_advance)">-->
+                                        <!--                                        </button>-->
                                         <button pButton label=""
                                                 class="p-button-danger p-button-raised p-button-rounded p-ml-2"
                                                 icon="pi pi-trash"
@@ -161,7 +173,9 @@
                                      dataKey="id"
                             >
                                 <ng-template pTemplate="body" let-activity>
-                                    <tr [pSelectableRow]="activity" (click)="displayFormTask=true;selectedTab=2">
+                                    <tr
+                                            [pSelectableRow]="activity"
+                                            (click)="op.show($event);selectedTab=2">
                                         <td>
                                             <span class="p-text-capitalize">{{activity.name.toLocaleLowerCase()}}</span>
                                         </td>

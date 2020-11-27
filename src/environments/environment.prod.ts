@@ -12,7 +12,7 @@ export const environment = {
     API_URL_COMMUNITY: URL + 'api/community/',
     
     CLIENT_ID: '1',
-    CLIENT_SECRET: 'Cf7DlpdyvmBAFrmBJeHGTPAcNZ8EivLCWk5uaxsK',
+    CLIENT_SECRET: 'FCKwfM2R0FZXSqGIGSP9xZRapT4QEjy6UqswvOiX',
     GRANT_TYPE: 'password',
     
     APP_ACRONYM: 'SIGA-A',

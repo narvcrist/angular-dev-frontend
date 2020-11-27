@@ -26,7 +26,7 @@
 					</div>
 					<div *ngIf="(institutions.length>1 || roles.length>1) && !flagChangePassword">
 						<h1 *ngIf="formInstitutionRole.get('institution').errors">
-							Seleccione una Institución</h1>
+							Seleccione su Instituto</h1>
 						<img *ngIf="!formInstitutionRole.get('institution').errors"
 							 [src]="STORAGE_URL+formInstitutionRole.controls['institution'].value['logo']"
 							 alt="mirage-layout"/>
@@ -43,10 +43,10 @@
 						<div class="login-input-wrapper">
 							<label for="username">Usuario:</label>
 							<input id="username" name="username" pInputText
-								   placeholder="Ingrese su número de cédula Ej. 0405448841"
+								   placeholder="Número de cédula Ej. 0504172422"
 								   maxlength="13"
 								   formControlName="username"/>
-							<i class="pi pi-user" pTooltip="Ingrese su número de cédula Ej. 0504224488"></i>
+							<i class="pi pi-user" pTooltip="Número de cédula Ej. 0504172422"></i>
 							<div *ngIf="formLogin.get('username').errors && formLogin.get('username').touched">
 								<small *ngIf="formLogin.get('username').hasError('required')"
 									   id="usernameHelp" class="p-invalid">
@@ -97,9 +97,9 @@
 									(click)="resetFormInstitutionRole()"></button>
 						</div>
 						<div class="login-input-wrapper" *ngIf="roles.length>0">
-							<label for="institution">Unidad Educativa Municipal:</label>
+							<label for="institution">Instituto:</label>
 							<p-dropdown id="institution" name="institution" formControlName="institution"
-										[options]="institutions" optionLabel="name" placeholder="SELECCIONE"
+										[options]="institutions" optionLabel="name" placeholder="Seleccione..."
 										[style]="{'width':'100%'}" (change)="selectInstitution()">
 
 								<ng-template pTemplate="selectedItem">
@@ -128,7 +128,7 @@
 						<div class="login-input-wrapper" *ngIf="roles.length>0">
 							<label for="role">Rol:</label>
 							<p-dropdown id="role" name="role" formControlName="role" [options]="roles"
-										placeholder="Select a Role" optionLabel="name"
+										placeholder="Seleccione..." optionLabel="name"
 										[style]="{'width':'100%'}"></p-dropdown>
 							<div *ngIf="formInstitutionRole.get('role').errors && formInstitutionRole.get('role').touched">
 								<small id="roleHelp" class="p-invalid"
@@ -153,7 +153,7 @@
 							<label for="new_password">Nueva Contraseña:</label>
 							<input type="password" pPassword id="new_password" name="new_password"
 								   formControlName="new_password"
-								   placeholder="Ingrese mínimo 6 dígitos"
+								   placeholder="Ingrese mínimo 6 caracteres"
 								   [feedback]="false"
 								   [showPassword]="flagShowPassword"/>
 							<i (click)="flagShowPassword=!flagShowPassword" class="pi"
@@ -178,7 +178,7 @@
 							<label for="password_confirm">Confirmar Contraseña:</label>
 							<input type="password" pPassword id="password_confirm" name="password_confirm"
 								   formControlName="password_confirm"
-								   placeholder="Ingrese mínimo 6 dígitos" [feedback]="false"
+								   placeholder="Ingrese mínimo 6 caracteres" [feedback]="false"
 								   [showPassword]="flagShowPassword"/>
 							<i (click)="flagShowPassword=!flagShowPassword" class="pi"
 							   [ngClass]="{'pi-eye-slash':flagShowPassword,'pi-eye':!flagShowPassword}"

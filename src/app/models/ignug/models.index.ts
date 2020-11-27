@@ -9,3 +9,4 @@ export {Addreess} from './address';
 export {SchoolPeriodo} from './school-periodo';
 export {Student} from './student';
 export {Teacher} from './teacher';
+export {Observation} from './observation';

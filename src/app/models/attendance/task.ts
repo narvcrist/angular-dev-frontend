@@ -1,4 +1,4 @@
-import {Catalogue, State} from '../ignug/models.index';
+import {Catalogue, Observation, State} from '../ignug/models.index';
 import {Attendance} from './models.index';
 
 export interface Task {
@@ -6,7 +6,8 @@ export interface Task {
     attendance?: Attendance;
     description?: string;
     percentage_advance?: number;
-    observations?: string;
     type?: Catalogue;
     state?: State;
+    observations?: Observation[];
+    observation?: string;
 }
