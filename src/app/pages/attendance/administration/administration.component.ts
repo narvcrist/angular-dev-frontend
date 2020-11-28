@@ -12,6 +12,8 @@ import * as moment from 'moment';
 import {environment} from '../../../../environments/environment';
 import {Institution} from '../../../models/ignug/institution';
 import {HttpParams} from '@angular/common/http';
+import * as fileSaver from 'file-saver';
+import {format} from 'url';
 
 @Component({
     selector: 'app-administration-laboral',
@@ -61,6 +63,7 @@ export class AdministrationComponent implements OnInit {
     dialogFormTask: boolean;
     dialogFormWorkday: boolean;
     institution: Institution;
+    selectedDates: Date;
 
     constructor(private _breadcrumbService: BreadcrumbService,
                 private _attendanceService: AttendanceService,
@@ -191,7 +194,9 @@ export class AdministrationComponent implements OnInit {
 
     createOrUpdateTask() {
         const params = new HttpParams().append('user_id', this.selectedUser.id.toString())
-            .append('institution_id', this.institution.id.toString());
+            .append('institution_id', this.institution.id.toString())
+            .append('date', this.selectedDate.getFullYear() + '-' + (this.selectedDate.getMonth() + 1) + '-' + this.selectedDate.getDate());
+
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
         this.selectedTask.observation = this.formTask.controls['observation'].value;
         this.selectedTask.description = '';
@@ -202,7 +207,6 @@ export class AdministrationComponent implements OnInit {
             this._spinner.hide();
             this.displayFormTask = false;
             this.attendance = response['data'];
-            this.selectedDate = new Date();// para que se pueda visualizar la actividad cread
             this.getAttendances();
             this.getHistoryTasks();
             this.fillChartActivities();
@@ -551,6 +555,68 @@ export class AdministrationComponent implements OnInit {
         this.getAttendances();
         this.fillChartActivities();
         this.getHistoryTasks();
+    }
+
+    generateAttendancesReport() {
+        const params = new HttpParams().append('date', this.selectedDate.getFullYear() + '-' + (this.selectedDate.getMonth() + 1) + '-01')
+            .append('institution_id', this.institution.id.toString());
+        this._spinner.show();
+        this._attendanceService.report('attendances', params).subscribe(response => {
+            this._spinner.hide();
+            const blob = new Blob([response as Blob], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            const date = moment(this.selectedDate).format('MMMM - YYYY').toUpperCase();
+            const fileName = 'INFORME DE ASISTENCIA ' + this.institution.short_name + ' (' + date + ').xlsx';
+            fileSaver.saveAs(blob, fileName);
+        }, error => {
+            this._spinner.hide();
+            this.messageService.add({
+                key: 'msgToast',
+                severity: 'error',
+                summary: error.error.msg.summary,
+                detail: error.error.msg.detail,
+            });
+        });
+    }
+
+    generateTasksReport() {
+        if (this.selectedDates) {
+            if (this.selectedDates[1] != null) {
+                const params = new HttpParams()
+                    .append('start_date', this.selectedDates[0].getFullYear() + '-' + (this.selectedDates[0].getMonth() + 1) + '-' + this.selectedDates[0].getDate())
+                    .append('end_date', this.selectedDates[1].getFullYear() + '-' + (this.selectedDates[1].getMonth() + 1) + '-' + this.selectedDates[1].getDate())
+                    .append('institution_id', this.institution.id.toString());
+                this._spinner.show();
+                this._attendanceService.report('tasks', params).subscribe(response => {
+                    this._spinner.hide();
+                    const blob = new Blob([response as Blob], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+                    const date = moment(this.selectedDates[0]).format('MMMM - YYYY').toUpperCase();
+                    const fileName = 'INFORME DE ACTIVIDADES ' + this.institution.short_name + ' (' + date + ').xlsx';
+                    fileSaver.saveAs(blob, fileName);
+                }, error => {
+                    this._spinner.hide();
+                    this.messageService.add({
+                        key: 'msgToast',
+                        severity: 'error',
+                        summary: error.error.msg.summary,
+                        detail: error.error.msg.detail,
+                    });
+                });
+            } else {
+                this.messageService.add({
+                    key: 'msgToast',
+                    severity: 'error',
+                    summary: 'Debe seleccionar la fecha de finalización',
+                    detail: 'Intente de nuevo',
+                });
+            }
+        } else {
+            this.messageService.add({
+                key: 'msgToast',
+                severity: 'error',
+                summary: 'Debe seleccionar un rango de fechas',
+                detail: 'Intente de nuevo',
+            });
+        }
     }
 }
 

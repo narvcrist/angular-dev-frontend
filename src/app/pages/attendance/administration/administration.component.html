@@ -102,6 +102,13 @@
                                     pRipple
                                     class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
+
+                            <button pButton type="button"
+                                    label="Reporte de asistencia"
+                                    icon="pi pi-file-excel"
+                                    pRipple
+                                    class="p-button-info p-my-3 p-ml-3"
+                                    (click)="generateAttendancesReport()"></button>
                         </div>
                     </div>
                     <hr>
@@ -245,6 +252,22 @@
                                     pRipple
                                     class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
+                            <p-calendar [(ngModel)]="selectedDates"
+                                        dateFormat="yy/mm/dd"
+                                        icon="pi pi-calendar-plus"
+                                        showIcon="true"
+                                        class="p-my-3 p-ml-3"
+                                        selectionMode="range"
+                                        [disabledDays]="[0,6]"
+                                        [monthNavigator]="true"
+                                        readonlyInput="true">
+                            </p-calendar>
+                            <button pButton type="button"
+                                    label="Reporte de actividades"
+                                    icon="pi pi-file-excel"
+                                    pRipple
+                                    class="p-button-info p-my-3 p-ml-3"
+                                    (click)="generateTasksReport()"></button>
                         </div>
                     </div>
                     <hr>

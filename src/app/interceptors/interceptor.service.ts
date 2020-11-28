@@ -23,8 +23,7 @@ export class InterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         let headers = new HttpHeaders();
         let params = req.params;
-        console.log(params)
-        if (localStorage.getItem('token')) {
+        if (localStorage.getItem('token') && req.url.indexOf('reports') === -1) {
             headers = headers.append('Accept', 'application/json')
                 .append('Authorization', 'Bearer ' + (JSON.parse(localStorage.getItem('token')) as Token).access_token);
             if (!req.params.has('page')) {
@@ -48,6 +47,14 @@ export class InterceptorService implements HttpInterceptor {
         }
         if (req.url === URL + 'api/logs') {
             return next.handle(req.clone({headers})).pipe(catchError(error => {
+                return throwError(error);
+            }));
+        }
+        if (req.url.indexOf('reports') >= 0) {
+            headers = new HttpHeaders()
+                .append('Authorization', 'Bearer ' + (JSON.parse(localStorage.getItem('token')) as Token).access_token)
+                .append('user_id', (JSON.parse(localStorage.getItem('user')) as User).id.toString());
+            return next.handle(req.clone({headers, params, responseType: 'blob'})).pipe(catchError(error => {
                 return throwError(error);
             }));
         }

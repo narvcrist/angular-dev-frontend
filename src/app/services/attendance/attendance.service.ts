@@ -36,4 +36,9 @@ export class AttendanceService {
         url = environment.API_URL_ATTENDANCE + url;
         return this._http.post(url, data, {params});
     }
+
+    report(url: string, params = new HttpParams()) {
+        url = environment.API_URL_ATTENDANCE + 'reports/' + url;
+        return this._http.get(url, {params});
+    }
 }
