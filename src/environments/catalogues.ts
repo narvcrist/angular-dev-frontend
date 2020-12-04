@@ -37,3 +37,14 @@ export const WORKDAYS = {
     WORK: 'WORK',
     LUNCH: 'LUNCH'
 };
+
+export const EVALUATION_TYPES = {
+    SELF_TEACHING: '3',
+    SELF_MANAGEMENT: '4',
+    STUDENT_TEACHING: '5',
+    STUDENT_MANAGEMENT: '6',
+    PAIR_TEACHING: '7',
+    PAIR_MANAGEMENT: '8',
+    AUTHORITY_TEACHING: '9',
+    AUTHORITY_MANAGEMENT: '10',
+};

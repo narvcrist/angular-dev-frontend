@@ -39,6 +39,11 @@ import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.c
                         canActivate: [AuthGuard]
                     },
                     {
+                        path: 'teacher_eval',
+                        loadChildren: () => import('./pages/teacher-eval/teacher-eval.module').then(m => m.TeacherEvalModule),
+                        canActivate: [AuthGuard]
+                    },
+                    {
                         path: 'auth/under-maintenance',
                         component: AppUnderMaintenanceComponent
                     },

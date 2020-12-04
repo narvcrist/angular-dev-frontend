@@ -8,47 +8,57 @@ import { SelfEvaluationComponent } from './self-evaluation/self-evaluation.compo
 import { StudentEvaluationComponent } from './student-evaluation/student-evaluation.component';
 import { EvaluationResultComponent } from './evaluation-result/evaluation-result.component';
 import { PairEvaluationComponent } from './pair-evaluation/pair-evaluation.component';
+import {AttendanceComponent} from '../attendance/attendance/attendance.component';
+import {AuthGuard} from '../../shared/auth.guard';
+import {AdministrationComponent} from '../attendance/administration/administration.component';
+import {BirthdayComponent} from '../attendance/birthday/birthday.component';
 
-const routes: Routes = [
+
+export const routes: Routes = [
   {
-    path: 'evaluation-types',
-    component: EvaluationTypeComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'evaluations',
-    component: EvaluationComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'answers',
-    component: AnswerComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'questions',
-    component: QuestionComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'self-evaluations',
-    component: SelfEvaluationComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'student-evaluations',
-    component: StudentEvaluationComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'pair-evaluations',
-    component: PairEvaluationComponent,
-    // canActivate: [AuthGuard]
-  },
-  {
-    path: 'evaluation-results',
-    component: EvaluationResultComponent,
-    // canActivate: [AuthGuard]
+    path: '',
+    children: [
+      {
+        path: 'evaluation-types',
+        component: EvaluationTypeComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'evaluations',
+        component: EvaluationComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'answers',
+        component: AnswerComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'questions',
+        component: QuestionComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: '',
+        component: SelfEvaluationComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'student-evaluations',
+        component: StudentEvaluationComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'pair-evaluations',
+        component: PairEvaluationComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'evaluation-results',
+        component: EvaluationResultComponent,
+        canActivate: [AuthGuard]
+      }
+    ]
   }
 ];
 

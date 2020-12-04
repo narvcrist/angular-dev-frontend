@@ -1,12 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgSelectModule } from '@ng-select/ng-select';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
-import { TeacherEvalRoutingModule } from './teacher-eval-routing.module';
-import { EvaluationTypeComponent } from './evaluation-type/evaluation-type.component';
-import { EvaluationComponent } from './evaluation/evaluation.component';
-import { QuestionComponent } from './question/question.component';
-import { AnswerComponent } from './answer/answer.component';
+import {TeacherEvalRoutingModule} from './teacher-eval-routing.module';
+import {EvaluationTypeComponent} from './evaluation-type/evaluation-type.component';
+import {EvaluationComponent} from './evaluation/evaluation.component';
+import {QuestionComponent} from './question/question.component';
+import {AnswerComponent} from './answer/answer.component';
 
 
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -26,34 +25,42 @@ import {TableModule} from 'primeng/table';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {TooltipModule} from 'primeng/tooltip';
 import {TabViewModule} from 'primeng/tabview';
-import { SelfEvaluationComponent } from './self-evaluation/self-evaluation.component';
-import { StudentEvaluationComponent } from './student-evaluation/student-evaluation.component';
-import { EvaluationResultComponent } from './evaluation-result/evaluation-result.component';
-import { PairEvaluationComponent } from './pair-evaluation/pair-evaluation.component';
+import {SelfEvaluationComponent} from './self-evaluation/self-evaluation.component';
+import {StudentEvaluationComponent} from './student-evaluation/student-evaluation.component';
+import {EvaluationResultComponent} from './evaluation-result/evaluation-result.component';
+import {PairEvaluationComponent} from './pair-evaluation/pair-evaluation.component';
 
 @NgModule({
-  declarations: [EvaluationTypeComponent, QuestionComponent, AnswerComponent, EvaluationComponent, SelfEvaluationComponent,StudentEvaluationComponent, EvaluationResultComponent, PairEvaluationComponent],
-  imports: [
-    CommonModule,
-    NgSelectModule,
-    TeacherEvalRoutingModule,
-    FormsModule,
-    InputTextModule,
-    InputTextareaModule,
-    CardModule,
-    MessageModule,
-    TranslateModule,
-    DropdownModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    DialogModule,
-    ConfirmDialogModule,
-    ToastModule,
-    TableModule,
-    TooltipModule,
-    TabViewModule
-  ],
-  providers: [ConfirmationService, MessageService]
+    declarations: [
+        EvaluationTypeComponent,
+        QuestionComponent,
+        AnswerComponent,
+        EvaluationComponent,
+        SelfEvaluationComponent,
+        StudentEvaluationComponent,
+        EvaluationResultComponent,
+        PairEvaluationComponent],
+    imports: [
+        CommonModule,
+        TeacherEvalRoutingModule,
+        FormsModule,
+        InputTextModule,
+        InputTextareaModule,
+        CardModule,
+        MessageModule,
+        TranslateModule,
+        DropdownModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        DialogModule,
+        ConfirmDialogModule,
+        ToastModule,
+        TableModule,
+        TooltipModule,
+        TabViewModule
+    ],
+    providers: [ConfirmationService, MessageService]
 
 })
-export class TeacherEvalModule { }
+export class TeacherEvalModule {
+}

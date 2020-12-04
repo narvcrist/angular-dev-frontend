@@ -66,13 +66,13 @@
                 <div class="p-xl-12 p-sm-12" style="margin: .5em" *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
                     <label for="float-input-type">* {{"SELECT EVALUATORS"|translate}}</label>
                     <span class="ui-float-label">
-                        <ng-select  formControlName="evaluators"
-                            [items]="teachers" 
-                            bindLabel="label"
-                            [multiple]="true" 
-                            [(ngModel)]="selectedItems" 
-                            (change)="onSelectAdd($event)">
-                        </ng-select>
+<!--                        <ng-select  formControlName="evaluators"-->
+<!--                            [items]="teachers" -->
+<!--                            bindLabel="label"-->
+<!--                            [multiple]="true" -->
+<!--                            [(ngModel)]="selectedItems" -->
+<!--                            (change)="onSelectAdd($event)">-->
+<!--                        </ng-select>-->
                         <!--<br />Selected : {{selected | json}}-->
                     </span>
                     <div *ngIf="formEvaluation.get('evaluators').errors && formEvaluation.get('evaluators').touched">
