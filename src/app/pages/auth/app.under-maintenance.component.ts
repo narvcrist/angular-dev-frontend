@@ -7,7 +7,7 @@ import {Role} from '../../models/auth/role';
         <div class="exception-body error">
             <div class="exception-content">
                 <div class="moon">
-                    <img src="../../../assets/layout/images/pages/asset-moon.svg" alt="mirage-layout"/>
+                    <img src="assets/layout/images/pages/asset-moon.svg" alt="mirage-layout"/>
                 </div>
                 <div class="exception-panel">
                     <div class="exception-panel-content">

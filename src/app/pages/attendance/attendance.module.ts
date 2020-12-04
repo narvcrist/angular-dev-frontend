@@ -57,6 +57,7 @@ import {RippleModule} from 'primeng/ripple';
 import {SidebarModule} from 'primeng/sidebar';
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {FieldsetModule} from 'primeng/fieldset';
+import {BirthdayComponent} from './birthday/birthday.component';
 
 @NgModule({
     imports: [
@@ -113,7 +114,7 @@ import {FieldsetModule} from 'primeng/fieldset';
         FieldsetModule,
     ],
     declarations: [
-        AttendanceComponent, AdministrationComponent
+        AttendanceComponent, AdministrationComponent, BirthdayComponent
     ],
     providers: [DialogService, MessageService, ConfirmationService]
 })

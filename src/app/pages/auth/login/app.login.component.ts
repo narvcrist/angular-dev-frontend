@@ -30,6 +30,8 @@ export class AppLoginComponent {
     flagShowPasswordReset: boolean;
     STORAGE_URL: string = environment.STORAGE_URL;
     flagChangePassword: boolean;
+    appName: string;
+    appAcronym: string;
 
     constructor(private authService: AuthService,
                 private ignugService: IgnugService,
@@ -43,6 +45,8 @@ export class AppLoginComponent {
         this.roles = [];
         this.institutions = [];
         this.user = {};
+        this.appName = environment.APP_NAME;
+        this.appAcronym = environment.APP_ACRONYM;
     }
 
     buildFormLogin() {

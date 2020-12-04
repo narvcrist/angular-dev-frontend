@@ -14,6 +14,7 @@ import {MessageService} from 'primeng/api';
 // My Components
 import {DashboardComponent} from './dashboard.component';
 import {TooltipModule} from 'primeng/tooltip';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
     imports: [
@@ -26,6 +27,7 @@ import {TooltipModule} from 'primeng/tooltip';
         MessagesModule,
         MessageModule,
         TooltipModule,
+        DialogModule,
     ],
     declarations: [DashboardComponent],
     providers: [MessageService]

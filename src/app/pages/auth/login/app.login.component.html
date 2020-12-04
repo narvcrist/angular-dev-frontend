@@ -8,9 +8,9 @@
 			<div class="login-panel-content">
 				<div class="logo">
 					<div *ngIf="institutions.length===0 || roles.length===0">
-						<h3>Sistema de Gestión Académico Administrativo</h3>
-						<h2>SIGA-A</h2>
-						<img src="../../../../assets/layout/images/login/login.png" alt="mirage-layout"/>
+						<h3>{{appName}}</h3>
+						<h2>{{appAcronym}}</h2>
+						<img src="assets/layout/images/login/login.png" alt="mirage-layout"/>
 					</div>
 					<div *ngIf="flagChangePassword">
 						<img src="assets/layout/images/login/password_change.png" alt="mirage-layout"/>

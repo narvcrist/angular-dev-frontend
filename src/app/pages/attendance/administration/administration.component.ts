@@ -231,7 +231,7 @@ export class AdministrationComponent implements OnInit {
         this._confirmationService.confirm({
             message: '¿Está seguro de eliminar el registro?',
             header: 'Confirmiación de elimnación',
-            icon: 'pi pi-exclamation-triangle',
+            icon: 'pi pi-trash',
             rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this._spinner.show();
@@ -422,11 +422,13 @@ export class AdministrationComponent implements OnInit {
         this.usersWorkdays = this.users.filter(this.filterNoWork);
     }
 
-    filterNoWork(users: User) {
-        if (users.attendance) {
-            let flagWorkday = false;
-            for (const item of users.attendance.workdays) {
-                flagWorkday = (item.end_time === null && item.type.code === 'WORK');
+    filterNoWork(user) {
+        if (user.attendance) {
+            let flagWorkday = true;
+            for (const item of user.attendance.workdays) {
+                if (item.type.code === 'WORK') {
+                    flagWorkday = item.end_time === null;
+                }
             }
             return flagWorkday;
         }
@@ -440,7 +442,9 @@ export class AdministrationComponent implements OnInit {
         if (user.attendance) {
             let flagWorkday = false;
             for (const item of user.attendance.workdays) {
-                flagWorkday = (item.end_time === null && item.type.code === 'LUNCH');
+                if (item.type.code === 'LUNCH') {
+                    flagWorkday = item.end_time === null;
+                }
             }
             return flagWorkday;
         }
@@ -558,7 +562,9 @@ export class AdministrationComponent implements OnInit {
     }
 
     generateAttendancesReport() {
-        const params = new HttpParams().append('date', this.selectedDate.getFullYear() + '-' + (this.selectedDate.getMonth() + 1) + '-01')
+        const params = new HttpParams()
+            .append('start_date', this.selectedDates[0].getFullYear() + '-' + (this.selectedDates[0].getMonth() + 1) + '-' + this.selectedDates[0].getDate())
+            .append('end_date', this.selectedDates[1].getFullYear() + '-' + (this.selectedDates[1].getMonth() + 1) + '-' + this.selectedDates[1].getDate())
             .append('institution_id', this.institution.id.toString());
         this._spinner.show();
         this._attendanceService.report('attendances', params).subscribe(response => {

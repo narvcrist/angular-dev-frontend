@@ -1,0 +1,21 @@
+<div class="p-grid">
+    <div class="p-xl-2 p-lg-3 p-md-4 p-sm-6" *ngFor="let user of users">
+        <p-card [header]="user.birthdate.toString().substr(8,2)"
+                [style]="{width: '200px'}"
+                styleClass="p-card-shadow">
+            <div class="p-text-center">
+                <img [src]="STORAGE_URL+user.avatar" alt="avatar"
+                     width="100px"
+                     height="100px"
+                     style="border-radius: 50%;">
+                <hr>
+                <img src="assets/layout/images/pages/attendance/birthdate.png" alt=""
+                     width="50px"
+                     height="50px"
+                     pTooltip="No ha iniciado su jornada de trabajo">
+                <hr>
+                {{user.first_name}} {{user.second_name}} {{user.first_lastname}} {{user.second_lastname}}
+            </div>
+        </p-card>
+    </div>
+</div>

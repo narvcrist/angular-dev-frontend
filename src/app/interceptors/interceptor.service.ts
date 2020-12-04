@@ -59,12 +59,12 @@ export class InterceptorService implements HttpInterceptor {
             }));
         }
         return next.handle(req.clone({headers, params})).pipe(catchError(error => {
-            if (error.status === 4030 || error.status === 4040 || error.status === 4230) {
+            if (error.status === 401 ||error.status === 403 || error.status === 423) {
                 this._authService.removeLogin();
                 this._router.navigate(['/auth/login']);
             }
 
-            if (error.status !== 401 && error.status !== 404) {
+            if (error.status !== 401 && error.status !== 404 && error.status !== 423) {
                 this._authService.logs(error);
             }
             return throwError(error);

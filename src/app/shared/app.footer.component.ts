@@ -12,7 +12,7 @@ import {environment} from '../../environments/environment';
 					<h1 class="hide">&reg; {{institution.denomination}} {{institution.name}}</h1>
 					<span> &copy;
 						{{currentYear}} Todos los derechos reservados.
-                        <b class="hide">{{appName}} ({{appAcronym}} V1.1.1)</b>
+                        <b class="hide">{{appName}} ({{appAcronym}} V{{appVersion}})</b>
                     </span>
 					<br>
 					<span class="hide">Iconos diseñados por
@@ -45,6 +45,7 @@ export class AppFooterComponent {
     STORAGE_URL: string;
     appName: string;
     appAcronym: string;
+    appVersion: string;
     currentYear: number;
     
     constructor() {
@@ -53,6 +54,7 @@ export class AppFooterComponent {
         this.STORAGE_URL = environment.STORAGE_URL;
         this.appName = environment.APP_NAME;
         this.appAcronym = environment.APP_ACRONYM;
+        this.appVersion = environment.APP_VERSION;
         this.currentYear = new Date().getFullYear();
     }
     

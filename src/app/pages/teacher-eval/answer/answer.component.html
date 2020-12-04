@@ -1,0 +1,173 @@
+<p-dialog [header]="headerDialogAnswer" [(visible)]="displayFormAnswer" modal="true" showEffect="fade"
+          styleClass="mydialog">
+    <form [formGroup]="formAnswer" (ngSubmit)="onSubmitAnswer($event)">
+        <p-card>
+            <p-header>
+                <h1 style="margin-left: .5em">{{"ANSWERS"|translate}}</h1>
+            </p-header>
+            <div class="p-grid">
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+            <span class="ui-float-label">
+                <input id="float-input-code" type="text" pInputText formControlName="code" size="30"
+                       [readOnly]="flagEditAnswer"
+                       [pTooltip]="flagEditAnswer?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)">
+                <label for="float-input-code">* {{"CODE"|translate}}</label>
+            </span>
+                    <div *ngIf="formAnswer.get('code').errors && formAnswer.get('code').touched">
+                        <p-message severity="warn" text="{{'CODE REQUIRED'|translate}}"
+                                   *ngIf="formAnswer.get('code').hasError('required')"></p-message>
+                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
+                                   *ngIf="formAnswer.get('code').hasError('minlength')"></p-message>
+                    </div>
+                </div>
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+            <span class="ui-float-label">
+                <input id="float-input-name" type="text" pInputText formControlName="name" size="30">
+                <label for="float-input-name">* {{"NAME"|translate}}</label>
+            </span>
+                    <div *ngIf="formAnswer.get('name').errors && formAnswer.get('name').touched">
+                        <p-message severity="warn" text="{{'NAME REQUIRED'|translate}}"
+                                   *ngIf="formAnswer.get('name').hasError('required')"></p-message>
+                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
+                                   *ngIf="formAnswer.get('name').hasError('minlength')"></p-message>
+                    </div>
+                </div>
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+            <span class="ui-float-label">
+                <input id="float-input-orden" type="text" pInputText formControlName="order" size="30">
+                <label for="float-input-orden">* {{"ORDER"|translate}}</label>
+            </span>
+                    <div *ngIf="formAnswer.get('order').errors && formAnswer.get('order').touched">
+                        <p-message severity="warn" text="{{'ORDER REQUIRED'|translate}}"
+                                   *ngIf="formAnswer.get('order').hasError('required')"></p-message>
+                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
+                                   *ngIf="formAnswer.get('order').hasError('minlength')"></p-message>
+                    </div>
+                </div>
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+            <span class="ui-float-label">
+                <input id="float-input-value" type="text" pInputText formControlName="value" size="30">
+                <label for="float-input-value">* {{"VALUE"|translate}}</label>
+            </span>
+                    <div *ngIf="formAnswer.get('value').errors && formAnswer.get('value').touched">
+                        <p-message severity="warn" text="{{'VALUE REQUIRED'|translate}}"
+                                   *ngIf="formAnswer.get('value').hasError('required')"></p-message>
+                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
+                                   *ngIf="formAnswer.get('value').hasError('minlength')"></p-message>
+                    </div>
+                </div>
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em" >
+            <span class="ui-float-label">
+                <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
+                            [style]="{'width':'235px'}"></p-dropdown>
+                <label for="float-input-status">* {{"SELECT STATUS"|translate}}</label>
+            </span>
+                    <div *ngIf="formAnswer.get('status_id').errors && formAnswer.get('status_id').touched">
+                        <p-message severity="warn" text="{{'STATUS REQUIRED'|translate}}"
+                                   *ngIf="formAnswer.get('status_id').hasError('required')"></p-message>
+                    </div>
+                </div>
+
+            </div>
+            <p-footer>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col">
+                        <button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
+                                label="{{'SAVE'|translate}}"></button>
+                    </div>
+                </div>
+            </p-footer>
+        </p-card>
+    </form>
+</p-dialog>
+<p-confirmDialog [style]="{width: '425px'}">
+</p-confirmDialog>
+<p-toast key="tst"></p-toast>
+<div class="p-grid ui-fluid">
+    <div class="p-lg-12 p-md-12 p-sm-12">
+        <p-table #dt [columns]="colsAnswer" styleClass="ui-table-cars" [value]="answers"
+                 [paginator]="true"
+                 [rows]="5"
+                 [responsive]="true"
+                 dataKey="id">
+            <ng-template pTemplate="caption">
+                <div class="p-grid">
+                    <div class="p-lg-12 p-md-12 p-sm-12">
+                        <h1>{{'ANSWERS'|translate}}</h1>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns"
+                        [pSortableColumn]="col.field"
+                        [ngSwitch]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                    <th style="width: 8em; text-align: center;">
+                        <button pButton type="button" icon="pi pi-plus" [pTooltip]="'NEW RECORD'|translate"
+                                class="ui-button-success"
+                                (click)="selectAnswer(null);flagEditAnswer = false;"></button>
+                    </th>
+                </tr>
+                <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field" style="padding: .5em;">
+                        <input *ngSwitchCase="'code'" pInputText type="text"
+                               [placeholder]="('SEARCH BY'|translate) + ' ' +('CODE'|translate)"
+                               class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                               (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'order'" pInputText type="text"
+                                [placeholder]="('SEARCH BY'|translate) + ' ' + ('ORDER'|translate)"
+                                class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                                (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'name'" pInputText type="text"
+                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('NAME'|translate)"
+                               class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                               (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'value'" pInputText type="text"
+                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('VALUE'|translate)"
+                               class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                               (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'status.name'" pInputText type="text"
+                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('STATUS'|translate)"
+                               class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                               (input)="dt.filter($event.target.value, col.field, 'contains')">
+                    </th>
+                    <th style="width: 8em;">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr>
+                    <td>{{rowData.code}}</td>
+                    <td>{{rowData.order}}</td>
+                    <td>{{rowData.name}}</td>
+                    <td>{{rowData.value}}</td>
+                    <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
+                    <td>
+                        <button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
+                                style="margin-right: .5em" [pTooltip]="'MODIFY RECORD'|translate"
+                                (click)="selectAnswer(rowData);flagEditAnswer = true;"></button>
+                        <button pButton type="button" class="ui-button-danger" [pTooltip]="'DELETE RECORD'|translate"
+                                (click)="deleteAnswer(rowData)"
+                                icon="pi pi-trash"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<!-- 
+<p-tabView>
+    <p-tabPanel header="Proyecto" leftIcon="pi pi-paperclip">
+        <h1>asd</h1>
+    </p-tabPanel>
+    <p-tabPanel header="Bezier Curve" headerStyleClass="greenText">
+        <h1>asd</h1>
+    </p-tabPanel>
+</p-tabView> -->

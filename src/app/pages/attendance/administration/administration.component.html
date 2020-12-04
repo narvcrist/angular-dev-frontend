@@ -102,7 +102,16 @@
                                     pRipple
                                     class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
-
+                            <p-calendar [(ngModel)]="selectedDates"
+                                        dateFormat="yy/mm/dd"
+                                        icon="pi pi-calendar-plus"
+                                        showIcon="true"
+                                        class="p-my-3 p-ml-3"
+                                        selectionMode="range"
+                                        [disabledDays]="[0,6]"
+                                        [monthNavigator]="true"
+                                        readonlyInput="true">
+                            </p-calendar>
                             <button pButton type="button"
                                     label="Reporte de asistencia"
                                     icon="pi pi-file-excel"
@@ -145,13 +154,13 @@
                                         {{user.first_name + ' ' + user.second_name}}
                                     </p>
                                     <hr>
-                                    <img [src]="STORAGE_URL+user.avatar" alt=""
+                                    <img [src]="STORAGE_URL+user.avatar" alt="avatar"
                                          width="100px"
                                          height="100px"
                                          style="border-radius: 50%;">
 
                                     <img *ngIf="!user.attendance"
-                                         src="../../../../assets/layout/images/pages/attendance/not_work.png" alt=""
+                                         src="assets/layout/images/pages/attendance/not_work.png" alt=""
                                          width="50px"
                                          height="50px"
                                          pTooltip="No ha iniciado su jornada de trabajo">
@@ -179,6 +188,17 @@
                                             <p-message
                                                     severity="info"
                                                     text="Jornada Finalizada"></p-message>
+                                            <button pButton type="button"
+                                                    label="Cambiar"
+                                                    class="p-button-text"
+                                                    icon="pi pi-refresh"
+                                                    pRipple
+                                                    (click)="openModalWorkday(user,workday)"></button>
+                                        </div>
+                                        <div *ngIf="workday.end_time!==null && workday.type.code==='LUNCH'">
+                                            <p-message
+                                                    severity="info"
+                                                    text="Almuerzo Finalizado"></p-message>
                                             <button pButton type="button"
                                                     label="Cambiar"
                                                     class="p-button-text"
@@ -292,13 +312,13 @@
                                              height="100px"
                                              style="border-radius: 50%;">
                                         <img *ngIf="user.attendance.tasks.length===0"
-                                             src="../../../../assets/layout/images/pages/attendance/no_activity.png"
+                                             src="assets/layout/images/pages/attendance/no_activity.png"
                                              alt=""
                                              width="50px"
                                              height="50px"
                                              pTooltip="No tiene actividades registradas">
                                         <img *ngIf="user.attendance.tasks.length>0"
-                                             src="../../../../assets/layout/images/pages/attendance/activity.png"
+                                             src="assets/layout/images/pages/attendance/activity.png"
                                              alt=""
                                              width="50px"
                                              height="50px">
@@ -308,7 +328,7 @@
                                              width="100px"
                                              height="100px"
                                              style="border-radius: 50%;">
-                                        <img src="../../../../assets/layout/images/pages/attendance/not_work.png" alt=""
+                                        <img src="assets/layout/images/pages/attendance/not_work.png" alt=""
                                              pTooltip="No está trabajando"
                                              width="50px"
                                              height="50px">

@@ -9,6 +9,7 @@ import {User} from '../../models/auth/user';
 import {Institution} from '../../models/ignug/institution';
 import {Message} from 'primeng/api';
 import {NgxSpinnerService} from 'ngx-spinner';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-dashboard',
@@ -23,6 +24,8 @@ export class DashboardComponent implements OnInit {
     permissions: Permission[];
     STORAGE_URL: string;
     msgs: Message[];
+    flagBirhday: boolean;
+    randomNumber: number = 0;
 
     constructor(
         private _breadcrumbService: BreadcrumbService,
@@ -41,6 +44,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         this.getShortcuts();
+        this.showBirthday();
     }
 
     getShortcuts() {
@@ -84,5 +88,19 @@ export class DashboardComponent implements OnInit {
             this._spinner.hide();
         });
     }
+
+    showBirthday() {
+        console.log('antes');
+        if (!localStorage.getItem('birthday')) {
+            console.log('entro1');
+            if (this.user.birthdate.toString().substr(5, 5) === moment().format('MM-DD')) {
+                console.log('entro2');
+                this.randomNumber = Math.floor(Math.random() * (5 - 1) + 1);
+                localStorage.setItem('birthday', 'true');
+                this.flagBirhday = true;
+            }
+        }
+    }
+
 
 }

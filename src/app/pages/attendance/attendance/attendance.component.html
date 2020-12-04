@@ -1,14 +1,18 @@
 <p-toast key="msgToast"></p-toast>
 <p-confirmDialog [style]="{width: '450px'}" [baseZIndex]="10000"></p-confirmDialog>
 
-
 <p-overlayPanel #op [showCloseIcon]="true">
     <ng-template pTemplate>
         <form [formGroup]="formTask" (ngSubmit)="onSubmitTask($event)">
-            <button type="submit"
+            <button *ngIf="selectedTask.type"  type="submit"
                     icon="pi pi-check"
                     pButton label="Registrar"
                     class="p-m-2"
+                    (click)="op.hide()"></button>
+            <button *ngIf="!selectedTask.type"  type="button"
+                    icon="pi pi-times"
+                    pButton label="Seleccione una actividad"
+                    class="p-button-secondary p-m-2"
                     (click)="op.hide()"></button>
             <!--            <div>-->
             <!--                <button *ngFor="let percentage of percentages"-->
@@ -125,8 +129,7 @@
                                            text="No tienes actividades registradas."></p-message>
                                 <p-card [header]="task.type.parent.name" *ngFor="let task of attendance.tasks"
                                         class="p-xl-4 p-lg-6 p-md-4 p-text-center"
-                                        [style]="{width: '250px',height:'300px'}"
-                                        styleClass="p-card-shadow">
+                                        [style]="{width: '250px',height:'300px','color':task.type.parent.color}">
                                     <p-scrollPanel [style]="{width: '100%', height: '120px'}">
                                         <p>{{task.type.name}}</p>
                                     </p-scrollPanel>
@@ -177,7 +180,7 @@
                                             [pSelectableRow]="activity"
                                             (click)="op.show($event);selectedTab=2">
                                         <td>
-                                            <span class="p-text-capitalize">{{activity.name.toLocaleLowerCase()}}</span>
+                                            <span class="p-text-uppercase">{{activity.name}}</span>
                                         </td>
                                     </tr>
                                 </ng-template>

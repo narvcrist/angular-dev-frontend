@@ -179,7 +179,7 @@ export class AttendanceComponent implements OnInit {
         this._confirmationService.confirm({
             message: '¿Está seguro de eliminar el registro?',
             header: 'Confirmiación de elimnación',
-            icon: 'pi pi-exclamation-triangle',
+            icon: 'pi pi-trash',
             rejectButtonStyleClass: 'p-button-text',
             accept: () => {
                 this._spinner.show();
@@ -228,13 +228,14 @@ export class AttendanceComponent implements OnInit {
                 summary: error.error.msg.summary,
                 detail: error.error.msg.detail,
             }];
+            this.getAttendance();
         });
     }
 
     endWorkday(workday: Workday) {
         this._confirmationService.confirm({
-            message: '¿Está seguro de finalizar?',
-            header: 'Confirmiación de finalización',
+            message: '¿Está seguro de finalizar ' + workday.type.name.toLowerCase() + '?',
+            header: 'Confirmiación de finalización de ' + workday.type.name.toLowerCase(),
             icon: 'pi pi-exclamation-triangle',
             rejectButtonStyleClass: 'p-button-text',
             accept: () => {

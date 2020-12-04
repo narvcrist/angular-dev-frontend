@@ -1,0 +1,184 @@
+<p-dialog [header]="headerDialogEvaluaion" [(visible)]="displayFormEvaluation" modal="true" showEffect="fade"
+    styleClass="mydialog">
+    <form [formGroup]="formEvaluation" (ngSubmit)="onSubmitEvaluation($event)">
+        <p-card>
+            <p-header>
+                <h1 style="margin-left: .5em">{{"EVALUATIONS"|translate}}</h1>
+            </p-header>
+            <div class="p-grid">
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+                    <span class="ui-float-label">
+                        <p-dropdown id="float-input-type" [options]="teachers" formControlName="teacher_id"
+                            [disabled]="flagEditEvaluation || flagCreateDetailEvaluation"
+                            [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
+                            [style]="{'width':'235px'}"></p-dropdown>
+                        <label for="float-input-type">* {{"SELECT TEACHER"|translate}}</label>
+                    </span>
+                    <div *ngIf="formEvaluation.get('teacher_id').errors && formEvaluation.get('teacher_id').touched">
+                        <p-message severity="warn" text="{{'TEACHER REQUIRED'|translate}}"
+                            *ngIf="formEvaluation.get('teacher_id').hasError('required')"></p-message>
+                    </div>
+                </div>
+                
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+                    <span class="ui-float-label">
+                        <p-dropdown id="float-input-evaluationType" [options]="evaluationTypes"
+                            formControlName="evaluation_type_id" [disabled]="flagEditEvaluation || flagCreateDetailEvaluation"
+                            [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
+                            [style]="{'width':'235px'}"></p-dropdown>
+                        <label for="float-input-evaluationType">* {{"SELECT EVALUATION TYPE"|translate}}</label>
+                    </span>
+                    <div
+                        *ngIf="formEvaluation.get('evaluation_type_id').errors && formEvaluation.get('evaluation_type_id').touched">
+                        <p-message severity="warn" text="{{'EVALUATION TYPE REQUIRED'|translate}}"
+                            *ngIf="formEvaluation.get('evaluation_type_id').hasError('required')"></p-message>
+                    </div>
+                </div>
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+                    <span class="ui-float-label">
+                        <input id="float-input-percentage" type="text" pInputText formControlName="percentage" 
+                        [readOnly]="flagEditEvaluation || flagCreateDetailEvaluation "
+                        [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
+                        size="30">
+                        <label for="float-input-percentage">* {{"PERCENTAGE"|translate}}</label>
+                    </span>
+                    <div *ngIf="formEvaluation.get('percentage').errors && formEvaluation.get('percentage').touched">
+                        <p-message severity="warn" text="{{'PERCENTAGE REQUIRED'|translate}}"
+                            *ngIf="formEvaluation.get('percentage').hasError('required')"></p-message>
+                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
+                            *ngIf="formEvaluation.get('percentage').hasError('minlength')"></p-message>
+                    </div>
+                </div>
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em">
+                    <span class="ui-float-label">
+                        <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
+                            [style]="{'width':'235px'}"></p-dropdown>
+                        <label for="float-input-status">* {{"SELECT STATUS"|translate}}</label>
+                    </span>
+                    <div *ngIf="formEvaluation.get('status_id').errors && formEvaluation.get('status_id').touched">
+                        <p-message severity="warn" text="{{'STATUS REQUIRED'|translate}}"
+                            *ngIf="formEvaluation.get('status_id').hasError('required')"></p-message>
+                    </div>
+                </div>
+
+                <div class="p-xl-12 p-sm-12" style="margin: .5em" *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
+                    <label for="float-input-type">* {{"SELECT EVALUATORS"|translate}}</label>
+                    <span class="ui-float-label">
+                        <ng-select  formControlName="evaluators"
+                            [items]="teachers" 
+                            bindLabel="label"
+                            [multiple]="true" 
+                            [(ngModel)]="selectedItems" 
+                            (change)="onSelectAdd($event)">
+                        </ng-select>
+                        <!--<br />Selected : {{selected | json}}-->
+                    </span>
+                    <div *ngIf="formEvaluation.get('evaluators').errors && formEvaluation.get('evaluators').touched">
+                        <p-message severity="warn" text="{{'EVALUATORS REQUIRED'|translate}}"
+                            *ngIf="formEvaluation.get('evaluators').hasError('required')"></p-message>
+                    </div>
+                </div>
+
+            </div>
+            <p-footer>
+                <div class="p-fluid p-formgrid p-grid">
+                    <div class="p-field p-col">
+                        <button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
+                            label="{{'SAVE'|translate}}"></button>
+                    </div>
+                </div>
+            </p-footer>
+        </p-card>
+    </form>
+</p-dialog>
+<p-confirmDialog [style]="{width: '425px'}">
+</p-confirmDialog>
+<p-toast key="tst"></p-toast>
+<div class="p-grid ui-fluid">
+    <div class="p-lg-12 p-md-12 p-sm-12">
+        <p-table #dt [columns]="colsEvaluation" styleClass="ui-table-cars" [value]="evaluations" [paginator]="true"
+            [rows]="5" [responsive]="true" dataKey="id">
+            <ng-template pTemplate="caption">
+                <div class="p-grid">
+                    <div class="p-lg-12 p-md-12 p-sm-12">
+                        <h1>{{'EVALUATIONS'|translate}}</h1>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [pSortableColumn]="col.field" [ngSwitch]="col.field">
+                        {{col.header}}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                    <th style="width: 11em; text-align: center;">
+                        <button pButton type="button" icon="pi pi-plus" [pTooltip]="'NEW RECORD'|translate"
+                            class="ui-button-success"
+                            (click)="selectEvaluation(null);flagEditEvaluation = false; flagCreateDetailEvaluation = false;"></button>
+                    </th>
+                </tr>
+                <tr>
+                    <th *ngFor="let col of columns" [ngSwitch]="col.field" style="padding: .5em;">
+                        <input *ngSwitchCase="'teacher.name'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' +('TEACHER'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'evaluation_type.name'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' +('EVALUATION TYPE'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'percentage'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' +('PERCENTAGE'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'schoolPeriod.name'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' +('EVALUATION TYPE'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'result'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' + ('RESULT'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'status.name'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' + ('STATUS'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <!--<input *ngSwitchCase="'evaluators'" pInputText type="text"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' + ('EVALUATORS'|translate)"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">-->
+
+                    </th>
+                    <th style="width: 8em;">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData>
+                <tr>
+                    <td>{{rowData.teacher.name ? rowData.teacher.name : getTeacherName(rowData.teacher.id)}}</td>
+                    <td>{{rowData.evaluation_type.name ? rowData.evaluation_type.name :getEvaluationTypeName(rowData.evaluation_type.id)}}</td>
+                    <td>{{rowData.percentage}}</td>
+                    <td>{{rowData.school_period_id}}</td>
+                    <td>{{rowData.result}}</td>
+                    <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
+                    <!--<td>{{getNameEvaluator(rowData.detail_evaluations)}}</td>
+                    <td>{{rowData.detail_evaluations}}</td>-->
+                    <td>
+                    <button pButton type="button" class="ui-button-success" icon="pi pi-user-plus"
+                            style="margin-right: .5em" [pTooltip]="'ADD EVALUATORS'|translate"
+                            (click)="selectEvaluation(rowData);flagCreateDetailEvaluation = true; flagEditEvaluation = false;"></button>
+
+                    <!--<button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
+                            style="margin-right: .5em" [pTooltip]="'MODIFY RECORD'|translate"
+                            (click)="selectEvaluation(rowData);flagEditEvaluation = true; flagCreateDetailEvaluation = flase;"></button>-->
+
+                        <button pButton type="button" class="ui-button-danger" [pTooltip]="'DELETE RECORD'|translate"
+                            (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
