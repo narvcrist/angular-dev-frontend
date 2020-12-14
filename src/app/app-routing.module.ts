@@ -26,7 +26,7 @@ import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.c
                     {
                         path: 'crud',
                         component: AppCrudComponent,
-                        canActivate: [AuthGuard]
+                        // canActivate: [AuthGuard]
                     },
                     {
                         path: 'profile',

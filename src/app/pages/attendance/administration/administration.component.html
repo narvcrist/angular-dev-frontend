@@ -58,6 +58,72 @@
     </ng-template>
 </p-overlayPanel>
 
+<p-overlayPanel #opCalendarWokrkdays [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="p-formgrid p-grid">
+            <div class="p-field p-col">
+                <h6>Fecha de inicio:</h6>
+                <p-calendar [(ngModel)]="selectedStartDate"
+                            dateFormat="yy/mm/dd"
+                            icon="pi pi-calendar-minus"
+                            showIcon="true"
+                            class="p-my-3 p-ml-3"
+                            [monthNavigator]="true"
+                            readonlyInput="true">
+                </p-calendar>
+            </div>
+            <div class="p-field p-col">
+                <h6>Fecha de fin:</h6>
+                <p-calendar [(ngModel)]="selectedEndDate"
+                            dateFormat="yy/mm/dd"
+                            icon="pi pi-calendar-plus"
+                            showIcon="true"
+                            class="p-my-3 p-ml-3"
+                            [monthNavigator]="true"
+                            readonlyInput="true">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="p-field">
+            <button type="button" pButton pRipple label="Descargar" icon="pi pi-download"
+                    class="p-button-raised" (click)="generateAttendancesReport()"></button>
+        </div>
+    </ng-template>
+</p-overlayPanel>
+
+<p-overlayPanel #opCalendarTasks [showCloseIcon]="true">
+    <ng-template pTemplate>
+        <div class="p-formgrid p-grid">
+            <div class="p-field p-col">
+                <h6>Fecha de inicio:</h6>
+                <p-calendar [(ngModel)]="selectedStartDate"
+                            dateFormat="yy/mm/dd"
+                            icon="pi pi-calendar-minus"
+                            showIcon="true"
+                            class="p-my-3 p-ml-3"
+                            [monthNavigator]="true"
+                            readonlyInput="true">
+                </p-calendar>
+            </div>
+            <div class="p-field p-col">
+                <h6>Fecha de fin:</h6>
+                <p-calendar [(ngModel)]="selectedEndDate"
+                            dateFormat="yy/mm/dd"
+                            icon="pi pi-calendar-plus"
+                            showIcon="true"
+                            class="p-my-3 p-ml-3"
+                            [monthNavigator]="true"
+                            readonlyInput="true">
+                </p-calendar>
+            </div>
+        </div>
+        <div class="p-field">
+            <button type="button" pButton pRipple label="Descargar" icon="pi pi-download"
+                    class="p-button-raised" (click)="generateTasksReport()"></button>
+        </div>
+    </ng-template>
+</p-overlayPanel>
+
 <div class="p-grid">
     <div *ngFor="let item of user.institutions"
          class="p-xl-3 p-lg-3 p-md-6 p-sm-12">
@@ -90,7 +156,6 @@
                                         icon="pi pi-calendar"
                                         showIcon="true"
                                         class="p-my-3 p-ml-3"
-                                        [disabledDays]="[0,6]"
                                         [monthNavigator]="true"
                                         readonlyInput="true"
                                         (onSelect)="getAttendances()">
@@ -102,22 +167,13 @@
                                     pRipple
                                     class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
-                            <p-calendar [(ngModel)]="selectedDates"
-                                        dateFormat="yy/mm/dd"
-                                        icon="pi pi-calendar-plus"
-                                        showIcon="true"
-                                        class="p-my-3 p-ml-3"
-                                        selectionMode="range"
-                                        [disabledDays]="[0,6]"
-                                        [monthNavigator]="true"
-                                        readonlyInput="true">
-                            </p-calendar>
+
                             <button pButton type="button"
                                     label="Reporte de asistencia"
                                     icon="pi pi-file-excel"
                                     pRipple
                                     class="p-button-info p-my-3 p-ml-3"
-                                    (click)="generateAttendancesReport()"></button>
+                                    (click)="opCalendarWokrkdays.show($event)"></button>
                         </div>
                     </div>
                     <hr>
@@ -125,6 +181,7 @@
                         <div class="p-xl-12 p-lg-12 p-md-12 p-sm-12">
                             <p-radioButton name="groupname" value="ABSENT" label="Ausentes" class="p-my-3 p-ml-3"
                                            [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
+
                             <p-radioButton name="groupname" value="PRESENT" label="Presentes" class="p-my-3 p-ml-3"
                                            [(ngModel)]="selectedValue" (click)="getAttendances()"></p-radioButton>
 
@@ -174,6 +231,7 @@
                                     </p>
                                 </div>
                                 <hr>
+                                <!--Boton para iniciar jornada-->
                                 <div *ngIf="!user.attendance" class="p-text-center">
                                     <button pButton type="button"
                                             label="Iniciar Jornada!"
@@ -185,51 +243,43 @@
                                 <div *ngIf="user.attendance">
                                     <div *ngFor="let workday of user.attendance.workdays" class="p-text-center">
                                         <div *ngIf="workday.end_time!==null && workday.type.code==='WORK'">
+                                            <b>{{workday.start_time}} - {{workday.end_time}}</b>
                                             <p-message
                                                     severity="info"
-                                                    text="Jornada Finalizada"></p-message>
-                                            <button pButton type="button"
-                                                    label="Cambiar"
-                                                    class="p-button-text"
-                                                    icon="pi pi-refresh"
-                                                    pRipple
-                                                    (click)="openModalWorkday(user,workday)"></button>
+                                                    text="Cambiar Jornada"
+                                                    class="p-button p-button-text"
+                                                    (click)="openModalWorkday(user,workday)">
+                                            </p-message>
+                                            <hr>
                                         </div>
                                         <div *ngIf="workday.end_time!==null && workday.type.code==='LUNCH'">
+                                            <b>{{workday.start_time}} - {{workday.end_time}}</b>
                                             <p-message
                                                     severity="info"
-                                                    text="Almuerzo Finalizado"></p-message>
-                                            <button pButton type="button"
-                                                    label="Cambiar"
-                                                    class="p-button-text"
-                                                    icon="pi pi-refresh"
-                                                    pRipple
-                                                    (click)="openModalWorkday(user,workday)"></button>
+                                                    text="Cambiar Almuerzo"
+                                                    class="p-button p-button-text"
+                                                    (click)="openModalWorkday(user,workday)">
+                                            </p-message>
+                                            <hr>
                                         </div>
                                         <div *ngIf="workday.end_time===null && workday.type.code==='WORK'">
+                                            <b>{{workday.start_time}}</b>
                                             <p-message
                                                     severity="warn"
-                                                    text="Jornada sin finalizar"></p-message>
-                                            <button pButton type="button"
-                                                    label="Finalizar"
-                                                    class="p-button-text"
-                                                    icon="pi pi-check"
-                                                    pRipple
-                                                    (click)="openModalEndWorkday(user,workday)"></button>
+                                                    class="p-button p-button-text"
+                                                    text="Finalizar Jornada"
+                                                    (click)="openModalEndWorkday(user,workday)">
+                                            </p-message>
                                             <hr>
                                         </div>
                                         <div *ngIf="workday.end_time===null && workday.type.code==='LUNCH'">
+                                            <b>{{workday.start_time}}</b>
                                             <p-message
                                                     severity="warn"
-                                                    text="Almuerzo sin finalizar">
-                                            </p-message>
-                                            <button pButton type="button"
-                                                    label="Finalizar"
                                                     class="p-button-text"
-                                                    icon="pi pi-check"
-                                                    pRipple
+                                                    text="Finalizar Almuerzo"
                                                     (click)="openModalEndWorkday(user,workday)">
-                                            </button>
+                                            </p-message>
                                             <hr>
                                         </div>
                                     </div>
@@ -261,7 +311,6 @@
                                         icon="pi pi-calendar"
                                         showIcon="true"
                                         class="p-my-3 p-ml-3"
-                                        [disabledDays]="[0,6]"
                                         [monthNavigator]="true"
                                         readonlyInput="true"
                                         (onSelect)="getAttendances()">
@@ -272,22 +321,12 @@
                                     pRipple
                                     class="p-my-3 p-ml-3"
                                     (click)="getAttendances()"></button>
-                            <p-calendar [(ngModel)]="selectedDates"
-                                        dateFormat="yy/mm/dd"
-                                        icon="pi pi-calendar-plus"
-                                        showIcon="true"
-                                        class="p-my-3 p-ml-3"
-                                        selectionMode="range"
-                                        [disabledDays]="[0,6]"
-                                        [monthNavigator]="true"
-                                        readonlyInput="true">
-                            </p-calendar>
                             <button pButton type="button"
                                     label="Reporte de actividades"
                                     icon="pi pi-file-excel"
                                     pRipple
                                     class="p-button-info p-my-3 p-ml-3"
-                                    (click)="generateTasksReport()"></button>
+                                    (click)="opCalendarTasks.show($event)"></button>
                         </div>
                     </div>
                     <hr>
@@ -362,7 +401,6 @@
                         dateFormat="yy/mm/dd"
                         icon="pi pi-calendar"
                         showIcon="true"
-                        [disabledDays]="[0,6]"
                         [monthNavigator]="true"
                         readonlyInput="true"
                         class="p-ml-3"

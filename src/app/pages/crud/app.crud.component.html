@@ -4,11 +4,11 @@
 		<div class="card">
 			<p-toolbar styleClass="p-mb-4">
 				<ng-template pTemplate="left">
-					<button pButton pRipple icon="pi pi-plus" label=""
-							class="p-button-info p-button-raised p-button-lg p-button-rounded p-mr-2"
+					<button pButton pRipple icon="pi pi-plus" label="Añadir"
+							class="p-button-info p-button-raised p-button-rounded"
 							(click)="openModal(null)" [pTooltip]="'Nuevo registro'"></button>
-					<button pButton pRipple icon="pi pi-trash" label=""
-							class="p-button-lg p-button-danger p-button-raised p-button-rounded"
+					<button pButton pRipple icon="pi pi-trash" label="Eliminar"
+							class="p-button-danger p-button-raised p-button-rounded p-ml-2"
 							(click)="deleteSelected()"
 							[pTooltip]="'Eliminar uno o varios registros'"></button>
 				</ng-template>

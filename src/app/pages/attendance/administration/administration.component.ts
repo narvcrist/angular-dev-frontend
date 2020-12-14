@@ -13,7 +13,7 @@ import {environment} from '../../../../environments/environment';
 import {Institution} from '../../../models/ignug/institution';
 import {HttpParams} from '@angular/common/http';
 import * as fileSaver from 'file-saver';
-import {format} from 'url';
+
 
 @Component({
     selector: 'app-administration-laboral',
@@ -64,6 +64,8 @@ export class AdministrationComponent implements OnInit {
     dialogFormWorkday: boolean;
     institution: Institution;
     selectedDates: Date;
+    selectedStartDate: Date;
+    selectedEndDate: Date;
 
     constructor(private _breadcrumbService: BreadcrumbService,
                 private _attendanceService: AttendanceService,
@@ -563,8 +565,8 @@ export class AdministrationComponent implements OnInit {
 
     generateAttendancesReport() {
         const params = new HttpParams()
-            .append('start_date', this.selectedDates[0].getFullYear() + '-' + (this.selectedDates[0].getMonth() + 1) + '-' + this.selectedDates[0].getDate())
-            .append('end_date', this.selectedDates[1].getFullYear() + '-' + (this.selectedDates[1].getMonth() + 1) + '-' + this.selectedDates[1].getDate())
+            .append('start_date', this.selectedStartDate.getFullYear() + '-' + (this.selectedStartDate.getMonth() + 1) + '-' + this.selectedStartDate.getDate())
+            .append('end_date', this.selectedEndDate.getFullYear() + '-' + (this.selectedEndDate.getMonth() + 1) + '-' + this.selectedEndDate.getDate())
             .append('institution_id', this.institution.id.toString());
         this._spinner.show();
         this._attendanceService.report('attendances', params).subscribe(response => {
@@ -585,44 +587,26 @@ export class AdministrationComponent implements OnInit {
     }
 
     generateTasksReport() {
-        if (this.selectedDates) {
-            if (this.selectedDates[1] != null) {
-                const params = new HttpParams()
-                    .append('start_date', this.selectedDates[0].getFullYear() + '-' + (this.selectedDates[0].getMonth() + 1) + '-' + this.selectedDates[0].getDate())
-                    .append('end_date', this.selectedDates[1].getFullYear() + '-' + (this.selectedDates[1].getMonth() + 1) + '-' + this.selectedDates[1].getDate())
-                    .append('institution_id', this.institution.id.toString());
-                this._spinner.show();
-                this._attendanceService.report('tasks', params).subscribe(response => {
-                    this._spinner.hide();
-                    const blob = new Blob([response as Blob], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
-                    const date = moment(this.selectedDates[0]).format('MMMM - YYYY').toUpperCase();
-                    const fileName = 'INFORME DE ACTIVIDADES ' + this.institution.short_name + ' (' + date + ').xlsx';
-                    fileSaver.saveAs(blob, fileName);
-                }, error => {
-                    this._spinner.hide();
-                    this.messageService.add({
-                        key: 'msgToast',
-                        severity: 'error',
-                        summary: error.error.msg.summary,
-                        detail: error.error.msg.detail,
-                    });
-                });
-            } else {
-                this.messageService.add({
-                    key: 'msgToast',
-                    severity: 'error',
-                    summary: 'Debe seleccionar la fecha de finalización',
-                    detail: 'Intente de nuevo',
-                });
-            }
-        } else {
+        const params = new HttpParams()
+            .append('start_date', this.selectedStartDate.getFullYear() + '-' + (this.selectedStartDate.getMonth() + 1) + '-' + this.selectedStartDate.getDate())
+            .append('end_date', this.selectedEndDate.getFullYear() + '-' + (this.selectedEndDate.getMonth() + 1) + '-' + this.selectedEndDate.getDate())
+            .append('institution_id', this.institution.id.toString());
+        this._spinner.show();
+        this._attendanceService.report('tasks', params).subscribe(response => {
+            this._spinner.hide();
+            const blob = new Blob([response as Blob], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+            const date = moment(this.selectedDate).format('MMMM - YYYY').toUpperCase();
+            const fileName = 'INFORME DE ACTIVIDADES ' + this.institution.short_name + ' (' + date + ').xlsx';
+            fileSaver.saveAs(blob, fileName);
+        }, error => {
+            this._spinner.hide();
             this.messageService.add({
                 key: 'msgToast',
                 severity: 'error',
-                summary: 'Debe seleccionar un rango de fechas',
-                detail: 'Intente de nuevo',
+                summary: error.error.msg.summary,
+                detail: error.error.msg.detail,
             });
-        }
+        });
     }
 }
 

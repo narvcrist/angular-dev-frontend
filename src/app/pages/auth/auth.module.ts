@@ -25,6 +25,8 @@ import {AppLoginComponent} from './login/app.login.component';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {UserUnlockComponent} from './user-unlock/user-unlock.component';
 import {UnlockComponent} from './unlock/unlock.component';
+import { UserComponent } from './user/user.component';
+import { PermissionRoleComponent } from './permission-role/permission-role.component';
 
 @NgModule({
     imports: [
@@ -49,7 +51,9 @@ import {UnlockComponent} from './unlock/unlock.component';
         PasswordResetComponent,
         PasswordForgotComponent,
         UserUnlockComponent,
-        UnlockComponent
+        UnlockComponent,
+        UserComponent,
+        PermissionRoleComponent
     ],
     providers: [ConfirmationService, MessageService]
 })
