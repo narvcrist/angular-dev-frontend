@@ -15,24 +15,25 @@ export class UserUnlockComponent implements OnInit {
     checked: boolean;
     msgs: Message[];
     formPasswordReset: FormGroup;
-    
+    flagPasswordReset: boolean;
+
     constructor(private _authService: AuthService,
                 private _spinner: NgxSpinnerService,
                 private _router: Router,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService) {
     }
-    
+
     ngOnInit(): void {
         this.buildFormPasswordReset();
     }
-    
+
     buildFormPasswordReset() {
         this.formPasswordReset = this._fb.group({
             username: ['', Validators.required]
         });
     }
-    
+
     onSubmitForgotPassword(event: Event) {
         event.preventDefault();
         if (this.formPasswordReset.valid) {
@@ -41,7 +42,7 @@ export class UserUnlockComponent implements OnInit {
             this.formPasswordReset.markAllAsTouched();
         }
     }
-    
+
     forgotPassword() {
         this._spinner.show();
         this._authService.userUnlock(this.formPasswordReset.controls['username'].value).subscribe(response => {
@@ -59,5 +60,9 @@ export class UserUnlockComponent implements OnInit {
                 detail: error.error.msg.detail
             }];
         });
+    }
+
+    showResponse(event) {
+        this.flagPasswordReset = true;
     }
 }

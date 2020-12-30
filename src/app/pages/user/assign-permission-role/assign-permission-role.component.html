@@ -1,0 +1,73 @@
+<p-toast key="msgToast"></p-toast>
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <button pButton pRipple icon="pi pi-refresh" label="Recargar"
+                    class="p-button-raised p-button-rounded p-ml-2"
+                    (click)="getUsers()" [pTooltip]="'Recargar'"></button>
+        </div>
+    </div>
+</div>
+<p-accordion>
+    <p-accordionTab [header]="role.name" *ngFor="let role of roles" (click)="selectedRole = role">
+        <p-table #dt [value]="role.users" [responsive]="true" dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Apellidos</th>
+                    <th>Nombres</th>
+                    <th>Correo Electrónico</th>
+                    <th>
+                        <p-autoComplete [(ngModel)]="selectedUser" [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUser($event)" field="first_lastname" [dropdown]="true"
+                                        placeholder="Buscar usuario">
+                            <ng-template pTemplate="selectedItem">
+                                <div class="country-item country-item-value" *ngIf="selectedUser">
+                                    <div>{{selectedUser.first_lastname}}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-user pTemplate="item">
+                                <div class="country-item">
+                                    <div>
+                                        <b>{{user.username}}</b> {{user.first_lastname}} {{user.second_lastname}}
+                                        {{user.first_name}} {{user.second_name}}
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <button type="button" pButton pRipple label="Añadir" icon="pi pi-user-plus"
+                                class="p-button-raised p-ml-2" (click)="assignRole()"></button>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'username', 'contains')"
+                               placeholder="Buscar por usuario" class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="text"
+                               (input)="dt.filter($event.target.value, 'first_lastname', 'contains')"
+                               placeholder="Buscar por apellido" class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'first_name', 'contains')"
+                               placeholder="Buscar nombre" class="p-column-filter">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-user>
+                <tr>
+                    <td>{{user.username}}</td>
+                    <td>{{user.first_lastname}} {{user.second_lastname}}</td>
+                    <td>{{user.first_name}} {{user.second_name}}</td>
+                    <td>{{user.email}}</td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-user-minus" pTooltip="Quitar"
+                                class="p-button-danger p-button-raised p-button-rounded"
+                                (click)="removeRole(user)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-accordionTab>
+</p-accordion>

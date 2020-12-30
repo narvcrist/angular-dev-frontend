@@ -77,9 +77,6 @@ export class AttendanceComponent implements OnInit {
     }
 
     ngOnInit() {
-        setInterval(() => {
-            this.currentDate = moment();
-        }, 1000);
         this.fullCalendar();
         this.getProcesses();
         this.getAttendances();
@@ -134,7 +131,7 @@ export class AttendanceComponent implements OnInit {
         this._attendanceService.get('attendances/user_current_day').subscribe(response => {
             this._spinner.hide();
             this.attendance = response['data'];
-            this.currentDate = moment(this.attendance.date);
+            this.currentDate = moment();
         }, error => {
             this._spinner.hide();
             this.msgsErrors = [{

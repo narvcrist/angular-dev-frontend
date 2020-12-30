@@ -1,0 +1,81 @@
+<p-toast key="msgToast"></p-toast>
+<div class="p-grid">
+    <div class="p-col-12">
+        <div class="card">
+            <button pButton pRipple icon="pi pi-refresh" label="Recargar"
+                    class="p-button-raised p-button-rounded p-ml-2"
+                    (click)="getUsers()" [pTooltip]="'Recargar'"></button>
+        </div>
+    </div>
+</div>
+<p-accordion>
+    <p-accordionTab [header]="role.name" *ngFor="let role of roles" (click)="selectedRole = role">
+        <p-table #dt [value]="role.permissions" [responsive]="true" dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Ruta</th>
+                    <th>Módulo</th>
+                    <th>Orden</th>
+                    <th>URI</th>
+                    <th>Estado</th>
+                    <th>
+                        <p-autoComplete [(ngModel)]="selectedUser" [suggestions]="filteredUsers"
+                                        (completeMethod)="filterUser($event)" field="first_lastname" [dropdown]="true"
+                                        placeholder="Buscar usuario">
+                            <ng-template pTemplate="selectedItem">
+                                <div class="country-item country-item-value" *ngIf="selectedUser">
+                                    <div>{{selectedUser.first_lastname}}</div>
+                                </div>
+                            </ng-template>
+                            <ng-template let-user pTemplate="item">
+                                <div class="country-item">
+                                    <div>
+                                        <b>{{user.username}}</b> {{user.first_lastname}} {{user.second_lastname}}
+                                        {{user.first_name}} {{user.second_name}}
+                                    </div>
+                                </div>
+                            </ng-template>
+                        </p-autoComplete>
+                        <button type="button" pButton pRipple label="Añadir" icon="pi pi-user-plus"
+                                class="p-button-raised p-ml-2" (click)="assignRole()"></button>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'route.label', 'contains')"
+                               placeholder="Buscar por ruta" class="p-column-filter">
+                    </th>
+                    <th>
+                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'route.module.name', 'contains')"
+                               placeholder="Buscar por módulo" class="p-column-filter">
+                    </th>
+                    <th>
+
+                    </th>
+
+                    <th>
+
+                    </th>
+                    <th>
+                        <input pInputText type="text" (input)="dt.filter($event.target.value, 'route.status.name', 'contains')"
+                               placeholder="Buscar por estado" class="p-column-filter">
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-permission>
+                <tr>
+                    <td>{{permission.route.label}}</td>
+                    <td>{{permission.route.module.name}}</td>
+                    <td>{{permission.route.order}}</td>
+                    <td>{{permission.route.uri}}</td>
+                    <td>{{permission.route.status.name}}</td>
+                    <td>
+                        <button type="button" pButton pRipple icon="pi pi-user-minus" pTooltip="Quitar"
+                                class="p-button-danger p-button-raised p-button-rounded"
+                                (click)="removeRole(permission)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-accordionTab>
+</p-accordion>

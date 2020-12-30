@@ -13,4 +13,5 @@ export interface Route {
     status: Catalogue;
     parent?: Catalogue;
     images?: Image[];
+    image?: Image;
 }

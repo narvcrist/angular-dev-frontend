@@ -54,7 +54,6 @@ import {DropdownModule} from 'primeng/dropdown';
 import {PaginatorModule} from 'primeng/paginator';
 import {KeyFilterModule} from 'primeng/keyfilter';
 import {InterceptorService} from './interceptors/interceptor.service';
-import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.component';
 
 
 @NgModule({
@@ -107,7 +106,6 @@ import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.c
         AppRightPanelComponent,
         AppConfigComponent,
         AppBreadcrumbComponent,
-        AppUnderMaintenanceComponent,
         AppCrudComponent,
         TableDemoComponent
     ],

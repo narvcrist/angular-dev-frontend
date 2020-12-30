@@ -23,10 +23,10 @@ export const AuthRoutes: Routes = [
                 path: 'access-denied',
                 component: AppAccessdeniedComponent
             },
-            // {
-            //     path: 'under-maintenance',
-            //     component: AppUnderMaintenanceComponent
-            // },
+            {
+                path: 'under-maintenance',
+                component: AppUnderMaintenanceComponent
+            },
             {
                 path: 'login',
                 component: AppLoginComponent

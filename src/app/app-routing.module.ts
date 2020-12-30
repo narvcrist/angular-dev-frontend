@@ -9,7 +9,6 @@ import {AppBlankComponent} from './shared/app.blank.component';
 // AuthGuard
 import {AuthGuard} from './shared/auth.guard';
 import {AppCrudComponent} from './pages/crud/app.crud.component';
-import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.component';
 
 @NgModule({
     imports: [
@@ -22,6 +21,11 @@ import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.c
                         path: 'dashboard',
                         loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule),
                         canActivate: [AuthGuard]
+                    },
+                    {
+                        path: 'user',
+                        loadChildren: () => import('./pages/user/user.module').then(m => m.UserModule),
+                        // canActivate: [AuthGuard]
                     },
                     {
                         path: 'crud',
@@ -42,11 +46,7 @@ import {AppUnderMaintenanceComponent} from './pages/auth/app.under-maintenance.c
                         path: 'teacher_eval',
                         loadChildren: () => import('./pages/teacher-eval/teacher-eval.module').then(m => m.TeacherEvalModule),
                         canActivate: [AuthGuard]
-                    },
-                    {
-                        path: 'auth/under-maintenance',
-                        component: AppUnderMaintenanceComponent
-                    },
+                    }
                 ]
             },
             {

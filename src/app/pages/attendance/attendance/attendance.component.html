@@ -73,7 +73,7 @@
             <div class="p-lg-12 p-md-12 p-sm-12">
                 <p-card>
                     <p-tabView [activeIndex]="selectedTab" (onChange)="changeIndex($event)">
-                        <p-tabPanel header="Jornada" leftIcon="pi pi-home">
+                        <p-tabPanel header="Jornada y Almuerzo" leftIcon="pi pi-home">
                             <div class="p-grid">
                                 <p-message *ngIf="attendance.workdays.length===0" severity="warn"
                                            text="No tienes actividades registradas."></p-message>
@@ -109,7 +109,7 @@
                                 </div>
                             </div>
                         </p-tabPanel>
-                        <p-tabPanel header="Actividades" leftIcon="pi pi-list">
+                        <p-tabPanel header="Mis Actividades" leftIcon="pi pi-list">
                             <div class="p-text-center">
                                 <p-calendar [(ngModel)]="selectedDate"
                                             dateFormat="yy/mm/dd"
@@ -189,7 +189,7 @@
                 </p-card>
             </div>
             <div class="p-lg-12 p-md-12 p-sm-12">
-                <p-card header="Histórico de actividades">
+                <p-card header="Histórico de mis actividades">
                     <p-message *ngIf="processes.length===0" severity="info"
                                text="No tienes actividades registradas."></p-message>
                     <p-chart type="pie" [data]="data" [options]="options"></p-chart>

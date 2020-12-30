@@ -8,6 +8,7 @@ import {IgnugService} from '../../../services/ignug/ignug.service';
 import {environment} from '../../../../environments/environment';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Institution} from '../../../models/ignug/models.index';
+import {element} from 'protractor';
 
 @Component({
     selector: 'app-login',
@@ -88,9 +89,8 @@ export class AppLoginComponent {
             response => {
                 localStorage.setItem('token', JSON.stringify(response));
                 this.authService.resetAttempts(credentials.username).subscribe(response => {
-                    console.log(response);
+
                 }, error => {
-                    console.log(error);
                     this.msgs = [{
                         severity: 'error',
                         summary: error.error.msg.summary,
@@ -101,7 +101,6 @@ export class AppLoginComponent {
             }, error => {
                 this._spinner.hide();
                 this.removeLogin();
-                console.log(error);
                 if (error.status === 401) {
                     this.authService.attempts(credentials.username).subscribe(response => {
                         this.msgs = [{
@@ -132,30 +131,24 @@ export class AppLoginComponent {
                 this._spinner.hide();
                 let errors = false;
                 this.user = response['data'];
-                this.roles = this.user['roles'];
+                const roles = this.user['roles'];
                 this.institutions = this.user['institutions'];
                 this.msgs = [];
                 // Error cuando no tiene asiganda una institucion
                 if (this.institutions.length === 0) {
-                    this.removeLogin();
                     this.msgs.push({
                         severity: 'warn',
-                        summary: 'No tienes una institucion asignada!',
-                        detail: 'Comunícate con el administrador!'
+                        summary: 'No tiene una institucion asignada!',
+                        detail: 'Comuníquese con el administrador!'
                     });
                     errors = true;
                 }
-                // Error cuando no tiene asigando roles
-                if (this.roles.length === 0) {
-                    this.msgs.push({
-                        severity: 'warn',
-                        summary: 'No tienes un rol asignado!',
-                        detail: 'Comunícate con el administrador!'
-                    });
+
+                if (roles.length === 0) {
                     errors = true;
                 }
+
                 if (errors) {
-                    this.removeLogin();
                     return;
                 }
                 this.flagChangePassword = !this.user['change_password'];
@@ -164,15 +157,9 @@ export class AppLoginComponent {
                     this.formInstitutionRole.controls['institution'].setValue(this.institutions[0]);
                 }
 
-                if (this.roles.length === 1) {
-                    this.formInstitutionRole.controls['role'].setValue(this.roles[0]);
-                }
-
-                localStorage.setItem('user', JSON.stringify(this.user));
-                localStorage.setItem('isLoggedin', 'true');
-
-                if (this.institutions.length === 1 && this.roles.length === 1 && !this.flagChangePassword) {
-                    this.continueLogin();
+                if (this.institutions.length === 1 && roles.length === 1 && !this.flagChangePassword) {
+                    this.formInstitutionRole.controls['role'].setValue(roles[0]);
+                    this.getPermissions();
                 }
             },
             error => {
@@ -247,7 +234,8 @@ export class AppLoginComponent {
     }
 
     continueLogin() {
-        this.selectInstitution();
+        localStorage.setItem('user', JSON.stringify(this.user));
+        localStorage.setItem('isLoggedin', 'true');
         localStorage.setItem('institution', JSON.stringify(this.formInstitutionRole.controls['institution'].value));
         localStorage.setItem('role', JSON.stringify(this.formInstitutionRole.controls['role'].value));
         this.router.navigate(['/dashboard']);
@@ -256,28 +244,48 @@ export class AppLoginComponent {
     resetFormInstitutionRole() {
         this.roles = [];
         this.institutions = [];
+        this.msgs = [];
         this.buildFormInstitutionRole();
     }
 
-    selectInstitution() {
-        const allPermissions = this.formInstitutionRole.controls['role'].value['permissions'];
-        const permissions = [];
-        allPermissions.forEach(permission => {
-            if (permission.institution.id === this.formInstitutionRole.controls['institution'].value['id']) {
-                permissions.push(permission);
-            }
-        });
-        localStorage.setItem('permissions', JSON.stringify(permissions));
+    getRoles() {
+        this.authService.post('users/roles', {
+            institution_id: this.formInstitutionRole.controls['institution'].value['id'],
+            user_id: this.user.id
+        }).subscribe(response => {
+            this.roles = response['data'];
+            this.msgs = [];
+        }, error => {
+            this.roles = [];
+            this.msgs = [{
+                severity: 'warn',
+                summary: 'No tiene un rol asignado para esta Institución!',
+                detail: 'Comuníquese con el administrador!'
+            }];
+        })
     }
 
-    // filterInstitution(event) {
-    //     const filtered: any[] = [];
-    //     const query = event.query;
-    //     this.institutions.forEach(institution => {
-    //         if (institution.name.toLowerCase().indexOf(query.toLowerCase()) === 0) {
-    //             filtered.push(institution);
-    //         }
-    //     });
-    //     this.filteredCountries = filtered;
-    // }
+    getPermissions() {
+        this._spinner.show();
+        this.authService.post('users/permissions', {
+            role_id: this.formInstitutionRole.controls['role'].value['id'],
+            institution_id: this.formInstitutionRole.controls['institution'].value['id']
+        }).subscribe(response => {
+            this._spinner.hide();
+            const permissions = response['data'];
+            if (!permissions) {
+                this.msgs = [{
+                    severity: 'warn',
+                    summary: 'No tiene permisos asignados!',
+                    detail: 'Comuníquese con el administrador!'
+                }];
+            } else {
+                this.msgs = [];
+                localStorage.setItem('permissions', JSON.stringify(permissions));
+                this.continueLogin();
+            }
+        }, error => {
+            this._spinner.hide();
+        });
+    }
 }

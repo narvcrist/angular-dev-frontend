@@ -17,7 +17,6 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 // My Components
 import {AppNotfoundComponent} from './app.notfound.component';
 import {AppAccessdeniedComponent} from './app.accessdenied.component';
-import {AppUnderMaintenanceComponent} from './app.under-maintenance.component';
 import {TooltipModule} from 'primeng/tooltip';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { PasswordForgotComponent } from './password-forgot/password-forgot.component';
@@ -25,8 +24,8 @@ import {AppLoginComponent} from './login/app.login.component';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import {UserUnlockComponent} from './user-unlock/user-unlock.component';
 import {UnlockComponent} from './unlock/unlock.component';
-import { UserComponent } from './user/user.component';
-import { PermissionRoleComponent } from './permission-role/permission-role.component';
+import {AppUnderMaintenanceComponent} from './app.under-maintenance.component';
+import {CaptchaModule} from 'primeng/captcha';
 
 @NgModule({
     imports: [
@@ -42,18 +41,17 @@ import { PermissionRoleComponent } from './permission-role/permission-role.compo
         DropdownModule,
         TooltipModule,
         AutoCompleteModule,
+        CaptchaModule,
     ],
     declarations: [
         AppNotfoundComponent,
         AppAccessdeniedComponent,
-        // AppUnderMaintenanceComponent,
         AppLoginComponent,
         PasswordResetComponent,
         PasswordForgotComponent,
         UserUnlockComponent,
         UnlockComponent,
-        UserComponent,
-        PermissionRoleComponent
+        AppUnderMaintenanceComponent
     ],
     providers: [ConfirmationService, MessageService]
 })

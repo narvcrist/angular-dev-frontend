@@ -26,12 +26,15 @@
 							</div>
 						</div>
 						<div class="buttons">
-							<button id="userUnlock" name="userUnlock" type="submit" pButton icon="pi pi-envelope"
+							<button *ngIf="flagPasswordReset" id="userUnlock" name="userUnlock" type="submit" pButton icon="pi pi-envelope"
 									label="Enviar"></button>
 							<button id="goToLogin" name="goToLogin" type="button" pButton label="Ir al Login"
 									icon="pi pi-arrow-left" [routerLink]="['/auth/login']"></button>
 						</div>
 						<p-messages [value]="msgs"></p-messages>
+						<hr>
+						<p-captcha siteKey="6LcY8xAaAAAAAOTR95-UJ_zAeP9OWYPhlWg4_iFC" language="es"
+								   (onResponse)="showResponse($event)"></p-captcha>
 					</form>
 				</div>
 			</div>

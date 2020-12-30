@@ -7,4 +7,5 @@ export interface Image {
     type?: string;
     state?: State;
     uri?: string;
+    extension?: string;
 }

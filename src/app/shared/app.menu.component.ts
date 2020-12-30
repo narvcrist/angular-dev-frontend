@@ -60,7 +60,6 @@ export class AppMenuComponent implements OnInit {
             this.permissions.forEach(permission => {
                 const moduleIndex = this.menus.findIndex(menu => menu.module === permission.route.module.id);
                 if (permission.route.type.code === TYPE_MENUS.MENU) {
-                    console.log('moduleIndex ' + moduleIndex);
                     if (moduleIndex === -1) {
                         this.menus.push(
                             {
@@ -79,7 +78,6 @@ export class AppMenuComponent implements OnInit {
 
                     }
                 }
-                console.log(this.permissions);
             });
         }
     }

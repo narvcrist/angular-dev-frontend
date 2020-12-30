@@ -1,4 +1,5 @@
 import {Catalogue} from '../ignug/catalogue';
+import {Permission, User} from './models.index';
 
 export interface Role {
     id?: number;
@@ -7,4 +8,6 @@ export interface Role {
     uri?: string;
     description?: string;
     system?: Catalogue;
+    permissions?: Permission[];
+    users?: User[];
 }

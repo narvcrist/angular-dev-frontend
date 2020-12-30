@@ -18,6 +18,7 @@ import * as moment from 'moment';
 })
 export class DashboardComponent implements OnInit {
     shortcuts: any[];
+    editShortcuts: any[];
     role: Role;
     user: User;
     institution: Institution;
@@ -26,6 +27,7 @@ export class DashboardComponent implements OnInit {
     msgs: Message[];
     flagBirhday: boolean;
     randomNumber: number = 0;
+    flagShortcuts: boolean;
 
     constructor(
         private _breadcrumbService: BreadcrumbService,
@@ -39,6 +41,8 @@ export class DashboardComponent implements OnInit {
         this.user = JSON.parse(localStorage.getItem('user')) as User;
         this.institution = JSON.parse(localStorage.getItem('institution')) as Institution;
         this.permissions = JSON.parse(localStorage.getItem('permissions')) as Permission[];
+        this.shortcuts = [];
+        this.editShortcuts = [];
         this.STORAGE_URL = environment.STORAGE_URL;
     }
 
@@ -54,13 +58,15 @@ export class DashboardComponent implements OnInit {
             if (response) {
                 this._spinner.hide();
                 this.shortcuts = [];
-                response['data'].forEach(permission => {
+                console.log(response['data']);
+                response['data'].forEach(shortcut => {
                     this.shortcuts.push({
-                        id: permission.id,
-                        image: permission.shortcut.image,
-                        title: permission.route.label,
-                        uri: permission.route.uri,
-                        toolTip: permission.route.description,
+                        id: shortcut.id,
+                        permission_id: shortcut.permission.id,
+                        image: shortcut.image,
+                        title: shortcut.permission.route.label,
+                        uri: shortcut.permission.route.uri,
+                        toolTip: shortcut.permission.route.description,
                     });
                 });
                 this.shortcuts.sort(
@@ -79,7 +85,7 @@ export class DashboardComponent implements OnInit {
                         {
                             severity: 'info',
                             summary: 'No tiene accesos directos disponibles',
-                            detail: 'Consulte con el administrador'
+                            detail: 'Haga click aquí para agregar'
                         },
                     ];
                 }
@@ -102,5 +108,52 @@ export class DashboardComponent implements OnInit {
         }
     }
 
+    administrateShortcuts() {
+        this.editShortcuts = [];
+        this.permissions.forEach(permission => {
+            if (this.shortcuts.find(shortcut => shortcut.permission_id === permission.id) === undefined) {
+                this.editShortcuts.push({
+                    permission_id: permission.id,
+                    image: permission.route.image.code + '.' + permission.route.image.extension,
+                    title: permission.route.label,
+                    uri: permission.route.uri,
+                    toolTip: permission.route.description,
+                });
+            }
 
+        })
+        this.flagShortcuts = true;
+    }
+
+    showShortcut(shortcut) {
+        this._spinner.show();
+        this._authService.post('shortcuts', {shortcut}).subscribe(
+            response => {
+                this._spinner.hide();
+                this.editShortcuts = this.editShortcuts.filter(element => element.uri !== shortcut.uri);
+                shortcut.id = response['data']['id'];
+                this.shortcuts.unshift(shortcut);
+            },error => {
+                this._spinner.hide();
+                if (error.status === 400) {
+                    this.editShortcuts = this.editShortcuts.filter(element => element.uri !== shortcut.uri);
+                    this.getShortcuts();
+                }
+            });
+    }
+
+    hideShortcut(shortcut) {
+        this._spinner.show();
+        this._authService.delete('shortcuts/' + shortcut.id).subscribe(response => {
+            this._spinner.hide();
+            this.shortcuts = this.shortcuts.filter(element => element.id !== shortcut.id);
+            this.editShortcuts.push(shortcut);
+        }, error => {
+            this._spinner.hide();
+            if (error.status === 400) {
+                this.shortcuts = this.shortcuts.filter(element => element.id !== shortcut.id);
+                this.editShortcuts.push(shortcut);
+            }
+        });
+    }
 }

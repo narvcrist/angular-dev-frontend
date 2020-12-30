@@ -1,213 +1,212 @@
 <div class="login-body" [ngClass]="{'layout-dark': dark, 'layout-light': !dark}">
-	<div class="login-content">
-		<div class="night-switch">
-			<p-button styleClass="dark-switch" icon="pi pi-circle-on" (click)="dark = true"></p-button>
-			<p-button styleClass="light-switch" icon="pi pi-circle-off" (click)="dark = false"></p-button>
-		</div>
-		<div class="login-panel">
-			<div class="login-panel-content">
-				<div class="logo">
-					<div *ngIf="institutions.length===0 || roles.length===0">
-						<h3>{{appName}}</h3>
-						<h2>{{appAcronym}}</h2>
-						<img src="assets/layout/images/login/login.png" alt="mirage-layout"/>
-					</div>
-					<div *ngIf="flagChangePassword">
-						<img src="assets/layout/images/login/password_change.png" alt="mirage-layout"/>
-						<h1>Por favor, cambie su contraseña</h1>
-					</div>
-					<div *ngIf="institutions.length===1 && roles.length===1 && !flagChangePassword">
-						<img [src]="STORAGE_URL+institutions[0]['logo']" alt="mirage-layout"/>
-						<p>
-							<b>{{formInstitutionRole.controls['institution'].value['denomination']}}
-								{{formInstitutionRole.controls['institution'].value['name']}}
-							</b>
-						</p>
-					</div>
-					<div *ngIf="(institutions.length>1 || roles.length>1) && !flagChangePassword">
-						<h1 *ngIf="formInstitutionRole.get('institution').errors">
-							Seleccione su Instituto</h1>
-						<img *ngIf="!formInstitutionRole.get('institution').errors"
-							 [src]="STORAGE_URL+formInstitutionRole.controls['institution'].value['logo']"
-							 alt="mirage-layout"/>
-						<p>
-							<b>{{formInstitutionRole.controls['institution'].value['denomination']}}
-								{{formInstitutionRole.controls['institution'].value['name']}}
-							</b>
-						</p>
-					</div>
-				</div>
-				<!-- Formulario login -->
-				<div *ngIf="institutions.length==0 || roles.length==0" class="forms">
-					<form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin($event)">
-						<div class="login-input-wrapper">
-							<label for="username">Usuario:</label>
-							<input id="username" name="username" pInputText
-								   placeholder="Número de cédula Ej. 0504172422"
-								   maxlength="13"
-								   formControlName="username"/>
-							<i class="pi pi-user" pTooltip="Número de cédula Ej. 0504172422"></i>
-							<div *ngIf="formLogin.get('username').errors && formLogin.get('username').touched">
-								<small *ngIf="formLogin.get('username').hasError('required')"
-									   id="usernameHelp" class="p-invalid">
-									Usuario es obligatorio.
-								</small>
-							</div>
-						</div>
-						<div class="login-input-wrapper">
-							<label for="password">Contraseña:</label>
-							<input id="password" name="password" type="password" placeholder=""
-								   pPassword
-								   formControlName="password"
-								   [feedback]="false"
-								   [showPassword]="flagShowPassword"/>
-							<i (click)="flagShowPassword=!flagShowPassword"
-							   [class]="flagShowPassword?'pi pi-eye-slash':'pi pi-eye'"
-							   [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
-							<div *ngIf="formLogin.get('password').errors && formLogin.get('password').touched">
-								<small *ngIf="formLogin.get('password').hasError('required')"
-									   id="passwordHelp" class="p-invalid">
-									Contraseña es obligatorio.
-								</small>
-							</div>
-						</div>
-						<div class="buttons">
-							<button id="login" name="login" type="submit" pButton label="Continuar"
-									icon="pi pi-arrow-right"></button>
-							<button pButton [routerLink]="['/auth/user-unlock']" label="Desbloquear Usuario"
-									icon="pi pi-unlock"
-									class="secondary-button p-ml-2" pTooltip="Haz click para desbloquear tu usuario">
-							</button>
-							<button pButton [routerLink]="['/auth/password-forgot']" label="¿Olvidó su contraseña?"
-									icon="pi pi-key"
-									class="secondary-button p-ml-2" pTooltip="Haz click si olvidaste tu contraseña">
-							</button>
-						</div>
-						<p-messages [value]="msgs"></p-messages>
-					</form>
-				</div>
-				<!-- Formulario cambiar contraseña -->
-				<div class="forms" *ngIf="institutions.length>0 && roles.length>0 && !flagChangePassword">
-					<form [formGroup]="formInstitutionRole" (ngSubmit)="onSubmitContinue($event)">
-						<div class="login-input-wrapper">
-							<button id="usernameDisabled" name="usernameDisabled" pButton type="button"
-									[label]="user.first_name+ ' ' + user.second_name+ ' ' + user.first_lastname + ' ' + user.second_lastname"
-									class="p-button-raised p-button-lg p-text-uppercase" iconPos="right"
-									icon="pi pi-chevron-circle-down" style="width: 100%;"
-									(click)="resetFormInstitutionRole()"></button>
-						</div>
-						<div class="login-input-wrapper" *ngIf="roles.length>0">
-							<label for="institution">Instituto:</label>
-							<p-dropdown id="institution" name="institution" formControlName="institution"
-										[options]="institutions" optionLabel="name" placeholder="Seleccione..."
-										[style]="{'width':'100%'}" (change)="selectInstitution()">
+    <div class="login-content">
+        <div class="night-switch">
+            <p-button styleClass="dark-switch" icon="pi pi-circle-on" (click)="dark = true"></p-button>
+            <p-button styleClass="light-switch" icon="pi pi-circle-off" (click)="dark = false"></p-button>
+        </div>
+        <div class="login-panel">
+            <div class="login-panel-content">
+                <div class="logo">
+                    <div *ngIf="institutions.length===0">
+                        <h3>{{appName}}</h3>
+                        <h2>{{appAcronym}}</h2>
+                        <img src="assets/layout/images/login/login.png" alt="mirage-layout"/>
+                    </div>
+                    <div *ngIf="flagChangePassword">
+                        <img src="assets/layout/images/login/password_change.png" alt="mirage-layout"/>
+                        <h1>Por favor, cambie su contraseña</h1>
+                    </div>
+                    <div *ngIf="institutions.length===1 && roles.length===1 && !flagChangePassword">
+                        <img [src]="STORAGE_URL+institutions[0]['logo']" alt="mirage-layout"/>
+                        <p>
+                            <b>{{formInstitutionRole.controls['institution'].value['denomination']}}
+                                {{formInstitutionRole.controls['institution'].value['name']}}
+                            </b>
+                        </p>
+                    </div>
+                    <div *ngIf="(institutions.length>1 || roles.length>1) && !flagChangePassword">
+                        <h1 *ngIf="formInstitutionRole.get('institution').errors">
+                            Seleccione su Institución</h1>
+                        <img *ngIf="!formInstitutionRole.get('institution').errors"
+                             [src]="STORAGE_URL+formInstitutionRole.controls['institution'].value['logo']"
+                             alt="mirage-layout"/>
+                        <p>
+                            <b>{{formInstitutionRole.controls['institution'].value['denomination']}}
+                                {{formInstitutionRole.controls['institution'].value['name']}}
+                            </b>
+                        </p>
+                    </div>
+                </div>
+                <!-- Formulario login -->
+                <div *ngIf="institutions.length==0" class="forms">
+                    <form [formGroup]="formLogin" (ngSubmit)="onSubmitLogin($event)">
+                        <div class="login-input-wrapper">
+                            <label for="username">Usuario:</label>
+                            <input id="username" name="username" pInputText
+                                   placeholder="Número de cédula Ej. 0504172422"
+                                   maxlength="13"
+                                   formControlName="username"/>
+                            <i class="pi pi-user" pTooltip="Número de cédula Ej. 0504172422"></i>
+                            <div *ngIf="formLogin.get('username').errors && formLogin.get('username').touched">
+                                <small *ngIf="formLogin.get('username').hasError('required')"
+                                       id="usernameHelp" class="p-invalid">
+                                    Usuario es obligatorio.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <label for="password">Contraseña:</label>
+                            <input id="password" name="password" type="password" placeholder=""
+                                   pPassword
+                                   formControlName="password"
+                                   [feedback]="false"
+                                   [showPassword]="flagShowPassword"/>
+                            <i (click)="flagShowPassword=!flagShowPassword"
+                               [class]="flagShowPassword?'pi pi-eye-slash':'pi pi-eye'"
+                               [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
+                            <div *ngIf="formLogin.get('password').errors && formLogin.get('password').touched">
+                                <small *ngIf="formLogin.get('password').hasError('required')"
+                                       id="passwordHelp" class="p-invalid">
+                                    Contraseña es obligatorio.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button id="login" name="login" type="submit" pButton label="Continuar"
+                                    icon="pi pi-arrow-right"></button>
+                            <button pButton [routerLink]="['/auth/user-unlock']" label="Desbloquear Usuario"
+                                    icon="pi pi-unlock"
+                                    class="secondary-button p-ml-2" pTooltip="Haga click para desbloquear tu usuario">
+                            </button>
+                            <button pButton [routerLink]="['/auth/password-forgot']" label="¿Olvidó su contraseña?"
+                                    icon="pi pi-key"
+                                    class="secondary-button p-ml-2" pTooltip="Haga click si olvidaste tu contraseña">
+                            </button>
+                        </div>
+                        <p-messages [value]="msgs"></p-messages>
+                    </form>
+                </div>
 
-								<ng-template pTemplate="selectedItem">
-									<div class="country-item country-item-value"
-										 *ngIf="formInstitutionRole.controls['institution']">
-										<img [src]="STORAGE_URL+formInstitutionRole.controls['institution'].value['logo']"
-											 style="height: 24px;position:absolute"/>
-										<div class="p-ml-6">{{formInstitutionRole.controls['institution'].value['name']}}</div>
-									</div>
-								</ng-template>
-								<ng-template let-item pTemplate="item">
-									<div class="country-item">
-										<img [src]="STORAGE_URL+item.value.logo"
-											 style="height:20px;position:absolute"/>
-										<div class="p-ml-6">{{item.value.name}}</div>
-									</div>
-								</ng-template>
-							</p-dropdown>
-							<div *ngIf="formInstitutionRole.get('institution').errors && formInstitutionRole.get('institution').touched">
-								<small id="institutionHelp" class="p-invalid"
-									   *ngIf="formInstitutionRole.get('institution').hasError('required')">
-									Institution is required.
-								</small>
-							</div>
-						</div>
-						<div class="login-input-wrapper" *ngIf="roles.length>0">
-							<label for="role">Rol:</label>
-							<p-dropdown id="role" name="role" formControlName="role" [options]="roles"
-										placeholder="Seleccione..." optionLabel="name"
-										[style]="{'width':'100%'}"></p-dropdown>
-							<div *ngIf="formInstitutionRole.get('role').errors && formInstitutionRole.get('role').touched">
-								<small id="roleHelp" class="p-invalid"
-									   *ngIf="formInstitutionRole.get('role').hasError('required')">
-									Role is required.
-								</small>
-							</div>
-						</div>
-						<div class="buttons">
-							<button id="continue" name="continue" type="submit" pButton icon="pi pi-sign-in"
-									label="Ingresar"></button>
-							<button id="goToLogin" name="goToLogin" type="button" pButton label="Regresar"
-									icon="pi pi-arrow-left" (click)="resetFormInstitutionRole()"></button>
-						</div>
-						<p-messages [value]="msgs"></p-messages>
-					</form>
-				</div>
-				<!-- Seleccionar Institutcion -->
-				<div class="forms" *ngIf="flagChangePassword">
-					<form [formGroup]="formChangePassword" (ngSubmit)="onSubmitChangePassword($event)">
-						<div class="login-input-wrapper">
-							<label for="new_password">Nueva Contraseña:</label>
-							<input type="password" pPassword id="new_password" name="new_password"
-								   formControlName="new_password"
-								   placeholder="Ingrese mínimo 6 caracteres"
-								   [feedback]="false"
-								   [showPassword]="flagShowPassword"/>
-							<i (click)="flagShowPassword=!flagShowPassword" class="pi"
-							   [ngClass]="{'pi-eye-slash':flagShowPassword,'pi-eye':!flagShowPassword}"
-							   [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
-							<div *ngIf="formChangePassword.get('new_password').errors && formChangePassword.get('new_password').touched">
-								<small id="new_passwor1Help" class="p-invalid"
-									   *ngIf="formChangePassword.get('new_password').hasError('required')">
-									NewPassword is Required.
-								</small>
-								<small id="new_password2Help" class="p-invalid"
-									   *ngIf="formChangePassword.get('new_password').hasError('minlength')">
-									NewPassword minlength is 6.
-								</small>
-							</div>
-							<small id="new_password3Help" class="p-invalid"
-								   *ngIf="formChangePassword.controls['new_password'].value !== formChangePassword.controls['password_confirm'].value">
-								Passwords not match.
-							</small>
-						</div>
-						<div class="login-input-wrapper">
-							<label for="password_confirm">Confirmar Contraseña:</label>
-							<input type="password" pPassword id="password_confirm" name="password_confirm"
-								   formControlName="password_confirm"
-								   placeholder="Ingrese mínimo 6 caracteres" [feedback]="false"
-								   [showPassword]="flagShowPassword"/>
-							<i (click)="flagShowPassword=!flagShowPassword" class="pi"
-							   [ngClass]="{'pi-eye-slash':flagShowPassword,'pi-eye':!flagShowPassword}"
-							   [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
-							<div *ngIf="formChangePassword.get('password_confirm').errors && formChangePassword.get('password_confirm').touched">
-								<small id="password_confirm1Help" class="p-invalid"
-									   *ngIf="formChangePassword.get('password_confirm').hasError('required')">
-									PasswordConfirm is required.
-								</small>
-								<small id="password_confirm2Help" class="p-invalid"
-									   *ngIf="formChangePassword.get('password_confirm').hasError('minlength')">
-									PasswordConfirm minlength is 6.
-								</small>
-							</div>
-							<small id="password_confirm3Help" class="p-invalid"
-								   *ngIf="formChangePassword.controls['new_password'].value != formChangePassword.controls['password_confirm'].value">
-								Passwords not match.
-							</small>
-						</div>
-						<div class="buttons">
-							<button id="changePassword" name="changePassword" type="submit" pButton
-									label="Cambiar Contraseña"
-									icon="pi pi-key"></button>
-						</div>
-						<p-messages [value]="msgs"></p-messages>
-					</form>
-				</div>
-			</div>
-		</div>
-		<div class="desert"></div>
-	</div>
+                <!-- Seleccionar Institutcion -->
+                <div class="forms" *ngIf="institutions.length>0 && !flagChangePassword">
+                    <form [formGroup]="formInstitutionRole" (ngSubmit)="onSubmitContinue($event)">
+                        <div class="login-input-wrapper">
+                            <button id="usernameDisabled" name="usernameDisabled" pButton type="button"
+                                    [label]="user.first_name+ ' ' + user.second_name+ ' ' + user.first_lastname + ' ' + user.second_lastname"
+                                    class="p-button-raised p-button-lg p-text-uppercase" iconPos="right"
+                                    icon="pi pi-chevron-circle-down" style="width: 100%;"
+                                    (click)="resetFormInstitutionRole()"></button>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <label for="institution">Institución:</label>
+                            <p-dropdown id="institution" name="institution" formControlName="institution"
+                                        [options]="institutions" optionLabel="name" placeholder="Seleccione..."
+                                        [style]="{'width':'100%'}" (onChange)="getRoles()">
+                                <ng-template pTemplate="selectedItem">
+                                    <div class="country-item country-item-value"
+                                         *ngIf="formInstitutionRole.controls['institution']">
+                                        <img [src]="STORAGE_URL+formInstitutionRole.controls['institution'].value['logo']"
+                                             style="height: 24px;position:absolute"/>
+                                        <div class="p-ml-6">{{formInstitutionRole.controls['institution'].value['name']}}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-item pTemplate="item">
+                                    <div class="country-item">
+                                        <img [src]="STORAGE_URL+item.value.logo"
+                                             style="height:20px;position:absolute"/>
+                                        <div class="p-ml-6">{{item.value.name}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                            <div *ngIf="formInstitutionRole.get('institution').errors && formInstitutionRole.get('institution').touched">
+                                <small id="institutionHelp" class="p-invalid"
+                                       *ngIf="formInstitutionRole.get('institution').hasError('required')">
+                                    Institution is required.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="login-input-wrapper" *ngIf="roles.length>0">
+                            <label for="role">Rol:</label>
+                            <p-dropdown id="role" name="role" formControlName="role" [options]="roles"
+                                        placeholder="Seleccione..." optionLabel="name"
+                                        [style]="{'width':'100%'}" (onChange)="getPermissions()"></p-dropdown>
+                            <div *ngIf="formInstitutionRole.get('role').errors && formInstitutionRole.get('role').touched">
+                                <small id="roleHelp" class="p-invalid"
+                                       *ngIf="formInstitutionRole.get('role').hasError('required')">
+                                    Role is required.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <button id="goToLogin" name="goToLogin" type="button" pButton label="Regresar"
+                                    icon="pi pi-arrow-left" (click)="resetFormInstitutionRole()"></button>
+                        </div>
+                        <p-messages [value]="msgs"></p-messages>
+                    </form>
+                </div>
+
+                <!-- Formulario cambiar contraseña -->
+                <div class="forms" *ngIf="flagChangePassword">
+                    <form [formGroup]="formChangePassword" (ngSubmit)="onSubmitChangePassword($event)">
+                        <div class="login-input-wrapper">
+                            <label for="new_password">Nueva Contraseña:</label>
+                            <input type="password" pPassword id="new_password" name="new_password"
+                                   formControlName="new_password"
+                                   placeholder="Ingrese mínimo 6 caracteres"
+                                   [feedback]="false"
+                                   [showPassword]="flagShowPassword"/>
+                            <i (click)="flagShowPassword=!flagShowPassword" class="pi"
+                               [ngClass]="{'pi-eye-slash':flagShowPassword,'pi-eye':!flagShowPassword}"
+                               [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
+                            <div *ngIf="formChangePassword.get('new_password').errors && formChangePassword.get('new_password').touched">
+                                <small id="new_passwor1Help" class="p-invalid"
+                                       *ngIf="formChangePassword.get('new_password').hasError('required')">
+                                    NewPassword is Required.
+                                </small>
+                                <small id="new_password2Help" class="p-invalid"
+                                       *ngIf="formChangePassword.get('new_password').hasError('minlength')">
+                                    NewPassword minlength is 6.
+                                </small>
+                            </div>
+                            <small id="new_password3Help" class="p-invalid"
+                                   *ngIf="formChangePassword.controls['new_password'].value !== formChangePassword.controls['password_confirm'].value">
+                                Passwords not match.
+                            </small>
+                        </div>
+                        <div class="login-input-wrapper">
+                            <label for="password_confirm">Confirmar Contraseña:</label>
+                            <input type="password" pPassword id="password_confirm" name="password_confirm"
+                                   formControlName="password_confirm"
+                                   placeholder="Ingrese mínimo 6 caracteres" [feedback]="false"
+                                   [showPassword]="flagShowPassword"/>
+                            <i (click)="flagShowPassword=!flagShowPassword" class="pi"
+                               [ngClass]="{'pi-eye-slash':flagShowPassword,'pi-eye':!flagShowPassword}"
+                               [pTooltip]="flagShowPassword?'Ocultar Contraseña':'Mostrar Contraseña'"></i>
+                            <div *ngIf="formChangePassword.get('password_confirm').errors && formChangePassword.get('password_confirm').touched">
+                                <small id="password_confirm1Help" class="p-invalid"
+                                       *ngIf="formChangePassword.get('password_confirm').hasError('required')">
+                                    PasswordConfirm is required.
+                                </small>
+                                <small id="password_confirm2Help" class="p-invalid"
+                                       *ngIf="formChangePassword.get('password_confirm').hasError('minlength')">
+                                    PasswordConfirm minlength is 6.
+                                </small>
+                            </div>
+                            <small id="password_confirm3Help" class="p-invalid"
+                                   *ngIf="formChangePassword.controls['new_password'].value != formChangePassword.controls['password_confirm'].value">
+                                Passwords not match.
+                            </small>
+                        </div>
+                        <div class="buttons">
+                            <button id="changePassword" name="changePassword" type="submit" pButton
+                                    label="Cambiar Contraseña"
+                                    icon="pi pi-key"></button>
+                        </div>
+                        <p-messages [value]="msgs"></p-messages>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="desert"></div>
+    </div>
 </div>

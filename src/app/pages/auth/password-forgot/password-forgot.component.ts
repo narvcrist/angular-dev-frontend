@@ -15,7 +15,7 @@ export class PasswordForgotComponent implements OnInit {
     checked: boolean;
     msgs: Message[];
     formPasswordReset: FormGroup;
-    
+    flagPasswordReset: boolean;
     constructor(private _authService: AuthService,
                 private _spinner: NgxSpinnerService,
                 private _router: Router,
@@ -59,5 +59,9 @@ export class PasswordForgotComponent implements OnInit {
                 detail: error.error.msg.detail
             }];
         });
+    }
+
+    showResponse(event) {
+        this.flagPasswordReset = true;
     }
 }
