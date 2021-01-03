@@ -9,7 +9,7 @@ import { StudentEvaluationComponent } from './student-evaluation/student-evaluat
 import { EvaluationResultComponent } from './evaluation-result/evaluation-result.component';
 import { PairEvaluationComponent } from './pair-evaluation/pair-evaluation.component';
 import {AttendanceComponent} from '../attendance/attendance/attendance.component';
-import {AuthGuard} from '../../shared/auth.guard';
+import {AuthGuard} from '../../shared/guards/auth.guard';
 import {AdministrationComponent} from '../attendance/administration/administration.component';
 import {BirthdayComponent} from '../attendance/birthday/birthday.component';
 

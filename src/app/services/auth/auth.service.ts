@@ -125,6 +125,5 @@ export class AuthService {
         localStorage.removeItem('permissions');
         localStorage.removeItem('isLoggedin');
         localStorage.removeItem('token');
-        localStorage.removeItem('requestURL');
     }
 }

@@ -1,21 +1,21 @@
-import {Component} from '@angular/core';
-import {ConfirmationService, Message} from 'primeng/api';
-import {Permission, Role, User} from '../../../models/auth/models.index';
-import {AuthService} from '../../../services/auth/auth.service';
-import {NgxSpinnerService} from 'ngx-spinner';
-import {Router} from '@angular/router';
-import {IgnugService} from '../../../services/ignug/ignug.service';
-import {environment} from '../../../../environments/environment';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Institution} from '../../../models/ignug/models.index';
-import {element} from 'protractor';
+import {Router} from '@angular/router';
+import {environment} from '../../../../environments/environment';
+import {NgxSpinnerService} from 'ngx-spinner';
+import {ConfirmationService, Message} from 'primeng/api';
+import {IgnugService} from '../../../services/ignug/ignug.service';
+import {AuthService} from '../../../services/auth/auth.service';
+import {Permission, Role, User} from '../../../models/auth/models.index';
+import {Institution} from '../../../models/ignug/institution';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-login',
     templateUrl: './app.login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class AppLoginComponent {
+export class AppLoginComponent implements OnInit, OnDestroy {
     dark: boolean;
     checked: boolean;
     msgs: Message[];
@@ -33,6 +33,7 @@ export class AppLoginComponent {
     flagChangePassword: boolean;
     appName: string;
     appAcronym: string;
+    private subscription: Subscription;
 
     constructor(private authService: AuthService,
                 private ignugService: IgnugService,
@@ -40,14 +41,22 @@ export class AppLoginComponent {
                 private router: Router,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService) {
-        this.buildFormLogin();
-        this.buildFormInstitutionRole();
-        this.buildFormChangePassword();
+        this.subscription = new Subscription();
         this.roles = [];
         this.institutions = [];
         this.user = {};
         this.appName = environment.APP_NAME;
         this.appAcronym = environment.APP_ACRONYM;
+    }
+
+    ngOnInit(): void {
+        this.buildFormLogin();
+        this.buildFormInstitutionRole();
+        this.buildFormChangePassword();
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     buildFormLogin() {
@@ -85,7 +94,7 @@ export class AppLoginComponent {
             password: this.formLogin.controls['password'].value
         };
         this._spinner.show();
-        this.authService.login(credentials).subscribe(
+        this.subscription.add(this.authService.login(credentials).subscribe(
             response => {
                 localStorage.setItem('token', JSON.stringify(response));
                 this.authService.resetAttempts(credentials.username).subscribe(response => {
@@ -100,7 +109,7 @@ export class AppLoginComponent {
                 this.getUser();
             }, error => {
                 this._spinner.hide();
-                this.removeLogin();
+                this.authService.removeLogin();
                 if (error.status === 401) {
                     this.authService.attempts(credentials.username).subscribe(response => {
                         this.msgs = [{
@@ -122,11 +131,11 @@ export class AppLoginComponent {
                     summary: error.error.msg.summary,
                     detail: error.error.msg.detail,
                 }];
-            });
+            }));
     }
 
     getUser() {
-        this.authService.getUser(this.formLogin.controls['username'].value).subscribe(
+        this.subscription.add(this.authService.getUser(this.formLogin.controls['username'].value).subscribe(
             response => {
                 this._spinner.hide();
                 let errors = false;
@@ -164,13 +173,12 @@ export class AppLoginComponent {
             },
             error => {
                 this._spinner.hide();
-                this.removeLogin();
                 this.msgs = [{
                     severity: 'error',
                     summary: error.error.msg.summary,
                     detail: error.error.msg.detail
                 }];
-            });
+            }));
     }
 
     changePassword() {
@@ -223,16 +231,6 @@ export class AppLoginComponent {
         }
     }
 
-    removeLogin() {
-        localStorage.removeItem('user');
-        localStorage.removeItem('role');
-        localStorage.removeItem('institution');
-        localStorage.removeItem('permissions');
-        localStorage.removeItem('isLoggedin');
-        localStorage.removeItem('token');
-        localStorage.removeItem('requestURL');
-    }
-
     continueLogin() {
         localStorage.setItem('user', JSON.stringify(this.user));
         localStorage.setItem('isLoggedin', 'true');
@@ -249,7 +247,7 @@ export class AppLoginComponent {
     }
 
     getRoles() {
-        this.authService.post('users/roles', {
+        this.subscription.add(this.authService.post('users/roles', {
             institution_id: this.formInstitutionRole.controls['institution'].value['id'],
             user_id: this.user.id
         }).subscribe(response => {
@@ -262,12 +260,12 @@ export class AppLoginComponent {
                 summary: 'No tiene un rol asignado para esta Institución!',
                 detail: 'Comuníquese con el administrador!'
             }];
-        })
+        }));
     }
 
     getPermissions() {
         this._spinner.show();
-        this.authService.post('users/permissions', {
+        this.subscription.add(this.authService.post('users/permissions', {
             role_id: this.formInstitutionRole.controls['role'].value['id'],
             institution_id: this.formInstitutionRole.controls['institution'].value['id']
         }).subscribe(response => {
@@ -286,6 +284,6 @@ export class AppLoginComponent {
             }
         }, error => {
             this._spinner.hide();
-        });
+        }));
     }
 }

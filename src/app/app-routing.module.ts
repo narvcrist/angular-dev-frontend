@@ -7,7 +7,7 @@ import {AppMainComponent} from './shared/app.main.component';
 import {AppBlankComponent} from './shared/app.blank.component';
 
 // AuthGuard
-import {AuthGuard} from './shared/auth.guard';
+import {AuthGuard} from './shared/guards/auth.guard';
 import {AppCrudComponent} from './pages/crud/app.crud.component';
 
 @NgModule({
