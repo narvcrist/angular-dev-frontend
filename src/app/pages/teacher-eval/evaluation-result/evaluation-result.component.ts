@@ -38,19 +38,22 @@ export class EvaluationResultComponent implements OnInit {
   setColsEvaluationResult() {
     this._translate.stream('CODE').subscribe(response => {
       this.colsEvaluationResult = [
-        /* { field: 'teacher', header: this._translate.instant('TEACHER') }, */
         { field: 'evaluation_type', header: this._translate.instant('EVALUATION TYPE') },
         { field: 'school_period', header: this._translate.instant('SCHOOL PERIOD') },
         { field: 'result', header: this._translate.instant('RESULT') },
-        { field: 'percentage', header: this._translate.instant('PERCENTAGE') },
-        { field: 'status', header: this._translate.instant('STATUS') },
       ];
     });
   }
 
+  getResultFinal(result:any){
+    const resultFinal = result*100/4;
+
+    return resultFinal.toFixed(2);
+  }
+
   getEvaluations(): void {
     this._spinnerService.show();
-    this._teacherEvalService.post('types_questions/teacher_evaluations',{}).subscribe(
+    this._teacherEvalService.get('evaluations/teacher_evaluations').subscribe(
       response => {
         this._spinnerService.hide();
         this.evaluations = response['data']
