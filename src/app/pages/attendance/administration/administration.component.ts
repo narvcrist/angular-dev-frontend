@@ -133,8 +133,10 @@ export class AdministrationComponent implements OnInit {
 
     getAttendances() {
         this._spinner.show();
-        const params = new HttpParams().append('institution_id', this.institution.id.toString());
-        this._attendanceService.post('attendances/current_day', {date: this.selectedDate.toDateString()}, params)
+        this._attendanceService.post('attendances/current_day', {
+            date: this.selectedDate.toDateString(),
+            institution_id: this.institution.id
+        })
             .subscribe(response => {
                 this._spinner.hide();
                 this.users = response['data'];
@@ -195,8 +197,7 @@ export class AdministrationComponent implements OnInit {
     }
 
     createOrUpdateTask() {
-        const params = new HttpParams().append('user_id', this.selectedUser.id.toString())
-            .append('institution_id', this.institution.id.toString())
+        const params = new HttpParams()
             .append('date', this.selectedDate.getFullYear() + '-' + (this.selectedDate.getMonth() + 1) + '-' + this.selectedDate.getDate());
 
         this.selectedTask.percentage_advance = this.formTask.controls['percentage_advance'].value;
@@ -205,7 +206,11 @@ export class AdministrationComponent implements OnInit {
         this.formTask.controls['percentage_advance'].setValue('1');
         this.formTask.controls['observation'].setValue('');
         this._spinner.show();
-        this._attendanceService.post('attendances/register_tasks', {task: this.selectedTask}, params).subscribe(response => {
+        this._attendanceService.post('attendances/register_tasks', {
+            task: this.selectedTask,
+            user_id: this.selectedUser.id,
+            institution_id: this.institution.id
+        }, params).subscribe(response => {
             this._spinner.hide();
             this.displayFormTask = false;
             this.attendance = response['data'];
@@ -284,8 +289,6 @@ export class AdministrationComponent implements OnInit {
     }
 
     startWorkday() {
-        const params = new HttpParams().append('user_id', this.selectedUser.id.toString())
-            .append('institution_id', this.institution.id.toString());
         this.workday = {
             description: this.formWorkday.controls['description'].value,
             start_time: this.formWorkday.controls['start_time'].value,
@@ -294,9 +297,11 @@ export class AdministrationComponent implements OnInit {
         };
         this._spinner.show();
         this._attendanceService.post('attendances/start_day', {
+            user_id: this.selectedUser.id,
+            institution_id: this.institution.id,
             workday: this.workday,
             date: this.selectedDate.toDateString()
-        }, params).subscribe(response => {
+        }).subscribe(response => {
             this._spinner.hide();
             this.attendance = response['data'];
             this.getAttendances();

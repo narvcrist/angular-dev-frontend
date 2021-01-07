@@ -29,15 +29,15 @@ export class InterceptorService implements HttpInterceptor {
             if (!req.params.has('page')) {
                 params = params.append('page', '1');
             }
-            if (!req.params.has('institution_id') && localStorage.getItem('institution')) {
+            if (localStorage.getItem('institution')) {
                 params = params.append('institution_id',
                     (JSON.parse(localStorage.getItem('institution')) as Institution).id.toString());
             }
-            if (!req.params.has('user_id') && localStorage.getItem('user')) {
+            if (localStorage.getItem('user')) {
                 params = params.append('user_id',
                     (JSON.parse(localStorage.getItem('user')) as User).id.toString());
             }
-            if (!req.params.has('role_id') && localStorage.getItem('role')) {
+            if (localStorage.getItem('role')) {
                 params = params.append('role_id',
                     (JSON.parse(localStorage.getItem('role')) as Role).id.toString());
             }
