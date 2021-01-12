@@ -8,6 +8,7 @@ import { SelfEvaluationComponent } from './self-evaluation/self-evaluation.compo
 import { StudentEvaluationComponent } from './student-evaluation/student-evaluation.component';
 import { EvaluationResultComponent } from './evaluation-result/evaluation-result.component';
 import { PairEvaluationComponent } from './pair-evaluation/pair-evaluation.component';
+import {StudentEvaluationResultComponent} from './student-evaluation-result/student-evaluation-result.component';
 import { AuthorityEvaluationComponent } from './authority-evaluation/authority-evaluation.component';
 import {AttendanceComponent} from '../attendance/attendance/attendance.component';
 import {AuthGuard} from '../../shared/guards/auth.guard';
@@ -63,6 +64,12 @@ export const routes: Routes = [
         path: 'evaluation-results',
         component: EvaluationResultComponent,
         canActivate: [AuthGuard]
+      },
+      {
+        path:'student-evaluations-result',
+        component: StudentEvaluationResultComponent,
+        canActivate: [AuthGuard]
+
       }
     ]
   }

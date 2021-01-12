@@ -25,6 +25,9 @@ export class EvaluationTypeComponent implements OnInit {
   flagEditEvaluationType: boolean;
   headerDialogEvaluationType: string;
   displayFormEvaluationType: boolean;
+  validatorsOptions: any;
+  dialog: boolean;
+
 
   
 
@@ -41,6 +44,14 @@ export class EvaluationTypeComponent implements OnInit {
       { label: 'Evaluationtypes' }
   ]);
     this.evaluationTypes=[];
+    this.validatorsOptions = {
+      code:{minlength:1},
+      name:{minlength:3 , maxlength: 100},
+      percentage: {minlength:1},
+      global_percentage:{minlength:1},
+
+    };
+
   }
 
   ngOnInit() : void{
@@ -67,7 +78,7 @@ export class EvaluationTypeComponent implements OnInit {
 
 }
   getTypeStatus(): void {
-    const parameters = '?type=STATUS';
+    const parameters = '?type=STATUS_TYPE';
     this._teacherEvalService.get('catalogues' + parameters).subscribe(
         response => {
             const typeStatus = response['data']
@@ -121,10 +132,19 @@ export class EvaluationTypeComponent implements OnInit {
   buildFormEvaluationType() {
     this.formEvaluationType = this._fb.group({
         id: [''],
-        code: ['', Validators.required],
-        percentage: ['', Validators.required],
-        name: ['', Validators.required],
-        global_percentage: ['', Validators.required],
+        code: ['', [
+          Validators.required,
+          Validators.minLength(this.validatorsOptions.code.minlength)]],
+        name: ['', [
+          Validators.required,
+          Validators.minLength(this.validatorsOptions.name.minlength),
+          Validators.maxLength(this.validatorsOptions.name.maxlength)]],
+        percentage: ['',[
+          Validators.required,
+          Validators.minLength(this.validatorsOptions.percentage.minlength)]],
+        global_percentage: ['', [ 
+          Validators.required,
+          Validators.minLength(this.validatorsOptions.global_percentage.minlength)]],
         status_id : ['', Validators.required]
 
     });
@@ -139,6 +159,7 @@ export class EvaluationTypeComponent implements OnInit {
             this.createEvaluationType();
             console.log('creado');
         }
+        this.dialog= false;
     } else {
         this.formEvaluationType.markAllAsTouched();
         console.log('salio');
@@ -165,6 +186,7 @@ selectEvaluationType(evaluationType: EvaluationType): void {
       this._translate.stream('NEW EVALUATION TYPE').subscribe(response => {
           this.headerDialogEvaluationType  = response;
       });
+      this.dialog=true;
   }
   this.displayFormEvaluationType = true;
 }

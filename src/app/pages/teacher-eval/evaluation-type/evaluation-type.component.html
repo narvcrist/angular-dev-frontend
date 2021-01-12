@@ -1,89 +1,118 @@
-
-
- <p-dialog [header]="headerDialogEvaluationType" [(visible)]="displayFormEvaluationType" modal="true" showEffect="fade"
-          styleClass="mydialog" [style]="{width: '50%'}">
     <form [formGroup]="formEvaluationType" (ngSubmit)="onSubmitEvaluationType($event)">
-        <p-card>
-            <p-header>
-                <h1 style="margin-left: .5em;text-align: center;">{{"EVALUATION TYPES"|translate}}</h1>
-            </p-header>
-            <div class="p-grid">
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <label for="float-input-code">* {{"CODE"|translate}}</label><br>
-                        <input id="float-input-code" type="text" pInputText formControlName="code" size="30"
-                            [readOnly]="flagEditEvaluationType"
-                            [pTooltip]="flagEditEvaluationType?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)">
-                    </span>
+        <p-dialog [(visible)]="displayFormEvaluationType" [style]="{width: '450px'}" header="Evaluation Type" [modal]="true"
+                  styleClass="mydialog">
+            <ng-template pTemplate="content">
+                <div class="p-formgrid p-grid">
+                    <div class="p-field p-col">
+                    <label for="code">Code:</label>
+                    <input type="text" pInputText id="code" name="code"
+                           pKeyFilter="alphanum"
+                           class="p-text-uppercase"
+                           formControlName="code" 
+                           [readOnly]="flagEditEvaluationType"
+                           [pTooltip]="flagEditEvaluationType?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"autofocus/>
                     <div *ngIf="formEvaluationType.get('code').errors && formEvaluationType.get('code').touched">
-                        <p-message severity="warn" text="{{'CODE REQUIRED'|translate}}"
-                            *ngIf="formEvaluationType.get('code').hasError('required')"></p-message>
-                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
-                            *ngIf="formEvaluationType.get('code').hasError('minlength')"></p-message>
+                        <small id="code1" class="p-invalid"
+                        *ngIf="formEvaluationType.get('code').hasError('required')">
+                            Code is required.
+                        </small>
+                        <small id="code1" class="p-invalid"
+                            *ngIf="formEvaluationType.get('code').hasError('minlength')">
+                            Code minLength is {{validatorsOptions.code.minlength}}.
+                        </small>
                     </div>
                 </div>
+                <div class="p-field p-col"></div>
+            </div>
 
-                <div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <label for="float-input-name">* {{"NAME"|translate}}</label><br>
-                        <input id="float-input-name" type="text" pInputText formControlName="name" size="30">
-                    </span>
-                    <div *ngIf="formEvaluationType.get('name').errors && formEvaluationType.get('name').touched">
-                        <p-message severity="warn" text="{{'NAME REQUIRED'|translate}}"
-                                   *ngIf="formEvaluationType.get('name').hasError('required')"></p-message>
-                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
-                                   *ngIf="formEvaluationType.get('name').hasError('minlength')"></p-message>
-                    </div>
-                </div>
-                <div class="col px-md-8" style="margin: .8em">
-                    <span class="ui-float-label">
-                        <label for="float-input-percentage">* {{"PERCENTAGE"|translate}}</label><br>
-                        <input id="float-input-percentage" type="text" pInputText formControlName="percentage" size="30">
-                    </span>
-                    <div *ngIf="formEvaluationType.get('percentage').errors && formEvaluationType.get('percentage').touched">
-                        <p-message severity="warn" text="{{'PERCENTAGE REQUIRED'|translate}}"
-                                   *ngIf="formEvaluationType.get('percentage').hasError('required')"></p-message>
-                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
-                                   *ngIf="formEvaluationType.get('percentage').hasError('minlength')"></p-message>
-                    </div>
-                </div>
-                <div class="col px-md-8" style="margin: .8em">
-                    <span class="ui-float-label">
-                        <label for="float-input-globalpercentage">* {{"GLOBAL PERCENTAGE"|translate}}</label><br>
-                        <input id="float-input-globalpercentage" type="text" pInputText formControlName="global_percentage" size="30">
-                    </span>
-                    <div *ngIf="formEvaluationType.get('global_percentage').errors && formEvaluationType.get('global_percentage').touched">
-                        <p-message severity="warn" text="{{'VALUE REQUIRED'|translate}}"
-                                   *ngIf="formEvaluationType.get('global_percentage').hasError('required')"></p-message>
-                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
-                                   *ngIf="formEvaluationType.get('global_percentage').hasError('minlength')"></p-message>
-                    </div>
-                </div>
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em" >
-                    <span class="ui-float-label">
-                        <label for="float-input-status">* {{"SELECT STATUS"|translate}}</label><br>
-                        <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
-                                    [style]="{'width':'235px'}"></p-dropdown>
-                    </span>
-                    <div *ngIf="formEvaluationType.get('status_id').errors && formEvaluationType.get('status_id').touched">
-                        <p-message severity="warn" text="{{'STATUS REQUIRED'|translate}}"
-                                   *ngIf="formEvaluationType.get('status_id').hasError('required')"></p-message>
-                    </div>
+            <div class="p-field">
+                <label for="name">Name:
+                    <small>
+                        ({{formEvaluationType.get('name').value == null ? 0 : formEvaluationType.get('name').value.length}}
+                         de
+                        {{validatorsOptions.name.maxlength}})
+                    </small>
+                </label><br>
+                <input type="text" pInputText id="name" name="name" size="50"
+                    pKeyFilter="alpha"
+                    class="p-text-uppercase"
+                    [maxlength]="validatorsOptions.name.maxlength"
+                    formControlName="name"/>
+                <div *ngIf="formEvaluationType.get('name').errors && formEvaluationType.get('name').touched">
+                    <small id="name1Help" class="p-invalid"
+                        *ngIf="formEvaluationType.get('name').hasError('required')">
+                        Name is required.
+                    </small>
+                    <small id="name2nHelp" class="p-invalid"
+                        *ngIf="formEvaluationType.get('name').hasError('minlength')">
+                        Name minLength is {{validatorsOptions.name.minlength}}.
+                    </small>
+                    <small id="name3Help" class="p-invalid"
+                        *ngIf="formEvaluationType.get('name').hasError('maxlength')">
+                        Name maxLength is {{validatorsOptions.name.maxlength}}.
+                    </small>
                 </div>
             </div>
-            <p-footer>
-                <div class="p-fluid p-formgrid p-grid">
-                    <div class="p-field p-col">
-                        <button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
-                                label="{{'SAVE'|translate}}"></button>
+            
+            <div class="p-formgrid p-grid">
+                <div class="p-field p-col">
+                    <label for="status">Status:</label>
+                    <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
+                    [style]="{'width':'235px'}"></p-dropdown>
+                    <div *ngIf="formEvaluationType.get('status_id').errors && formEvaluationType.get('status_id').touched">
+                        <small id="status" class="p-invalid"
+                            *ngIf="formEvaluationType.get('status_id').hasError('required')">
+                                Status is required.
+                        </small>
                     </div>
                 </div>
-            </p-footer>
-        </p-card>
+                <div class="p-field p-col">
+                </div>
+            </div>
+                <div class="p-formgrid p-grid">
+                    <div class="p-field p-col">
+                        <label for="percentage">Percentage:
+                        </label><br>
+                        <input type="number" pInputText id="percentage" name="percentage" size="10"
+                               pKeyFilter="alphanum" 
+                               formControlName="percentage"/> %
+                        <div *ngIf="formEvaluationType.get('percentage').errors && formEvaluationType.get('percentage').touched">
+                            <small id="percenta" class="p-invalid"
+                                   *ngIf="formEvaluationType.get('percentage').hasError('required')">
+                                Percentage is required.
+                            </small>
+                            <small id="percenta1" class="p-invalid"
+                                   *ngIf="formEvaluationType.get('percentage').hasError('minlength')">
+                                Percentage minLength is {{validatorsOptions.percentage.minlength}}.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="p-field p-col">
+                        <label for="globalpercentage">Global Percentage:
+                        </label><br>
+                        <input type="number" pInputText id="global_percentage" name="global_percentage" pKeyFilter="alphanum" size="10"
+                               formControlName="global_percentage"/> %
+                        <div *ngIf="formEvaluationType.get('global_percentage').errors && formEvaluationType.get('global_percentage').touched">
+                            <small id="globapercentage1" class="p-invalid"
+                                   *ngIf="formEvaluationType.get('global_percentage').hasError('required')">
+                                Global percentage is required.
+                            </small>
+                            <small id="globalpercentage2" class="p-invalid"
+                                   *ngIf="formEvaluationType.get('global_percentage').hasError('minlength')">
+                                Global percentage minLength is {{validatorsOptions.global_percentage.minlength}}.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <!-- <button type="button" pButton pRipple label="Cancelar" icon="pi pi-times"
+                        class="p-button-text" (click)="dialog=false"></button> -->
+                <button type="submit" pButton pRipple label="Guardar" icon="pi pi-save"
+                        class="p-button-raised"></button>
+            </ng-template>
+        </p-dialog>
     </form>
-</p-dialog>
 <p-confirmDialog [style]="{width: '425px'}">
 </p-confirmDialog>
 <p-toast key="tst"></p-toast>
