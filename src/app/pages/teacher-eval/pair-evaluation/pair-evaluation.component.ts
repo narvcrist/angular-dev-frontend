@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../../shared/breadcrumb.service';
 import { MessageService } from 'primeng/api';
-import { IgnugService } from '../../../services/ignug/ignug.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TeacherEvalService } from '../../../services/teacher-eval/teacher-eval.service';
@@ -40,8 +39,7 @@ export class PairEvaluationComponent implements OnInit {
     private _spinnerService: NgxSpinnerService,
     private _teacherEvalService: TeacherEvalService,
     private _messageService: MessageService,
-    private _translate: TranslateService,
-    private _ignugService: IgnugService,
+    private _translate: TranslateService
   ) {
     this._breadcrumbService.setItems([
       { label: 'pairEvaluations' }
@@ -102,7 +100,7 @@ export class PairEvaluationComponent implements OnInit {
 
   getTeachers(): void {
     this._spinnerService.show();
-    this._ignugService.get('teachers').subscribe(
+    this._teacherEvalService.get('teachers').subscribe(
       response => {
         const teachers = response['data'];
         this.teachers = [{ label: 'Seleccione', value: '' }];
