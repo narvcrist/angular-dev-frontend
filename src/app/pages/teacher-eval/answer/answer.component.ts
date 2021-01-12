@@ -68,7 +68,7 @@ export class AnswerComponent implements OnInit {
     }
 
     getTypeStatus(): void {
-        const parameters = '?type=STATUS';
+        const parameters = '?type=STATUS_TYPE';
         this._teacherEvalService.get('catalogues' + parameters).subscribe(
             response => {
                 const typeStatus = response['data']
