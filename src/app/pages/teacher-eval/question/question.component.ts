@@ -98,7 +98,7 @@ export class QuestionComponent implements OnInit {
   }
 
   getCatalogueTypes(): void {
-    const parameters = '?type=TYPE_QUESTIONS';
+    const parameters = '?type=QUESTIONS_TYPE';
     this._teacherEvalService.get('catalogues' + parameters).subscribe(
       response => {
         const catalogueTypes = response['data'];
@@ -118,7 +118,7 @@ export class QuestionComponent implements OnInit {
   }
 
   getTypeStatus(): void {
-    const parameters = '?type=STATUS';
+    const parameters = '?type=STATUS_TYPE';
     this._teacherEvalService.get('catalogues' + parameters).subscribe(
       response => {
         const catalogueStatus = response['data'];
