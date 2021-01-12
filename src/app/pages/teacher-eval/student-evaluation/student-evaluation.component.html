@@ -1,11 +1,11 @@
-<div *ngIf="displayFormStudentEvaluation" class="centrado">
+<div class="centrado">
     <div class="p-grid">
         <div class="p-lg-12 p-md-12 p-sm-12" style="text-align: center;">
             <h1 style="color:#000;">{{'STUDENT EVALUATIONS'|translate}}</h1>
         </div>
     </div>
 
-    <form [formGroup]="formStudentEvaluation" (ngSubmit)="onSubmitStudentEvaluation($event)" *ngIf="displayFormStudentEvaluation">
+    <form [formGroup]="formStudentEvaluation" (ngSubmit)="onSubmitStudentEvaluation($event)" >
         <p-card>
 
             <div class="p-grid">
