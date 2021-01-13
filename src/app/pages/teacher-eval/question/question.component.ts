@@ -61,12 +61,19 @@ export class QuestionComponent implements OnInit {
   setColsQuestion() {
     this._translate.stream('CODE').subscribe(response => {
       this.colsQuestion = [
-        { field: 'code', header: this._translate.instant('CODE') },
+        /*{ field: 'code', header: this._translate.instant('CODE') },
         { field: 'order', header: this._translate.instant('ORDER') },
         { field: 'name', header: this._translate.instant('NAME') },
         { field: 'description', header: this._translate.instant('DESCRIPTION') },
         { field: 'evaluation_type.name', header: this._translate.instant('EVALUATION TYPE') },
         { field: 'type.name', header: this._translate.instant('TYPE') },
+        { field: 'status.name', header: this._translate.instant('STATUS') },*/
+        { field: 'code', header: this._translate.instant('CÓDIGO') },
+        { field: 'order', header: this._translate.instant('ORDEN') },
+        { field: 'name', header: this._translate.instant('NOMBRE') },
+        { field: 'description', header: this._translate.instant('DESCRIPCIÓN') },
+        { field: 'evaluation_type.name', header: this._translate.instant('TIPO EVALUACIÓN') },
+        { field: 'type.name', header: this._translate.instant('TIPO PREGUNTA') },
         { field: 'status.name', header: this._translate.instant('STATUS') },
       ];
     });
