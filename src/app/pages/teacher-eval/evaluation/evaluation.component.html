@@ -1,129 +1,109 @@
-<p-dialog [header]="headerDialogEvaluation" [(visible)]="displayFormEvaluation" modal="true" showEffect="fade"
-    styleClass="mydialog" [style]="{width: '50%'}">
-    <form [formGroup]="formEvaluation" (ngSubmit)="onSubmitEvaluation($event)">
-        <p-card>
-            <p-header>
-                <h1 style="margin-left: .5em">{{"EVALUATIONS"|translate}}</h1>
-            </p-header>
-            <div class="p-grid">
-                <div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <p-dropdown id="float-input-type" 
-                        [options]="teachers" formControlName="teacher_id"
-                        [disabled]="flagEditEvaluation || flagCreateDetailEvaluation" 
-                        [pTooltip]="flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
-                        [style]="{'width':'350px'}" 
-                        [filter]="true" 
-                        [showClear]="true">
-                        </p-dropdown>
-                        <label for="float-input-type">* {{"SELECT TEACHER"|translate}}</label>
-                    </span>
-                    <div *ngIf="formEvaluation.get('teacher_id').errors && formEvaluation.get('teacher_id').touched">
-                        <p-message severity="warn" text="{{'TEACHER REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('teacher_id').hasError('required')"></p-message>
-                    </div>
+<form [formGroup]="formEvaluation" (ngSubmit)="onSubmitEvaluation($event)">
+    <!--<p-dialog [(visible)]="displayFormEvaluation" header="EVALUATIONS" [modal]="true" styleClass="p-fluid"
+        [style]="{width: '450px'}">-->
+    <p-dialog [(visible)]="displayFormEvaluation" header="Evaluaciones" [modal]="true" styleClass="p-fluid"
+        [style]="{width: '450px'}">
+        <ng-template pTemplate="content">
+
+            <div class="p-field">
+                <!--<label for="float-input-type">Teacher:</label>-->
+                <label for="float-input-type">Docente:</label>
+                <p-dropdown id="float-input-type" [options]="teachers" formControlName="teacher_id"
+                    [disabled]="flagEditEvaluation || flagCreateDetailEvaluation" [filter]="true" [showClear]="true">
+                </p-dropdown>
+                <div *ngIf="formEvaluation.get('teacher_id').errors && formEvaluation.get('teacher_id').touched">
+                    <!--<small id="teacher" class="p-invalid"
+                            *ngIf="formEvaluation.get('teacher_id').hasError('required')">
+                            Teacher is required.
+                        </small>-->
+                    <small id="teacher" class="p-invalid" *ngIf="formEvaluation.get('teacher_id').hasError('required')">
+                        Docente es requerido.
+                    </small>
                 </div>
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <p-dropdown id="float-input-evaluationType" 
-                        [options]="evaluationTypes"
-                        formControlName="evaluation_type_id"
-                        [disabled]="flagEditEvaluation || flagCreateDetailEvaluation"
-                        [pTooltip]="flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
-                        [style]="{'width':'350px'}" 
-                        (onChange)="getPercentage($event)">
-                        </p-dropdown>
-                        <label for="float-input-evaluationType">* {{"SELECT EVALUATION TYPE"|translate}}</label>
-                    </span>
-                    <div
-                        *ngIf="formEvaluation.get('evaluation_type_id').errors && formEvaluation.get('evaluation_type_id').touched">
-                        <p-message severity="warn" text="{{'EVALUATION TYPE REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('evaluation_type_id').hasError('required')"></p-message>
-                    </div>
-                </div>
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em"
-                    *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
-                    <span class="ui-float-label">
-                        <input id="float-input-percentage" type="text" pInputText formControlName="percentage" size="30"
-                            [readOnly]="flagEditEvaluation || flagCreateDetailEvaluation"
-                            [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
-                            style="width :350px">
-                        <label for="float-input-percentage">* {{"PERCENTAGE"|translate}}</label>
-                    </span>
-                    <div *ngIf="formEvaluation.get('percentage').errors && formEvaluation.get('percentage').touched">
-                        <p-message severity="warn" text="{{'PERCENTAGE REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('percentage').hasError('required')"></p-message>
-                        <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
-                            *ngIf="formEvaluation.get('percentage').hasError('minlength')"></p-message>
-                    </div>
-                </div>
-
-                <!--<div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <p-dropdown id="float-input-schoolPeriod" [options]="schoolPeriods"
-                            formControlName="school_period_id"
-                            [disabled]="flagEditEvaluation || flagCreateDetailEvaluation"
-                            [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)"
-                            [style]="{'width':'350px'}"></p-dropdown>
-                        <label for="float-input-schoolPeriod">* {{"SELECT SCHOOL PERIOD"|translate}}</label>
-                    </span>
-                    <div
-                        *ngIf="formEvaluation.get('school_period_id').errors && formEvaluation.get('school_period_id').touched">
-                        <p-message severity="warn" text="{{'EVALUATION TYPE REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('school_period_id').hasError('required')"></p-message>
-                    </div>
-                </div>-->
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em">
-                    <span class="ui-float-label">
-                        <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
-                            [style]="{'width':'350px'}"></p-dropdown>
-                        <label for="float-input-status">* {{"SELECT STATUS"|translate}}</label>
-                    </span>
-                    <div *ngIf="formEvaluation.get('status_id').errors && formEvaluation.get('status_id').touched">
-                        <p-message severity="warn" text="{{'STATUS REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('status_id').hasError('required')"></p-message>
-                    </div>
-                </div>
-
-                <div class="p-xl-12 p-sm-12" style="margin: .5em"
-                    *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
-                    <span class="ui-float-label">
-                        <span class="p-fluid">
-                            <p-autoComplete 
-                            formControlName="evaluators" 
-                            [suggestions]="filteredTeachers" 
-                            field="label"
-                            (completeMethod)="filterTeachers($event)" 
-                            [size]="50" [multiple]="true"
-                            (onSelect)="selectAddEvaluator($event)" 
-                            (onUnselect)="selectDeleteEvaluator($event)"
-                            [minLength]="1" 
-                            placeholder="SEARCH EVALUATORS..">
-                            </p-autoComplete>
-                        </span>
-                        <label for="float-input-type">* {{"SELECT EVALUATORS"|translate}}</label>
-                    </span>
-                    <div *ngIf="formEvaluation.get('evaluators').errors && formEvaluation.get('evaluators').touched">
-                        <p-message severity="warn" text="{{'EVALUATORS REQUIRED'|translate}}"
-                            *ngIf="formEvaluation.get('evaluators').hasError('required')"></p-message>
-                    </div>
-                </div>
-
             </div>
-            <p-footer>
-                <div class="p-fluid p-formgrid p-grid">
-                    <div class="p-field p-col">
-                        <button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
-                            label="{{'SAVE'|translate}}"></button>
-                    </div>
+
+            <div class="p-field">
+                <!--<label for="float-input-evaluationType">Evaluation type:</label>-->
+                <label for="float-input-evaluationType">Tipo de evaluación:</label>
+                <p-dropdown id="float-input-evaluationType" [options]="evaluationTypes"
+                    formControlName="evaluation_type_id" [disabled]="flagEditEvaluation || flagCreateDetailEvaluation"
+                    (onChange)="getPercentage($event)">
+                </p-dropdown>
+                <div
+                    *ngIf="formEvaluation.get('evaluation_type_id').errors && formEvaluation.get('evaluation_type_id').touched">
+                    <!--<small id="evaluation_type" class="p-invalid"
+                             *ngIf="formEvaluation.get('evaluation_type_id').hasError('required')">
+                            Evaluation type is required.
+                        </small>-->
+                    <small id="evaluation_type" class="p-invalid"
+                        *ngIf="formEvaluation.get('evaluation_type_id').hasError('required')">
+                        Tipo de evaluación es requerido.
+                    </small>
                 </div>
-            </p-footer>
-        </p-card>
-    </form>
-</p-dialog>
+            </div>
+
+            <div class="p-field" *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
+                <!--<label for="float-input-percentage">Percentage:</label><br>-->
+                <label for="float-input-percentage">Porcentaje:</label><br>
+                <input id="float-input-percentage" type="text" pInputText formControlName="percentage" size="30"
+                    [readOnly]="flagEditEvaluation || flagCreateDetailEvaluation"
+                    [pTooltip]="flagEditEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate) || flagCreateDetailEvaluation?('CANNOT BE MODIFIED'|translate):('YOU WILL NOT BE ABLE TO MODIFY LATER'|translate)">
+                <div *ngIf="formEvaluation.get('percentage').errors && formEvaluation.get('percentage').touched">
+                    <!--<small id="percentage" class="p-invalid" *ngIf="formEvaluation.get('percentage').hasError('required')">
+                            Percentage is required.
+                        </small>-->
+                    <small id="percentage" class="p-invalid"
+                        *ngIf="formEvaluation.get('percentage').hasError('required')">
+                        Porcentage es requerido.
+                    </small>
+                </div>
+            </div>
+
+            <div class="p-field" *ngIf="flagEditEvaluation || flagCreateDetailEvaluation">
+                <!--<label for="float-input-evaluationType">Evaluation type:</label>-->
+                <label for="float-input-type">Docente evaluador:</label>
+                <span class="p-fluid">
+                    <p-autoComplete formControlName="evaluators" [suggestions]="filteredTeachers" field="label"
+                        (completeMethod)="filterTeachers($event)" [size]="50" [multiple]="true"
+                        (onSelect)="selectAddEvaluator($event)" (onUnselect)="selectDeleteEvaluator($event)"
+                        [minLength]="1" placeholder="BUSCAR DOCENTES..">
+                    </p-autoComplete>
+                </span>
+                <div *ngIf="formEvaluation.get('evaluators').errors && formEvaluation.get('evaluators').touched">
+                    <!--<small id="evaluators" class="p-invalid"
+                             *ngIf="formEvaluation.get('evaluators').hasError('required')">
+                            Evaluator teacher is required.
+                        </small>-->
+                    <small id="evaluators" class="p-invalid"
+                        *ngIf="formEvaluation.get('evaluators').hasError('required')">
+                        Docente evaluador es requerido.
+                    </small>
+                </div>
+            </div>
+            <div class="p-field">
+                <!--<label for="float-input-status">Status:</label><br>-->
+                <label for="float-input-status">Estado:</label><br>
+                <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"></p-dropdown>
+                <div *ngIf="formEvaluation.get('status_id').errors && formEvaluation.get('status_id').touched">
+                    <!--<small id="status" class="p-invalid" *ngIf="formEvaluation.get('status_id').hasError('required')">
+                        Status is required.
+                    </small>-->
+                    <small id="status" class="p-invalid"
+                        *ngIf="formEvaluation.get('status_id').hasError('required')">
+                        Estado es requerido.
+                    </small>
+                </div>
+            </div>
+            <br><br><br>
+        </ng-template>
+
+        <ng-template pTemplate="footer">
+            <!-- <button type="button" pButton pRipple label="Cancelar" icon="pi pi-times"
+                    class="p-button-text" (click)="dialog=false"></button> -->
+            <button type="submit" pButton pRipple label="Guardar" icon="pi pi-save" class="p-button-raised"></button>
+        </ng-template>
+    </p-dialog>
+</form>
 <p-confirmDialog [style]="{width: '425px'}">
 </p-confirmDialog>
 <p-toast key="tst"></p-toast>
@@ -134,7 +114,8 @@
             <ng-template pTemplate="caption">
                 <div class="p-grid">
                     <div class="p-lg-12 p-md-12 p-sm-12">
-                        <h1>{{'EVALUATIONS'|translate}}</h1>
+                        <!--<h1>{{'EVALUATIONS'|translate}}</h1>-->
+                        <h1>EVALUACIONES</h1>
                     </div>
                 </div>
             </ng-template>
@@ -145,14 +126,17 @@
                         <p-sortIcon [field]="col.field"></p-sortIcon>
                     </th>
                     <th style="width: 8em; text-align: center;">
-                        <button pButton type="button" icon="pi pi-plus" [pTooltip]="'NEW RECORD'|translate"
+                        <!--<button pButton type="button" icon="pi pi-plus" [pTooltip]="'NEW RECORD'|translate"
+                            class="ui-button-success"
+                            (click)="selectEvaluation(null);flagEditEvaluation = false; flagCreateDetailEvaluation = false;"></button>-->
+                        <button pButton type="button" icon="pi pi-plus" [pTooltip]="'NUEVO REGISTRO'"
                             class="ui-button-success"
                             (click)="selectEvaluation(null);flagEditEvaluation = false; flagCreateDetailEvaluation = false;"></button>
                     </th>
                 </tr>
                 <tr>
                     <th *ngFor="let col of columns" [ngSwitch]="col.field" style="padding: .5em;">
-                        <input *ngSwitchCase="'teacher.name'" pInputText type="text"
+                        <!--<input *ngSwitchCase="'teacher.name'" pInputText type="text"
                             [placeholder]="('SEARCH BY'|translate) + ' ' +('TEACHER'|translate)"
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
@@ -165,7 +149,7 @@
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'school_period.name'" pInputText type="text"
-                            [placeholder]="('SEARCH BY'|translate) + ' ' +('EVALUATION TYPE'|translate)"
+                            [placeholder]="('SEARCH BY'|translate) + ' ' +('SCHOOL PERIOD'|translate)"
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'result'" pInputText type="text"
@@ -179,6 +163,32 @@
                         <input *ngSwitchCase="'evaluators'" pInputText type="text"
                             [placeholder]="('SEARCH BY'|translate) + ' ' + ('EVALUATORS'|translate)"
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">-->
+                        <input *ngSwitchCase="'teacher.name'" pInputText type="text"
+                            [placeholder]="('BUSCAR POR DOCENTE')" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'evaluation_type.name'" pInputText type="text"
+                            [placeholder]="'BUSCAR POR TIPO EVALUACIÓN'" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'percentage'" pInputText type="text"
+                            [placeholder]="'BUSCAR POR PORCENTAJE'" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'school_period.name'" pInputText type="text"
+                            [placeholder]="'BUSCAR POR PERIODO ACADÉMICO'" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'result'" pInputText type="text" [placeholder]="'BUSCAR POR RESULTADO'"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'status.name'" pInputText type="text" [placeholder]="'BUSCAR POR ESTADO'"
+                            class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'evaluators'" pInputText type="text"
+                            [placeholder]="'BUSCAR POR EVALUADORES'" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
 
                     </th>
@@ -189,10 +199,9 @@
             <ng-template pTemplate="body" let-rowData>
                 <tr>
                     <td>{{rowData.teacher.name ? rowData.teacher.name : getTeacherName(rowData.teacher.id)}}</td>
-                    <td>{{rowData.evaluation_type.name ? rowData.evaluation_type.name :getEvaluationTypeName(rowData.evaluation_type.id)}}</td>
+                    <td>{{rowData.evaluation_type.name ? rowData.evaluation_type.name : getEvaluationTypeName(rowData.evaluation_type.id)}}</td>
                     <td>{{rowData.percentage}}</td>
-                    <!--<td>{{rowData.school_period.name ? rowData.school_period.name : getNameSchoolPeriod(rowData.school_period.id)}}</td>-->
-                    <td>{{rowData.school_period_id}}</td>
+                    <td>{{rowData.school_period.name ? rowData.school_period.name : getSchoolPeriodName(rowData.school_period_id)}}</td>
                     <td>{{getResult(rowData.result)}}</td>
                     <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
                     <ol>
@@ -202,15 +211,22 @@
                     </ol>
 
                     <td>
-                        <button pButton type="button" class="ui-button-success" icon="pi pi-user-plus"
+                        <!--<button pButton type="button" class="ui-button-success" icon="pi pi-user-plus"
                             style="margin-right: .5em" [pTooltip]="'ADD EVALUATORS'|translate"
+                            (click)="selectEvaluation(rowData);flagCreateDetailEvaluation = true; flagEditEvaluation = false;"></button>-->
+
+                        <button pButton type="button" class="ui-button-success" icon="pi pi-user-plus"
+                            style="margin-right: .5em" [pTooltip]="'AÑADIR EVALUADORES'"
                             (click)="selectEvaluation(rowData);flagCreateDetailEvaluation = true; flagEditEvaluation = false;"></button>
 
                         <!--<button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
                             style="margin-right: .5em" [pTooltip]="'MODIFY RECORD'|translate"
                             (click)="selectEvaluation(rowData);flagEditEvaluation = true; flagCreateDetailEvaluation = flase;"></button>-->
 
-                        <button pButton type="button" class="ui-button-danger" [pTooltip]="'DELETE RECORD'|translate"
+                        <!--<button pButton type="button" class="ui-button-danger" [pTooltip]="'DELETE RECORD'|translate"
+                            (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>-->
+
+                        <button pButton type="button" class="ui-button-danger" [pTooltip]="'ELIMINAR REGISTRO'"
                             (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>
                     </td>
                 </tr>
