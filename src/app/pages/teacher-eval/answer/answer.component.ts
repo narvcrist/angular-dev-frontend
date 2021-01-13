@@ -34,7 +34,8 @@ export class AnswerComponent implements OnInit {
         private _translate: TranslateService,
     ) {
         this._breadcrumbService.setItems([
-            { label: 'answers' }
+            { label: 'Respuestas' }
+            /* { label: 'answers' } */
         ]);
 
         this.answers = [];
@@ -57,6 +58,18 @@ export class AnswerComponent implements OnInit {
     setColsAnswer() {
         this._translate.stream('CODE').subscribe(response => {
             this.colsAnswer = [
+                { field: 'code', header: 'CÓDIGO' },
+                { field: 'order', header: 'ORDEN' },
+                { field: 'name', header: 'NOMBRE' },
+                { field: 'value', header: 'VALOR' },
+                { field: 'status.name', header: 'ESTADO' },
+            ];
+        });
+
+    }
+/*     setColsAnswer() {
+        this._translate.stream('CODE').subscribe(response => {
+            this.colsAnswer = [
                 { field: 'code', header: this._translate.instant('CODE') },
                 { field: 'order', header: this._translate.instant('ORDER') },
                 { field: 'name', header: this._translate.instant('NAME') },
@@ -65,7 +78,7 @@ export class AnswerComponent implements OnInit {
             ];
         });
 
-    }
+    } */
 
     getTypeStatus(): void {
         const parameters = '?type=STATUS_TYPE';

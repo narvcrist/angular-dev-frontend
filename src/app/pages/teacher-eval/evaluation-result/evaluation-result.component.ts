@@ -23,7 +23,8 @@ export class EvaluationResultComponent implements OnInit {
     private _translate: TranslateService,
   ) {
     this._breadcrumbService.setItems([
-      { label: 'evaluationResults' }
+      { label: 'Resultados de las evaluaciones' }
+      /* { label: 'evaluationResults' } */
     ]);
     this.evaluations = []
   }
@@ -38,9 +39,9 @@ export class EvaluationResultComponent implements OnInit {
   setColsEvaluationResult() {
     this._translate.stream('CODE').subscribe(response => {
       this.colsEvaluationResult = [
-        { field: 'evaluation_type', header: this._translate.instant('EVALUATION TYPE') },
-        { field: 'school_period', header: this._translate.instant('SCHOOL PERIOD') },
-        { field: 'result', header: this._translate.instant('RESULT') },
+        { field: 'evaluation_type', header: this._translate.instant('TIPO DE EVALUACIÓN') },
+        { field: 'school_period', header: this._translate.instant('PERÍODO ACADÉMICO') },
+        { field: 'result', header: this._translate.instant('RESULTADO') },
       ];
     });
   }
