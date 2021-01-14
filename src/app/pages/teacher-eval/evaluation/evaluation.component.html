@@ -204,6 +204,7 @@
                     <td>{{rowData.school_period.name ? rowData.school_period.name : getSchoolPeriodName(rowData.school_period_id)}}</td>
                     <td>{{getResult(rowData.result)}}</td>
                     <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
+                    {{getTest(evaluations)}}
                     <ol>
                         <ng-container *ngFor="let detail of rowData.detail_evaluations ">
                             <li>{{getTeacherName(detail.detail_evaluationable_id)}}</li>

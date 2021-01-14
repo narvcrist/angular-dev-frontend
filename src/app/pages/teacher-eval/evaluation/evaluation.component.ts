@@ -140,6 +140,7 @@ export class EvaluationComponent implements OnInit {
           detail: response['msg']['detail'],
           life: 5000
         });
+        console.log(response);
       }, error => {
         this._spinnerService.hide();
         this._messageService.add({
@@ -150,6 +151,10 @@ export class EvaluationComponent implements OnInit {
           life: 5000
         });
       });
+  }
+
+  getTest(test){
+    console.log(test);
   }
 
   getEvaluationTypes(): void {
@@ -313,11 +318,11 @@ export class EvaluationComponent implements OnInit {
       evaluation: this.selectedEvaluation,
       teacher: this.selectedEvaluation.teacher,
       evaluation_type: this.selectedEvaluation.evaluation_type,
-      //school_period: this.selectedEvaluation.school_period,
       status: this.selectedEvaluation.status,
     }).subscribe(
       response => {
         this.selectedEvaluation.id = response['data']['id']
+        this.selectedEvaluation.school_period = response['data']['school_period']
         this.evaluations.unshift(this.selectedEvaluation);
         this._spinnerService.hide();
         this._messageService.add({
