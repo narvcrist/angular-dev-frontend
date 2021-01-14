@@ -74,7 +74,7 @@ export class QuestionComponent implements OnInit {
         { field: 'description', header: this._translate.instant('DESCRIPCIÓN') },
         { field: 'evaluation_type.name', header: this._translate.instant('TIPO EVALUACIÓN') },
         { field: 'type.name', header: this._translate.instant('TIPO PREGUNTA') },
-        { field: 'status.name', header: this._translate.instant('STATUS') },
+        { field: 'status.name', header: this._translate.instant('ESTADO') },
       ];
     });
   }
@@ -304,8 +304,8 @@ export class QuestionComponent implements OnInit {
 
   deleteQuestion(question: Question) {
     this._confirmationService.confirm({
-      header: 'Delete ' + question.name,
-      message: 'Are you sure to delete?',
+      header: 'Eliminar ' + question.name,
+      message: 'Estás seguro de eliminar?',
       acceptButtonStyleClass: 'ui-button-danger',
       rejectButtonStyleClass: 'ui-button-secondary',
       acceptLabel: 'Si',

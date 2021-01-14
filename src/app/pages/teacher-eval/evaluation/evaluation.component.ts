@@ -407,8 +407,8 @@ export class EvaluationComponent implements OnInit {
 
   deleteEvaluation(evaluation: Evaluation) {
     this._confirmationService.confirm({
-      header: 'Delete ' + evaluation.id,
-      message: 'Are you sure to delete?',
+      header: 'Eliminar ' + evaluation.evaluation_type.name,
+      message: 'Estás seguro de eliminar?',
       acceptButtonStyleClass: 'ui-button-danger',
       rejectButtonStyleClass: 'ui-button-secondary',
       acceptLabel: 'Si',
