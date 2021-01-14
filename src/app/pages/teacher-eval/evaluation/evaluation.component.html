@@ -88,8 +88,7 @@
                     <!--<small id="status" class="p-invalid" *ngIf="formEvaluation.get('status_id').hasError('required')">
                         Status is required.
                     </small>-->
-                    <small id="status" class="p-invalid"
-                        *ngIf="formEvaluation.get('status_id').hasError('required')">
+                    <small id="status" class="p-invalid" *ngIf="formEvaluation.get('status_id').hasError('required')">
                         Estado es requerido.
                     </small>
                 </div>
@@ -176,15 +175,15 @@
                             [placeholder]="'BUSCAR POR PORCENTAJE'" class="ui-column-filter"
                             style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
-                        <input *ngSwitchCase="'school_period.name'" pInputText type="text"
-                            [placeholder]="'BUSCAR POR PERIODO ACADÉMICO'" class="ui-column-filter"
-                            style="width: 100%; margin-top: 0;"
-                            (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'result'" pInputText type="text" [placeholder]="'BUSCAR POR RESULTADO'"
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'status.name'" pInputText type="text" [placeholder]="'BUSCAR POR ESTADO'"
                             class="ui-column-filter" style="width: 100%; margin-top: 0;"
+                            (input)="dt.filter($event.target.value, col.field, 'contains')">
+                        <input *ngSwitchCase="'school_period.name'" pInputText type="text"
+                            [placeholder]="'BUSCAR POR PERIODO ACADÉMICO'" class="ui-column-filter"
+                            style="width: 100%; margin-top: 0;"
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'evaluators'" pInputText type="text"
                             [placeholder]="'BUSCAR POR EVALUADORES'" class="ui-column-filter"
@@ -200,11 +199,10 @@
                 <tr>
                     <td>{{rowData.teacher.name ? rowData.teacher.name : getTeacherName(rowData.teacher.id)}}</td>
                     <td>{{rowData.evaluation_type.name ? rowData.evaluation_type.name : getEvaluationTypeName(rowData.evaluation_type.id)}}</td>
-                    <td>{{rowData.percentage}}</td>
-                    <td>{{rowData.school_period.name ? rowData.school_period.name : getSchoolPeriodName(rowData.school_period_id)}}</td>
+                    <td>{{rowData.percentage}}%</td>
                     <td>{{getResult(rowData.result)}}</td>
                     <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
-                    {{getTest(evaluations)}}
+                    <td>{{getSchoolPeriodName(rowData.school_period_id)}}</td>
                     <ol>
                         <ng-container *ngFor="let detail of rowData.detail_evaluations ">
                             <li>{{getTeacherName(detail.detail_evaluationable_id)}}</li>

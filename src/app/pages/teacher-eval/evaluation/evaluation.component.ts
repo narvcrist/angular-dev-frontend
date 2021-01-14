@@ -111,16 +111,16 @@ export class EvaluationComponent implements OnInit {
         /*{ field: 'teacher.name', header: this._translate.instant('TEACHER') },
         { field: 'evaluation_type.name', header: this._translate.instant('EVALUATION TYPE') },
         { field: 'percentage', header: this._translate.instant('PERCENTAGE') },
-        { field: 'school_period.name', header: this._translate.instant('SCHOOL PERIOD') },
         { field: 'result', header: this._translate.instant('RESULT') },
         { field: 'status.name', header: this._translate.instant('STATUS') },
+        { field: 'school_period.name', header: this._translate.instant('SCHOOL PERIOD') },
         { field: 'evaluators', header: this._translate.instant('EVALUETORS') },*/
         { field: 'teacher.name', header: this._translate.instant('DOCENTE') },
         { field: 'evaluation_type.name', header: this._translate.instant('TIPO EVALUACIÓN') },
         { field: 'percentage', header: this._translate.instant('PORCENTAJE') },
-        { field: 'school_period.name', header: this._translate.instant('PERIDO ACADÉMICO') },
         { field: 'result', header: this._translate.instant('RESULTADO') },
         { field: 'status.name', header: this._translate.instant('ESTADO') },
+        { field: 'school_period.name', header: this._translate.instant('PERIDO ACADÉMICO') },
         { field: 'evaluators', header: this._translate.instant('EVALUADORES') },
 
       ];
@@ -140,7 +140,6 @@ export class EvaluationComponent implements OnInit {
           detail: response['msg']['detail'],
           life: 5000
         });
-        console.log(response);
       }, error => {
         this._spinnerService.hide();
         this._messageService.add({
@@ -151,10 +150,6 @@ export class EvaluationComponent implements OnInit {
           life: 5000
         });
       });
-  }
-
-  getTest(test){
-    console.log(test);
   }
 
   getEvaluationTypes(): void {
@@ -186,8 +181,7 @@ export class EvaluationComponent implements OnInit {
         this.teachers = [{ label: 'Seleccione', value: '' }];
         teachers.map(item => {
           this.teachers.push({
-            label: item.user.first_name + ' ' + item.user.second_name + ' ' +
-              item.user.first_lastname + ' ' + item.user.second_lastname, value: item.user.id
+            label: item.user.first_name + ' ' + item.user.first_lastname, value: item.user.id
           });
         });
       }, error => {
@@ -209,7 +203,6 @@ export class EvaluationComponent implements OnInit {
         schoolPeriods.map(item => {
           this.schoolPeriods.push({ label: item.name, value: item.id });
         });
-        console.log(this.schoolPeriods);
       }, error => {
         this._messageService.add({
           key: 'tst',

@@ -38,14 +38,14 @@
             </div>
 
             <div class="p-field">
-                <label for="status">Status:</label><br>
+                <label for="status">Estado:</label><br>
                 <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"></p-dropdown>
                 <div *ngIf="formQuestion.get('status_id').errors && formQuestion.get('status_id').touched">
                     <!--<small id="status" class="p-invalid" *ngIf="formQuestion.get('status_id').hasError('required')">
                         Status is required.
                     </small>-->
                     <small id="status" class="p-invalid" *ngIf="formQuestion.get('status_id').hasError('required')">
-                        Status es requerido.
+                        Estado es requerido.
                     </small>
                 </div>
             </div>
@@ -87,7 +87,7 @@
                 <!--<label for="name">Name:</label><br>-->
                 <label for="name">Nombre:</label><br>
                 <textarea pInputTextarea id="float-input-name" name="name" rows="2" cols="32" pKeyFilter="alpha"
-                    class="p-text-uppercase" formControlName="name"></textarea>
+                    formControlName="name"></textarea>
                 <div *ngIf="formQuestion.get('name').errors && formQuestion.get('name').touched">
                     <!--<small id="name1Help" class="p-invalid" *ngIf="formQuestion.get('name').hasError('required')">
                         Name is required.
@@ -102,7 +102,7 @@
                 <!--<label for="float-input-description">description:</label><br>-->
                 <label for="float-input-description">Descripción:</label><br>
                 <textarea pInputTextarea id="float-input-description" rows="2" cols="32" pKeyFilter="alpha"
-                    class="p-text-uppercase" formControlName="description"></textarea>
+                    formControlName="description"></textarea>
                 <div *ngIf="formQuestion.get('description').errors && formQuestion.get('description').touched">
                     <!--<small id="description1Help" class="p-invalid" *ngIf="formQuestion.get('description').hasError('required')">
                         Description is required.
