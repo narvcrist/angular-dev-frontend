@@ -241,8 +241,10 @@ export class AnswerComponent implements OnInit {
 
     deleteAnswer(answer: Answer) {
         this._confirmationService.confirm({
-            header: 'Delete ' + answer.name,
-            message: 'Are you sure to delete?',
+            header: 'Eliminar ' + answer.name,
+            /* header: 'Delete ' + answer.name, */
+            message: 'Estás seguro de eliminar?',
+            /* message: 'Are you sure to delete?', */
             acceptButtonStyleClass: 'ui-button-danger',
             rejectButtonStyleClass: 'ui-button-secondary',
             acceptLabel: 'Si',
