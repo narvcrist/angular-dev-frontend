@@ -139,12 +139,12 @@
                     <td>{{rowData.name}}</td>
                     <td>{{rowData.value}}</td>
                     <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
-                    <td>
+                    <td style=" width: 8em; text-align: center;">
                         <button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
                             style="margin-right: .5em" pTooltip="Modificar registro"
                             (click)="selectAnswer(rowData);flagEditAnswer = true;"></button>
-                        <button pButton type="button" class="ui-button-danger" pTooltip="Eliminar registro"
-                            (click)="deleteAnswer(rowData)" icon="pi pi-trash"></button>
+<!--                         <button pButton type="button" class="ui-button-danger" pTooltip="Eliminar registro"
+                            (click)="deleteAnswer(rowData)" icon="pi pi-trash"></button> -->
                     </td>
                 </tr>
             </ng-template>
