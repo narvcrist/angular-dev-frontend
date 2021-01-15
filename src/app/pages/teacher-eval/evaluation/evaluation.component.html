@@ -191,7 +191,7 @@
                             (input)="dt.filter($event.target.value, col.field, 'contains')">
 
                     </th>
-                    <th style="width: 11em;">
+                    <th style="width: 8em;">
                     </th>
                 </tr>
             </ng-template>
@@ -209,7 +209,7 @@
                         </ng-container>
                     </ol>
 
-                    <td>
+                    <td style=" width: 8em; text-align: center;">
                         <!--<button pButton type="button" class="ui-button-success" icon="pi pi-user-plus"
                             style="margin-right: .5em" [pTooltip]="'ADD EVALUATORS'|translate"
                             (click)="selectEvaluation(rowData);flagCreateDetailEvaluation = true; flagEditEvaluation = false;"></button>-->
@@ -225,8 +225,8 @@
                         <!--<button pButton type="button" class="ui-button-danger" [pTooltip]="'DELETE RECORD'|translate"
                             (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>-->
 
-                        <button pButton type="button" class="ui-button-danger" [pTooltip]="'ELIMINAR REGISTRO'"
-                            (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>
+                        <!--<button pButton type="button" class="ui-button-danger" [pTooltip]="'ELIMINAR REGISTRO'"
+                            (click)="deleteEvaluation(rowData)" icon="pi pi-trash"></button>-->
                     </td>
                 </tr>
             </ng-template>
