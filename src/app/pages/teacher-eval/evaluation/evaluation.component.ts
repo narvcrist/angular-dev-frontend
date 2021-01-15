@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TeacherEvalService } from '../../../services/teacher-eval/teacher-eval.service';
 import { BreadcrumbService } from '../../../shared/breadcrumb.service';
+import { IgnugService } from '../../../services/ignug/ignug.service';
 import { Evaluation } from '../../../models/teacher-eval/evaluation';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -33,6 +34,7 @@ export class EvaluationComponent implements OnInit {
   filteredTeachers: any[];
 
   constructor(private _teacherEvalService: TeacherEvalService,
+    private _ignugService: IgnugService,
     private _messageService: MessageService,
     private _fb: FormBuilder,
     private _translate: TranslateService,
@@ -64,6 +66,7 @@ export class EvaluationComponent implements OnInit {
     this.getEvaluations();
     this.getEvaluationTypes();
     this.getTeachers();
+    this.getSchoolPeriods();
     this.getTypeStatus();
     this.setColsEvaluation();
 
@@ -97,21 +100,28 @@ export class EvaluationComponent implements OnInit {
     this.selectedEvaluationType = percentage['percentage'];
   }
 
-  getResult(result) {
-    let total = result * 100 / 4
+  getResult(result){
+    let total = result*100/4
     return total.toFixed(2)
   }
 
   setColsEvaluation() {
     this._translate.stream('CODE').subscribe(response => {
       this.colsEvaluation = [
-        { field: 'teacher.name', header: this._translate.instant('TEACHER') },
+        /*{ field: 'teacher.name', header: this._translate.instant('TEACHER') },
         { field: 'evaluation_type.name', header: this._translate.instant('EVALUATION TYPE') },
         { field: 'percentage', header: this._translate.instant('PERCENTAGE') },
-        { field: 'school_period.name', header: this._translate.instant('SCHOOL PERIOD') },
         { field: 'result', header: this._translate.instant('RESULT') },
         { field: 'status.name', header: this._translate.instant('STATUS') },
-        { field: 'evaluators', header: this._translate.instant('EVALUETORS') },
+        { field: 'school_period.name', header: this._translate.instant('SCHOOL PERIOD') },
+        { field: 'evaluators', header: this._translate.instant('EVALUETORS') },*/
+        { field: 'teacher.name', header: this._translate.instant('DOCENTE') },
+        { field: 'evaluation_type.name', header: this._translate.instant('TIPO EVALUACIÓN') },
+        { field: 'percentage', header: this._translate.instant('PORCENTAJE') },
+        { field: 'result', header: this._translate.instant('RESULTADO') },
+        { field: 'status.name', header: this._translate.instant('ESTADO') },
+        { field: 'school_period.name', header: this._translate.instant('PERIDO ACADÉMICO') },
+        { field: 'evaluators', header: this._translate.instant('EVALUADORES') },
 
       ];
     });
@@ -122,11 +132,7 @@ export class EvaluationComponent implements OnInit {
     this._teacherEvalService.get('evaluations').subscribe(
       response => {
         this._spinnerService.hide();
-        response['data'].map((evaluation: any) => {
-          if (evaluation.evaluation_type_id == EVALUATION_TYPES.PAIR_TEACHING || evaluation.evaluation_type_id == EVALUATION_TYPES.PAIR_MANAGEMENT) {
-            this.evaluations.push(evaluation);
-          }
-        })
+        this.evaluations = response['data'];
         this._messageService.add({
           key: 'tst',
           severity: 'success',
@@ -175,9 +181,27 @@ export class EvaluationComponent implements OnInit {
         this.teachers = [{ label: 'Seleccione', value: '' }];
         teachers.map(item => {
           this.teachers.push({
-            label: item.user.first_name + ' ' + item.user.second_name + ' ' +
-              item.user.first_lastname + ' ' + item.user.second_lastname, value: item.user.id
+            label: item.user.first_name + ' ' + item.user.first_lastname, value: item.user.id
           });
+        });
+      }, error => {
+        this._messageService.add({
+          key: 'tst',
+          severity: 'error',
+          summary: error.error.msg.summary,
+          detail: error.error.msg.detail,
+          life: 5000
+        });
+      });
+  }
+
+  getSchoolPeriods(): void {
+    this._spinnerService.show();
+    this._teacherEvalService.get('school_periods').subscribe(
+      response => {
+        const schoolPeriods = response['data'];
+        schoolPeriods.map(item => {
+          this.schoolPeriods.push({ label: item.name, value: item.id });
         });
       }, error => {
         this._messageService.add({
@@ -196,6 +220,7 @@ export class EvaluationComponent implements OnInit {
       response => {
         const catalogueStatus = response['data'];
         this.status = [{ label: 'Seleccione', value: '' }];
+
         catalogueStatus.forEach(item => {
           this.status.push({ label: item.name, value: item.id });
         });
@@ -208,10 +233,6 @@ export class EvaluationComponent implements OnInit {
           life: 5000
         });
       });
-  }
-
-  getSchoolPeriods(): void {
-
   }
 
   getStatusName(id: number) {
@@ -229,9 +250,9 @@ export class EvaluationComponent implements OnInit {
     return user ? user.label : ""
   }
 
-  getNameSchoolPeriod(id: number) {
+  getSchoolPeriodName(id: number) {
     const school = this.schoolPeriods.find(school => school.value === id)
-    return school ? school.label : ''
+    return school ? school.label : ""
   }
 
   buildFormEvaluation() {
@@ -290,11 +311,11 @@ export class EvaluationComponent implements OnInit {
       evaluation: this.selectedEvaluation,
       teacher: this.selectedEvaluation.teacher,
       evaluation_type: this.selectedEvaluation.evaluation_type,
-      //school_period: this.selectedEvaluation.school_period,
       status: this.selectedEvaluation.status,
     }).subscribe(
       response => {
         this.selectedEvaluation.id = response['data']['id']
+        this.selectedEvaluation.school_period = response['data']['school_period']
         this.evaluations.unshift(this.selectedEvaluation);
         this._spinnerService.hide();
         this._messageService.add({
@@ -328,8 +349,8 @@ export class EvaluationComponent implements OnInit {
         this._spinnerService.hide();
         this.formEvaluation.reset();
         this.selectedEvaluators = [];
-        this.getEvaluations()
-        this._spinnerService.hide();
+          this.getEvaluations()
+            this._spinnerService.hide();
         this._messageService.add({
           key: 'tst',
           severity: 'success',
@@ -386,8 +407,8 @@ export class EvaluationComponent implements OnInit {
 
   deleteEvaluation(evaluation: Evaluation) {
     this._confirmationService.confirm({
-      header: 'Delete ' + evaluation.id,
-      message: 'Are you sure to delete?',
+      header: 'Eliminar ' + evaluation.evaluation_type.name,
+      message: 'Estás seguro de eliminar?',
       acceptButtonStyleClass: 'ui-button-danger',
       rejectButtonStyleClass: 'ui-button-secondary',
       acceptLabel: 'Si',

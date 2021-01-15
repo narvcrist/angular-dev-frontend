@@ -16,7 +16,8 @@
 <div *ngIf="displayFormPairEvaluation" class="centrado">
 
     <div class="p-lg-12 p-md-12 p-sm-12">
-        <h1 style="color:#000;">{{'PAIR EVALUATIONS'|translate}}</h1>
+        <!--<h1 style="color:#000;">{{'PAIR EVALUATIONS'|translate}}</h1>-->
+        <h1 style="color:#000;">EVALUACIÓN POR PARES</h1>
     </div>
 
     <form [formGroup]="formPairEvaluation" (ngSubmit)="onSubmitPairEvaluation($event)">
@@ -78,8 +79,10 @@
             <p-footer>
                 <div class="p-fluid p-formgrid p-grid">
                     <div class="p-field p-col">
+                        <!--<button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
+                            label="{{'SEND'|translate}}"></button>-->
                         <button type="submit" pButton icon="pi pi-save" class="ui-button-primary"
-                            label="{{'SEND'|translate}}"></button>
+                            label="Enviar"></button>
                     </div>
                 </div>
             </p-footer>

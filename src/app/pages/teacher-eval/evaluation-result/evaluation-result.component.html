@@ -4,7 +4,7 @@
             <ng-template pTemplate="caption">
                 <div class="p-grid">
                     <div class="p-lg-12 p-md-12 p-sm-12">
-                        <h1>{{'EVALUATIONS RESULTS'|translate}}</h1>
+                        <h1>RESULTADOS DE LAS EVALUACIONES</h1>
                     </div>
                 </div>
             </ng-template>
@@ -30,3 +30,33 @@
     </div>
 </div>
 <p-toast key="tst"></p-toast>
+<!-- <div class="p-grid ui-fluid">
+    <div class="p-lg-12 p-md-12 p-sm-12">
+        <p-table [columns]="colsEvaluationResult" [value]="evaluations" styleClass="p-datatable-responsive-demo">
+            <ng-template pTemplate="caption">
+                <div class="p-grid">
+                    <div class="p-lg-12 p-md-12 p-sm-12">
+                        <h1>{{'EVALUATIONS RESULTS'|translate}}</h1>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns">
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowData let-columns="columns">
+                <tr>
+
+                        <td>{{rowData.evaluation_type.name}}</td>
+                        <td>{{rowData.school_period.name}}</td>
+                        <td>{{getResultFinal(rowData.result)}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+<p-toast key="tst"></p-toast> -->

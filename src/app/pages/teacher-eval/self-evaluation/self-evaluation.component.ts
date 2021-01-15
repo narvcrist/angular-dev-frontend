@@ -34,7 +34,8 @@ export class SelfEvaluationComponent implements OnInit {
         private _router: Router
     ) {
         this._breadcrumbService.setItems([
-            { label: 'selfEvaluations' }
+            { label: 'autoevaluaciones' }
+           /*  { label: 'selfEvaluations' } */
         ]);
 
         this.questions = [];

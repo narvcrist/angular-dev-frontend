@@ -34,7 +34,8 @@ export class AnswerComponent implements OnInit {
         private _translate: TranslateService,
     ) {
         this._breadcrumbService.setItems([
-            { label: 'answers' }
+            { label: 'Respuestas' }
+            /* { label: 'answers' } */
         ]);
 
         this.answers = [];
@@ -57,6 +58,18 @@ export class AnswerComponent implements OnInit {
     setColsAnswer() {
         this._translate.stream('CODE').subscribe(response => {
             this.colsAnswer = [
+                { field: 'code', header: 'CÓDIGO' },
+                { field: 'order', header: 'ORDEN' },
+                { field: 'name', header: 'NOMBRE' },
+                { field: 'value', header: 'VALOR' },
+                { field: 'status.name', header: 'ESTADO' },
+            ];
+        });
+
+    }
+/*     setColsAnswer() {
+        this._translate.stream('CODE').subscribe(response => {
+            this.colsAnswer = [
                 { field: 'code', header: this._translate.instant('CODE') },
                 { field: 'order', header: this._translate.instant('ORDER') },
                 { field: 'name', header: this._translate.instant('NAME') },
@@ -65,10 +78,10 @@ export class AnswerComponent implements OnInit {
             ];
         });
 
-    }
+    } */
 
     getTypeStatus(): void {
-        const parameters = '?type=STATUS';
+        const parameters = '?type=STATUS_TYPE';
         this._teacherEvalService.get('catalogues' + parameters).subscribe(
             response => {
                 const typeStatus = response['data']
@@ -228,8 +241,10 @@ export class AnswerComponent implements OnInit {
 
     deleteAnswer(answer: Answer) {
         this._confirmationService.confirm({
-            header: 'Delete ' + answer.name,
-            message: 'Are you sure to delete?',
+            header: 'Eliminar ' + answer.name,
+            /* header: 'Delete ' + answer.name, */
+            message: 'Estás seguro de eliminar?',
+            /* message: 'Are you sure to delete?', */
             acceptButtonStyleClass: 'ui-button-danger',
             rejectButtonStyleClass: 'ui-button-secondary',
             acceptLabel: 'Si',
