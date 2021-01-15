@@ -66,11 +66,11 @@ export class EvaluationTypeComponent implements OnInit {
   setColsEvaluationType() {
     this._translate.stream('CODE').subscribe(response => {
         this.colsEvaluationType = [
-            { field: 'code', header: this._translate.instant('CODE') },
-            { field: 'name', header: this._translate.instant('NAME') },
-            { field: 'percentage', header: this._translate.instant('PERCENTAGE') },
-            { field: 'global_percentage', header: this._translate.instant('GLOBAL PERCENTAGE') },
-            { field: 'status.name', header: this._translate.instant('STATUS') },
+            { field: 'code', header: this._translate.instant('CÓDIGO') },
+            { field: 'name', header: this._translate.instant('NOMBRE') },
+            { field: 'percentage', header: this._translate.instant('PORCENTAJE') },
+            { field: 'global_percentage', header: this._translate.instant('PORCENTAJE GLOBAL') },
+            { field: 'status.name', header: this._translate.instant('ESTADO') },
 
             
         ];

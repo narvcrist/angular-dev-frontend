@@ -1,7 +1,7 @@
 <div class="centrado">
     <div class="p-grid">
         <div class="p-lg-12 p-md-12 p-sm-12" style="text-align: center;">
-            <h1 style="color:#000;">{{'STUDENT EVALUATIONS'|translate}}</h1>
+            <h1 style="color:#000;">{{'Evaluación Docente'|translate}}</h1>
         </div>
     </div>
 
@@ -12,21 +12,21 @@
                 <div class="p-xl-12 p-sm-12" style="margin: .5em;text-align:center;">
                     <span class="ui-float-label">
                         <input id="float-input-teacher" type="text" pInputText formControlName="subject_teacher_id" size="30">
-                        <p><label for="float-input-teacher">* {{"SUBJECT TEACHER"|translate}}</label></p>
+                        <p><label for="float-input-teacher">* {{"Asignatura-Docente"|translate}}</label></p>
                     </span>
                     <div *ngIf="formStudentEvaluation.get('subject_teacher_id').errors && formStudentEvaluation.get('subject_teacher_id').touched">
-                        <p-message severity="warn" text="{{'TEACHER REQUIRED'|translate}}"
+                        <p-message severity="warn" text="{{'Asignatura obligatorio'|translate}}"
                             *ngIf="formStudentEvaluation.get('subject_teacher_id').hasError('required')"></p-message>
                         <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
                             *ngIf="formStudentEvaluation.get('subject_teacher_id').hasError('minlength')"></p-message>
                     </div>
                     <span class="ui-float-label">
                         <input id="float-input-student" type="text" pInputText formControlName="student_id" size="30">
-                    </span>
-                    <p><label for="float-input-student">* {{"STUDENT"|translate}}</label></p>
+                    </span> 
+                     <p><label for="float-input-student">* {{"Estudiante"|translate}}</label></p>
     
                     <div *ngIf="formStudentEvaluation.get('student_id').errors && formStudentEvaluation.get('student_id').touched">
-                        <p-message severity="warn" text="{{'STUDENT REQUIRED'|translate}}"
+                        <p-message severity="warn" text="{{'Estudiante obligatorio'|translate}}"
                             *ngIf="formStudentEvaluation.get('student_id').hasError('required')"></p-message>
                         <p-message severity="warn" text="Debe ingresar mínimo 5 dígitos"
                             *ngIf="formStudentEvaluation.get('student_id').hasError('minlength')"></p-message>

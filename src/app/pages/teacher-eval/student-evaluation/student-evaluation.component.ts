@@ -4,11 +4,15 @@ import { MessageService } from 'primeng/api';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { TeacherEvalService } from '../../../services/teacher-eval/teacher-eval.service';
+import { IgnugService } from '../../../services/ignug/ignug.service';
+
 import { TranslateService } from '@ngx-translate/core';
 import { EVALUATION_TYPES } from 'src/environments/catalogues';
 import { StudentEvaluation} from '../../../models/teacher-eval/student-evaluation';
 import {InputTextareaModule} from 'primeng/inputtextarea';
 import { Router } from '@angular/router';
+import {Student} from '../../../models/ignug/student';
+import {Permission, Role, User} from '../../../models/auth/models.index';
 
 @Component({
   selector: 'app-student-evaluation',
@@ -23,8 +27,13 @@ export class StudentEvaluationComponent implements OnInit {
   questionsManagement: any[];
   studentEvaluation: StudentEvaluation;
   selectedStudentEvaluation: StudentEvaluation;
+  selectedStudent: Student;
   displayFormStudentEvaluation: boolean;
   showStudentEvaluation: boolean;
+  students: any[];
+  user: User;
+
+
   
 
   constructor(private _breadcrumbService: BreadcrumbService,
@@ -33,6 +42,7 @@ export class StudentEvaluationComponent implements OnInit {
     private _teacherEvalService: TeacherEvalService,
     private _messageService: MessageService,
     private _translate: TranslateService,
+    private _ignugService: IgnugService,
     private _router: Router)
 
     { 
@@ -41,14 +51,17 @@ export class StudentEvaluationComponent implements OnInit {
       ]);
       this.questionsTeaching = [];
       this.questionsManagement = [];
+      this.user = {};
+
       this.buildformStudentEvaluation();
 
     }
 
   ngOnInit(): void 
   { 
-    this.getEvaluations();
+    
     this.getQuestions();
+    
 
   }
   getQuestions(): void {
@@ -89,20 +102,7 @@ export class StudentEvaluationComponent implements OnInit {
 showEvaluationResult(): void {
     this._router.navigate(['/teacher_eval/evaluation-results'])
 }
-getEvaluations(): void {
-    this._spinnerService.show();
-    this._teacherEvalService.get('evaluations/registered_student_evaluations').subscribe(
-        response => {
-            this.selectedStudentEvaluation.subject_teacher,
-            this._spinnerService.hide();
-            this.showEvaluationResult()
-            this.showStudentEvaluation = false
 
-        }, error => {
-            this._spinnerService.hide();
-            this.showStudentEvaluation = true
-        });
-}
 
 buildformStudentEvaluation() {
       this.formStudentEvaluation = this._fb.group({
@@ -163,7 +163,6 @@ createStudentEvaluationTeaching() {
 createStudentEvaluationManagement() {
   this.selectedStudentEvaluation = this.castStudentEvaluationManagement();
   this._spinnerService.show();
-  console.log('usuario',this.selectedStudentEvaluation.student);
   this._teacherEvalService.post('student_evaluations', {
       subject_teacher: this.selectedStudentEvaluation.subject_teacher,
       student: this.selectedStudentEvaluation.student,

@@ -4,7 +4,7 @@
             <ng-template pTemplate="content">
                 <div class="p-formgrid p-grid">
                     <div class="p-field p-col">
-                    <label for="code">Code:</label>
+                    <label for="code">Código:</label>
                     <input type="text" pInputText id="code" name="code"
                            pKeyFilter="alphanum"
                            class="p-text-uppercase"
@@ -14,11 +14,11 @@
                     <div *ngIf="formEvaluationType.get('code').errors && formEvaluationType.get('code').touched">
                         <small id="code1" class="p-invalid"
                         *ngIf="formEvaluationType.get('code').hasError('required')">
-                            Code is required.
+                            Código es obligatorio
                         </small>
                         <small id="code1" class="p-invalid"
                             *ngIf="formEvaluationType.get('code').hasError('minlength')">
-                            Code minLength is {{validatorsOptions.code.minlength}}.
+                            Código mÍnimo es {{validatorsOptions.code.minlength}}.
                         </small>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
             </div>
 
             <div class="p-field">
-                <label for="name">Name:
+                <label for="name">Nombre:
                     <small>
                         ({{formEvaluationType.get('name').value == null ? 0 : formEvaluationType.get('name').value.length}}
                          de
@@ -41,28 +41,28 @@
                 <div *ngIf="formEvaluationType.get('name').errors && formEvaluationType.get('name').touched">
                     <small id="name1Help" class="p-invalid"
                         *ngIf="formEvaluationType.get('name').hasError('required')">
-                        Name is required.
+                        Nombre es obligatorio.
                     </small>
                     <small id="name2nHelp" class="p-invalid"
                         *ngIf="formEvaluationType.get('name').hasError('minlength')">
-                        Name minLength is {{validatorsOptions.name.minlength}}.
+                        Nombre mÍnimo de caracteres es {{validatorsOptions.name.minlength}}.
                     </small>
                     <small id="name3Help" class="p-invalid"
                         *ngIf="formEvaluationType.get('name').hasError('maxlength')">
-                        Name maxLength is {{validatorsOptions.name.maxlength}}.
+                        Nombre máximo de caracteres es {{validatorsOptions.name.maxlength}}.
                     </small>
                 </div>
             </div>
             
             <div class="p-formgrid p-grid">
                 <div class="p-field p-col">
-                    <label for="status">Status:</label>
+                    <label for="status">Estado:</label>
                     <p-dropdown id="float-input-status" [options]="status" formControlName="status_id"
                     [style]="{'width':'235px'}"></p-dropdown>
                     <div *ngIf="formEvaluationType.get('status_id').errors && formEvaluationType.get('status_id').touched">
                         <small id="status" class="p-invalid"
                             *ngIf="formEvaluationType.get('status_id').hasError('required')">
-                                Status is required.
+                                Estado es obligatorio.
                         </small>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
             </div>
                 <div class="p-formgrid p-grid">
                     <div class="p-field p-col">
-                        <label for="percentage">Percentage:
+                        <label for="percentage">Porcentaje:
                         </label><br>
                         <input type="number" pInputText id="percentage" name="percentage" size="10"
                                pKeyFilter="alphanum" 
@@ -79,27 +79,27 @@
                         <div *ngIf="formEvaluationType.get('percentage').errors && formEvaluationType.get('percentage').touched">
                             <small id="percenta" class="p-invalid"
                                    *ngIf="formEvaluationType.get('percentage').hasError('required')">
-                                Percentage is required.
+                                Porcentaje es obligatorio.
                             </small>
                             <small id="percenta1" class="p-invalid"
                                    *ngIf="formEvaluationType.get('percentage').hasError('minlength')">
-                                Percentage minLength is {{validatorsOptions.percentage.minlength}}.
+                                Percentaje mÍnimo de caracteres es {{validatorsOptions.percentage.minlength}}.
                             </small>
                         </div>
                     </div>
                     <div class="p-field p-col">
-                        <label for="globalpercentage">Global Percentage:
+                        <label for="globalpercentage">Porcentaje Global:
                         </label><br>
                         <input type="number" pInputText id="global_percentage" name="global_percentage" pKeyFilter="alphanum" size="10"
                                formControlName="global_percentage"/> %
                         <div *ngIf="formEvaluationType.get('global_percentage').errors && formEvaluationType.get('global_percentage').touched">
                             <small id="globapercentage1" class="p-invalid"
                                    *ngIf="formEvaluationType.get('global_percentage').hasError('required')">
-                                Global percentage is required.
+                                Porcentaje Global es obligatorio.
                             </small>
                             <small id="globalpercentage2" class="p-invalid"
                                    *ngIf="formEvaluationType.get('global_percentage').hasError('minlength')">
-                                Global percentage minLength is {{validatorsOptions.global_percentage.minlength}}.
+                                   Porcentaje Global mÍnimo de caracteres es {{validatorsOptions.global_percentage.minlength}}.
                             </small>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
             <ng-template pTemplate="caption">
                 <div class="p-grid">
                     <div class="p-lg-12 p-md-12 p-sm-12" style="text-align: center;">
-                        <h1>{{'EVALUATION TYPES'|translate}}</h1>
+                        <h1>{{'Tipos de Evaluaciones'|translate}}</h1>
                     </div>
                 </div>
             </ng-template>
@@ -147,23 +147,23 @@
                 <tr>
                     <th *ngFor="let col of columns" [ngSwitch]="col.field" style="padding: .5em;">
                         <input *ngSwitchCase="'code'" pInputText type="text"
-                               [placeholder]="('SEARCH BY'|translate) + ' ' +('CODE'|translate)"
+                               [placeholder]="('BUSCAR POR'|translate) + ' ' +('CÓDIGO'|translate)"
                                class="ui-column-filter" style="width: 100%; margin-top: 0;"
                                (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'percentage'" pInputText type="text"
-                                [placeholder]="('SEARCH BY'|translate) + ' ' + ('PERCENTAGE'|translate)"
+                                [placeholder]="('BUSCAR POR'|translate) + ' ' + ('PORCENTAJE'|translate)"
                                 class="ui-column-filter" style="width: 100%; margin-top: 0;"
                                 (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'name'" pInputText type="text"
-                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('NAME'|translate)"
+                               [placeholder]="('BUSCAR POR'|translate) + ' ' + ('NOMBRE'|translate)"
                                class="ui-column-filter" style="width: 100%; margin-top: 0;"
                                (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'global_percentage'" pInputText type="text"
-                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('GLOBAL PERCENTAGE'|translate)"
+                               [placeholder]="('BUSCAR POR'|translate) + ' ' + ('PORCENTAJE GLOBAL'|translate)"
                                class="ui-column-filter" style="width: 100%; margin-top: 0;"
                                (input)="dt.filter($event.target.value, col.field, 'contains')">
                         <input *ngSwitchCase="'status.name'" pInputText type="text"
-                               [placeholder]="('SEARCH BY'|translate) + ' ' + ('STATUS'|translate)"
+                               [placeholder]="('BUSCAR POR'|translate) + ' ' + ('ESTADO'|translate)"
                                class="ui-column-filter" style="width: 100%; margin-top: 0;"
                                (input)="dt.filter($event.target.value, col.field, 'contains')">
                     </th>

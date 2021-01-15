@@ -8,6 +8,9 @@ import {Router} from '@angular/router';
 })
 
 export class IgnugService {
+    user_id(user_id: any) {
+        throw new Error('Method not implemented.');
+    }
     private headers: HttpHeaders;
 
     constructor(private _http: HttpClient) {
