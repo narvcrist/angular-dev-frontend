@@ -223,7 +223,7 @@
                     <td>{{rowData.type.name ? rowData.type.name : getTypeName(rowData.type.id)}}</td>
                     <td>{{rowData.status.name ? rowData.status.name : getStatusName(rowData.status.id)}}</td>
 
-                    <td>
+                    <td style=" width: 8em; text-align: center;">
                         <!--<button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
                             style="margin-right: .5em" [pTooltip]="'MODIFY RECORD'|translate"
                             (click)="selectQuestion(rowData);flagEditQuestion = true;"></button>
@@ -232,8 +232,8 @@
                             <button pButton type="button" class="ui-button-primary" icon="pi pi-user-edit"
                             style="margin-right: .5em" [pTooltip]="('MODIFICAR REGISTRO')"
                             (click)="selectQuestion(rowData);flagEditQuestion = true;"></button>
-                        <button pButton type="button" class="ui-button-danger" [pTooltip]="('ELIMINAR REGISTRO')"
-                            (click)="deleteQuestion(rowData)" icon="pi pi-trash"></button>
+                        <!--<button pButton type="button" class="ui-button-danger" [pTooltip]="('ELIMINAR REGISTRO')"
+                            (click)="deleteQuestion(rowData)" icon="pi pi-trash"></button>-->
                     </td>
                 </tr>
             </ng-template>
