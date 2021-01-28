@@ -13,6 +13,7 @@ import { Evaluation } from 'src/app/models/teacher-eval/evaluation';
 export class StudentEvaluationResultComponent implements OnInit {
   evaluations: any[];
   colsEvaluationResult: any[];
+  teachers: any[];
 
   constructor(private _breadcrumbService: BreadcrumbService,
     private _spinnerService: NgxSpinnerService,
@@ -23,8 +24,9 @@ export class StudentEvaluationResultComponent implements OnInit {
   ngOnInit(): void {
     this.getEvaluation();
     this.setColsEvaluationResult();
+    this.teachers = [];
+    this.getTeachers();
 
-    
     }
   
 
@@ -68,8 +70,9 @@ export class StudentEvaluationResultComponent implements OnInit {
     this._teacherEvalService.get('evaluations/student_evaluations').subscribe(
         response => {
             this._spinnerService.hide();
-            this.evaluations = response['data']
+            this.evaluations = response['data'];
             console.log('esto',this.evaluations);
+            
             this._messageService.add({
                 key: 'tst',
                 severity: 'success',
@@ -88,6 +91,34 @@ export class StudentEvaluationResultComponent implements OnInit {
             });
         });
 
+  }
+  getTeachers(): void {
+    this._spinnerService.show();
+    this._teacherEvalService.get('teachers').subscribe(
+      response => {
+        const teachers = response['data'];
+        this.teachers = [{ label: 'Seleccione', value: '' }];
+        teachers.map(item => {
+          this.teachers.push({
+            label: item.user.first_name + ' ' + item.user.second_name + ' ' +
+            item.user.first_lastname + ' ' + item.user.second_lastname, value: item.user.id
+          });
+        });
+        console.log(this.teachers);
+      }, error => {
+        this._messageService.add({
+          key: 'tst',
+          severity: 'error',
+          summary: error.error.msg.summary,
+          detail: error.error.msg.detail,
+          life: 5000
+        });
+      });
+  }
+
+  getTeacherName(id: number) {
+    const user = this.teachers.find(user => user.value === id)
+    return user ? user.label : ""
   }
 
 }

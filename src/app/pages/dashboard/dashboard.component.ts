@@ -10,6 +10,9 @@ import {Institution} from '../../models/ignug/institution';
 import {Message} from 'primeng/api';
 import {NgxSpinnerService} from 'ngx-spinner';
 import * as moment from 'moment';
+import { TeacherEvalService } from '../../services/teacher-eval/teacher-eval.service';
+import { MessageService } from 'primeng/api';
+import { threadId } from 'worker_threads';
 
 @Component({
     selector: 'app-dashboard',
@@ -28,11 +31,15 @@ export class DashboardComponent implements OnInit {
     flagBirhday: boolean;
     randomNumber: number = 0;
     flagShortcuts: boolean;
-
     constructor(
         private _breadcrumbService: BreadcrumbService,
         private _authService: AuthService,
-        private _spinner: NgxSpinnerService
+        private _spinner: NgxSpinnerService,
+        private _teacherEvalService: TeacherEvalService,
+        private _messageService: MessageService,
+        private _spinnerService: NgxSpinnerService,
+
+
     ) {
         this._breadcrumbService.setItems([
             {label: 'Dashboard'},
@@ -156,4 +163,5 @@ export class DashboardComponent implements OnInit {
             }
         });
     }
+
 }

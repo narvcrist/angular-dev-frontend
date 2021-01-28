@@ -21,7 +21,7 @@
     <div id="meet-mirage" class="section">
         <div class="section-title">
             <h3 *ngIf="!flagShortcuts">DASHBOARD - {{role.name}}</h3>
-            <h3 *ngIf="flagShortcuts">Editando accesos directos</h3>
+            <h3 *ngIf="flagShortcuts">Editando accesos directos</h3>            
         </div>
         <hr>
         <p-message *ngIf="editShortcuts.length===0 && flagShortcuts" severity="info" text="No tiene accesos directos para mostrar"></p-message>
@@ -65,4 +65,10 @@
             </div>
         </div>
     </div>
+
 </div>
+
+<button *ngFor="let asignaturas of asignatura" type="button" pButton 
+    icon="pi pi-cog"
+    class="p-button-success">
+</button>

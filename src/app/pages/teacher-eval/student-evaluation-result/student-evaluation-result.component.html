@@ -1,5 +1,5 @@
 <div class="a">
-    <button type="submit" pButton icon="pi pi-check" class="ui-button-secondary-lg"  (click)="createEvaluation()"
+    <button type="submit" pButton icon="pi pi-check"  class="p-button-success-lg"  (click)="createEvaluation()"
                             label="{{'Calcular Evaluación Docente'|translate}}"></button>
                             
 </div>
@@ -28,7 +28,7 @@
                                                 </td> -->
                                                     <td>{{rowData.evaluation_type.name}}</td>
                                                     <td>{{rowData.school_period.name}}</td>
-                                                    <td>{{rowData.teacher.id}}</td>
+                                                    <td>{{rowData.teacher.name}}</td>
                                                     <td>{{rowData.result}}</td>
                                             </tr>
                                         </ng-template>

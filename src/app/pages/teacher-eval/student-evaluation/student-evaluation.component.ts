@@ -32,9 +32,19 @@ export class StudentEvaluationComponent implements OnInit {
   showStudentEvaluation: boolean;
   students: any[];
   user: User;
+  subjects:any[];
+  listEvaluated: boolean;
+  dato: any;
+  dato1:any;
+  subjectTeaching: any[];
+  subjectManagement: any[];
 
+  displayVerificated: boolean;
+  valor: [];
+  datos: boolean;
+  registro: boolean;
 
-  
+  detail: any;
 
   constructor(private _breadcrumbService: BreadcrumbService,
     private _fb: FormBuilder,
@@ -49,21 +59,46 @@ export class StudentEvaluationComponent implements OnInit {
       this._breadcrumbService.setItems([
         { label: 'studentEvaluations' }
       ]);
+      
       this.questionsTeaching = [];
       this.questionsManagement = [];
-      this.user = {};
+      this.user = JSON.parse(localStorage.getItem('user')) as User;
 
+      this.subjects=[];
       this.buildformStudentEvaluation();
 
     }
 
   ngOnInit(): void 
   { 
-    
     this.getQuestions();
+    this.getSubjects();  
     
 
   }
+
+  public detalle:any;
+
+  getSubjects():void{
+    this._spinnerService.show();
+    this._teacherEvalService.get('registration?user_id='+this.user.id).subscribe(
+      response => {
+        this._spinnerService.hide();        
+        this.detalle = response['data'];
+
+        console.log('detalle',this.detalle);
+      }, error => {
+        this._messageService.add({
+          key: 'tst',
+          severity: 'error',
+          summary: error.error.msg.summary,
+          detail: error.error.msg.detail,
+          life: 5000
+        });
+      });
+  }
+  
+
   getQuestions(): void {
     this._spinnerService.show();
     this.displayFormStudentEvaluation = false;
@@ -105,13 +140,13 @@ showEvaluationResult(): void {
 
 
 buildformStudentEvaluation() {
-      this.formStudentEvaluation = this._fb.group({
-          id: [''],
-          student_id: ['', Validators.required],
-          subject_teacher_id: ['', Validators.required],
-          teachingArray: new FormArray([]),
-          managementArray: new FormArray([])
-      });
+  this.formStudentEvaluation = this._fb.group({
+    id: [''],     
+    // subject_teacher_id: [''],
+    teachingArray: new FormArray([]),
+    managementArray: new FormArray([])
+  });
+      
   }
   get teachingArray() {
       return this.formStudentEvaluation.get('teachingArray') as FormArray;
@@ -131,85 +166,96 @@ buildformStudentEvaluation() {
     }
 
     }   
-createStudentEvaluationTeaching() {
-  this.selectedStudentEvaluation = this.castStudentEvaluationTeaching();
-  this._spinnerService.show();
-  this._teacherEvalService.post('student_evaluations', {
-      subject_teacher: this.selectedStudentEvaluation.subject_teacher,
-      student: this.selectedStudentEvaluation.student,
-      answer_questions: this.selectedStudentEvaluation.answer_questions
-  }).subscribe(
-      response => {
-          this._spinnerService.hide();
-          this.formStudentEvaluation.reset();
-          this._messageService.add({
-              key: 'tst',
-              severity: 'success',
-              summary: response['msg']['summary'],
-              detail:  response['msg']['detail'],
-              life: 3000
-          });
-      }, error => {
-          this._spinnerService.hide();
-          this._messageService.add({
-              key: 'tst',
-              severity: 'error',
-              summary: error.error.msg.summary,
-              detail:  error.error.msg.detail,
-              life: 5000
-          });
-      });
-}
-createStudentEvaluationManagement() {
-  this.selectedStudentEvaluation = this.castStudentEvaluationManagement();
-  this._spinnerService.show();
-  this._teacherEvalService.post('student_evaluations', {
-      subject_teacher: this.selectedStudentEvaluation.subject_teacher,
-      student: this.selectedStudentEvaluation.student,
-      answer_questions: this.selectedStudentEvaluation.answer_questions
-      
-  }).subscribe(
-      response => {
-        this._spinnerService.hide();
-          this.formStudentEvaluation.reset();
-          this._messageService.add({
-              key: 'tst',
-              severity: 'success',
-              summary: response['msg']['summary'],
-              detail:  response['msg']['detail'],
-              life: 3000
-          });
-      }, error => {
-          this._spinnerService.hide();
-          this._messageService.add({
-              key: 'tst',
-              severity: 'error',
-              summary: error.error.msg.summary,
-              detail: error.error.msg.detail,
-              life: 5000
-          });
-      });
-}
-castStudentEvaluationTeaching(): StudentEvaluation {
-  return {
-      id: this.formStudentEvaluation.controls['id'].value,
-      subject_teacher: { id: this.formStudentEvaluation.controls['subject_teacher_id'].value },
-      student: { id: this.formStudentEvaluation.controls['student_id'].value },
-      answer_questions: this.formStudentEvaluation.controls['teachingArray'].value.map((answer_question_id: any) => {
-          return { id: answer_question_id }
-      }),
+  selectDetail(detail){
+    
+    this.detail=detail;
+    this.registro= true;
 
-} as StudentEvaluation;
-}
-castStudentEvaluationManagement(): StudentEvaluation {
-  return {
-      id: this.formStudentEvaluation.controls['id'].value,
-      subject_teacher: { id: this.formStudentEvaluation.controls['subject_teacher_id'].value },
-      student: { id: this.formStudentEvaluation.controls['student_id'].value },
-      answer_questions: this.formStudentEvaluation.controls['managementArray'].value.map((answer_question_id: any) => {
-          return { id: answer_question_id }
-      }),
+    }
+
+  createStudentEvaluationTeaching() {
+    const envio= this.valor;
+    console.log(envio);
+    this.selectedStudentEvaluation = this.castStudentEvaluationTeaching();
+    this._spinnerService.show();
+    this._teacherEvalService.post('student_evaluations', {
+        subject_teacher: this.detail.subject_teacher,
+        detail: this.detail,
+        answer_questions: this.selectedStudentEvaluation.answer_questions
+    }).subscribe(
+        response => {
+            this._spinnerService.hide();
+            this.formStudentEvaluation.reset();
+            this._messageService.add({
+                key: 'tst',
+                severity: 'success',
+                summary: response['msg']['summary'],
+                detail:  response['msg']['detail'],
+                life: 3000
+            });
+            this.registro=false;
+        }, error => {
+            this._spinnerService.hide();
+            this._messageService.add({
+                key: 'tst',
+                severity: 'error',
+                summary: error.error.msg.summary,
+                detail:  error.error.msg.detail,
+                life: 5000
+            });
+        });
+  }
+  createStudentEvaluationManagement() {
+    this.selectedStudentEvaluation = this.castStudentEvaluationManagement();
+    this._spinnerService.show();
+    this._teacherEvalService.post('student_evaluations', {
+      subject_teacher: this.detail.subject_teacher,
+      detail: this.detail,
+      answer_questions: this.selectedStudentEvaluation.answer_questions
+        
+    }).subscribe(
+        response => {
+          this.getSubjects();
+          this._spinnerService.hide();
+            this.formStudentEvaluation.reset();
+            this._messageService.add({
+                key: 'tst',
+                severity: 'success',
+                summary: response['msg']['summary'],
+                detail:  response['msg']['detail'],
+                life: 3000
+            });
+          this.registro=false;
+
+        }, error => {
+            this._spinnerService.hide();
+            this._messageService.add({
+                key: 'tst',
+                severity: 'error',
+                summary: error.error.msg.summary,
+                detail: error.error.msg.detail,
+                life: 5000
+            });
+        });
+  }
+  castStudentEvaluationTeaching(): StudentEvaluation {
+    return {
+        id: this.formStudentEvaluation.controls['id'].value,
+        //subject_teacher: this.formStudentEvaluation.controls['subject_teacher_id'].value,
+        answer_questions: this.formStudentEvaluation.controls['teachingArray'].value.map((answer_question_id: any) => {
+            return { id: answer_question_id }
+        }),
 
   } as StudentEvaluation;
-}
+  }
+  castStudentEvaluationManagement(): StudentEvaluation {
+    return {
+        id: this.formStudentEvaluation.controls['id'].value,
+        //subject_teacher: this.formStudentEvaluation.controls['subject_teacher_id'].value ,
+        answer_questions: this.formStudentEvaluation.controls['managementArray'].value.map((answer_question_id: any) => {
+            return { id: answer_question_id }
+        }),
+
+    } as StudentEvaluation;
+  }
 }
